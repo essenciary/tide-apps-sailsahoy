@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqladv70_46b6f183-e691-4eff-94d6-ffc50edbd7ce",
+  "id": 1781895183712372,
+  "category": "test",
+  "key": "testComputeSeaStatusNullWaves",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testComputeSeaStatusNullWaves",
+    "source": "\n// Test: null wave data (inland) should still produce valid result\nasync function testComputeSeaStatusNullWaves() {\n  const result = functions.call('computeSeaStatus', {\n    windSpeed: 10,\n    windGusts: 14,\n    waveHeight: null,   // no marine data — inland position\n    precipitation: 0,\n    pressure: 1013,\n    cloudCover: 40\n  });\n\n  assert(result.level !== undefined, 'Should have a level even without wave data');\n  assert(result.score >= 0 && result.score <= 100, 'Score should be 0-100, got ' + result.score);\n  assert(typeof result.label === 'string', 'Label should be a string');\n  assert(Array.isArray(result.reasons), 'Reasons should be an array');\n  // Without waves to penalize, light wind should be green\n  assertEquals(result.level, 'green', 'Light wind with no waves should be green');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqla42mc_cb847336-ad03-4257-abd0-2eb0a8917d03",
+    "turnIndex": 0,
+    "sessionId": "session_mql9z8e3_1671b604-d40e-4378-8c64-47ffcd18173b",
+    "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
+    "toolCallId": "sevt_01PkoWbrXfUdpzUVigUkMiZV"
+  },
+  "createdAt": "2026-06-19T18:53:03.653Z",
+  "undoable": true,
+  "turnId": "turn_mqla42mc_cb847336-ad03-4257-abd0-2eb0a8917d03",
+  "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
+  "rationale": "Verify that null wave data (inland positions) doesn't crash and produces valid output.",
+  "implementation": "Used the existing define_test mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781895183852604
+}

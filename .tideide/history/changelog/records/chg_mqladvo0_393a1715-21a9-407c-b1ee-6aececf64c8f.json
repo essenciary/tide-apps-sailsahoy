@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqladvo0_393a1715-21a9-407c-b1ee-6aececf64c8f",
+  "id": 1781895184316222,
+  "category": "test",
+  "key": "testComputeSeaStatusScoreClamped",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testComputeSeaStatusScoreClamped",
+    "source": "\n// Test: score should be clamped 0-100 even with extreme penalties\nasync function testComputeSeaStatusScoreClamped() {\n  // Near-gale winds + rough seas + heavy rain + low pressure — many penalties\n  const result = functions.call('computeSeaStatus', {\n    windSpeed: 35,\n    windGusts: 50,\n    waveHeight: 4.5,\n    precipitation: 10,\n    pressure: 988,\n    cloudCover: 100\n  });\n\n  assert(result.score >= 0, 'Score should never be negative, got ' + result.score);\n  assert(result.score <= 100, 'Score should never exceed 100, got ' + result.score);\n  // With this many penalties, should be red or black\n  assert(result.level === 'red' || result.level === 'black',\n    'Extreme conditions should be red or black, got ' + result.level);\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqla42mc_cb847336-ad03-4257-abd0-2eb0a8917d03",
+    "turnIndex": 0,
+    "sessionId": "session_mql9z8e3_1671b604-d40e-4378-8c64-47ffcd18173b",
+    "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
+    "toolCallId": "sevt_012MrbpAs96doj27W5pPbFJH"
+  },
+  "createdAt": "2026-06-19T18:53:04.265Z",
+  "undoable": true,
+  "turnId": "turn_mqla42mc_cb847336-ad03-4257-abd0-2eb0a8917d03",
+  "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
+  "rationale": "Verify that score is always clamped between 0 and 100, even with extreme penalty accumulation.",
+  "implementation": "Used the existing define_test mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781895184502869
+}

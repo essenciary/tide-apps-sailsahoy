@@ -1,7 +1,7 @@
 {
   "name": "getWeather",
-  "source": "\n// Fetch weather data for a lat/lon position — delegates coord validation to shared helper\nasync function getWeather(c) {\n  return functions.call('withValidatedCoords', c, async (lat, lon) => {\n    const result = await functions.call('fetchWeather', lat, lon);\n\n    // Map Result to HTTP response — success returns data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n    return c.json(result.data);\n  }, 'Failed to fetch weather data');\n}\n",
-  "registeredAt": "2026-06-19T18:29:23.364Z",
+  "source": "\n// Fetch weather data for a lat/lon position — delegates coord validation to shared helper.\n// Enriches the response with sea safety status (current + hourly) for the global indicator.\nasync function getWeather(c) {\n  return functions.call('withValidatedCoords', c, async (lat, lon) => {\n    const result = await functions.call('fetchWeather', lat, lon);\n\n    // Map Result to HTTP response — success returns data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n\n    const weatherData = result.data;\n\n    // Compute overall sea safety for current conditions\n    const seaStatus = functions.call('computeSeaStatus', weatherData.current);\n\n    // Compute sea safety for each hourly forecast entry so timeline can show it\n    const hourlySeaStatus = weatherData.hourly.map((hour) =>\n      functions.call('computeSeaStatus', hour)\n    );\n\n    // Attach sea status fields alongside existing weather data\n    return c.json({\n      ...weatherData,\n      seaStatus,\n      hourlySeaStatus\n    });\n  }, 'Failed to fetch weather data');\n}\n",
+  "registeredAt": "2026-06-19T18:47:11.123Z",
   "schema": {
     "query": {
       "lat": {
@@ -17,7 +17,7 @@
     },
     "responses": {
       "200": {
-        "description": "Weather data with current conditions and hourly forecast",
+        "description": "Weather data with current conditions, hourly forecast, and sea safety status",
         "schema": {
           "properties": {
             "current": {
@@ -26,11 +26,17 @@
             "hourly": {
               "type": "array"
             },
+            "hourlySeaStatus": {
+              "type": "array"
+            },
             "latitude": {
               "type": "number"
             },
             "longitude": {
               "type": "number"
+            },
+            "seaStatus": {
+              "type": "object"
             }
           },
           "type": "object"
@@ -43,7 +49,7 @@
         "description": "Weather API error"
       }
     },
-    "summary": "Get weather data for a position",
+    "summary": "Get weather data for a position with sea safety indicator",
     "tags": [
       "weather"
     ]

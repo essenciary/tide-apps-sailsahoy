@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqladupu_a7bff516-038f-4135-8882-876ddf02b702",
+  "id": 1781895183102041,
+  "category": "test",
+  "key": "testComputeSeaStatusBlackWaves",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testComputeSeaStatusBlackWaves",
+    "source": "\n// Test: very rough seas should instantly trigger black\nasync function testComputeSeaStatusBlackWaves() {\n  const result = functions.call('computeSeaStatus', {\n    windSpeed: 10,      // even with light wind\n    windGusts: 12,\n    waveHeight: 6.0,    // very rough seas — instant black trigger\n    precipitation: 0,\n    pressure: 1013,\n    cloudCover: 30\n  });\n\n  assertEquals(result.level, 'black', 'Very rough seas should trigger black');\n  assertEquals(result.score, 0, 'Black from instant trigger should be score 0');\n  assert(result.reasons[0].includes('Very rough seas'), 'Should mention rough seas');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqla42mc_cb847336-ad03-4257-abd0-2eb0a8917d03",
+    "turnIndex": 0,
+    "sessionId": "session_mql9z8e3_1671b604-d40e-4378-8c64-47ffcd18173b",
+    "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
+    "toolCallId": "sevt_016ygH8bno8FFRTjwWCAYADz"
+  },
+  "createdAt": "2026-06-19T18:53:03.034Z",
+  "undoable": true,
+  "turnId": "turn_mqla42mc_cb847336-ad03-4257-abd0-2eb0a8917d03",
+  "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
+  "rationale": "Verify that very rough seas (>5m) trigger instant black level regardless of wind.",
+  "implementation": "Used the existing define_test mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781895183255953
+}

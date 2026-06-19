@@ -1,0 +1,72 @@
+{
+  "id": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
+  "sessionId": "session_mql9z8e3_1671b604-d40e-4378-8c64-47ffcd18173b",
+  "title": "Add global sea safety indicator with green/yellow/red/black rating",
+  "description": "Add a prominent overall recommendation indicator that tells sailors at a glance whether it's safe to go out at sea, based on all weather and marine factors.",
+  "status": "completed",
+  "plan": {
+    "summary": "Add a global sea safety indicator that computes an overall score from current weather conditions (wind speed, gusts, wave height, precipitation, pressure trends) and maps it to a 4-tier color system: **green** (Good to go), **yellow** (Caution), **red** (Dangerous), **black** (Do not go out). The indicator will be computed server-side via a shared function, included in the /api/weather response, and rendered as a prominent badge at the top of the conditions panel. It will also update with the timeline slider as the user scrubs through forecast hours.\n\nThe scoring is direction-agnostic (unlike the per-direction compass scoring) — it answers \"should I be on the water at all right now?\" rather than \"which direction is best?\". Thresholds are calibrated to sailing safety: black triggers for storm-force winds (>40kn) or very rough seas (>5m), red for strong winds/rough seas, yellow for moderate conditions requiring attention, green for pleasant sailing.\n\nAssumptions:\n- The indicator uses only the current position's weather data (not directional samples)\n- Black is more severe than red — reserved for genuinely life-threatening conditions\n- The indicator sits prominently at the top of the existing conditions panel\n- Updates reactively when timeline slider changes hour",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Step 1: Create `computeSeaStatus` shared function that takes a weather snapshot (windSpeed, windGusts, waveHeight, precipitation, pressure, cloudCover) and returns { score: 0-100, level: 'green'|'yellow'|'red'|'black', label: string, reasons: string[] }. Scoring logic: wind >40kn or waves >5m = instant black; penalties for high wind, gust factor, wave height, heavy precipitation. Thresholds: green ≥70, yellow ≥40, red ≥15, black <15. (Fulfills req 1: global indicator based on all factors)",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Step 2: Update `getWeather` handler to call `computeSeaStatus` on the current conditions and include the result as a `seaStatus` field in the API response. Also include hourly sea statuses so the timeline can show them. (Fulfills req 1: makes the indicator available to the frontend)",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Step 3: Add CSS for the sea status indicator — a colored badge with glow effect matching the 4-tier system (green/yellow/red/black), placed at the top of the conditions panel. Add `--black` color variable. Style includes icon, label, score, and collapsible reasons list. (Fulfills req 2: visual range indicator)",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Step 4: Update the sailing-weather.js to render the sea status badge in the conditions panel header area. The badge shows the colored level indicator, label text, and score. Updates when timeline hour changes using hourly sea statuses. (Fulfills req 1+2: interactive global indicator that updates with timeline)",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Step 5: Update the sailing-app template to include a placeholder element for the sea status indicator in the conditions panel. (Fulfills req 2: DOM structure for the indicator)",
+        "status": "done"
+      },
+      {
+        "id": "step_5",
+        "description": "Step 6: Write tests for `computeSeaStatus` covering all 4 tiers (green/yellow/red/black) and edge cases (null wave data, extreme values). Run tests to verify.",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781894672915091
+  ],
+  "approvalMessageId": 1781894726917151,
+  "workMessageIds": [
+    1781894800022138,
+    1781894831323064,
+    1781894955390241,
+    1781894997429535,
+    1781895133933476,
+    1781895180724459,
+    1781895181300701,
+    1781895181926448,
+    1781895182629323,
+    1781895183255953,
+    1781895183852604,
+    1781895184502869,
+    1781895224924157
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 37,
+    "outputTokens": 31541,
+    "costUsd": 2.95232375,
+    "durationMs": 614462
+  },
+  "createdAt": "2026-06-19T18:44:32.349Z",
+  "updatedAt": "2026-06-19T18:55:41.192Z",
+  "completedAt": "2026-06-19T18:55:29.213Z"
+}

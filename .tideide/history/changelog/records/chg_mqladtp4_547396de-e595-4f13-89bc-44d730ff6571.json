@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqladtp4_547396de-e595-4f13-89bc-44d730ff6571",
+  "id": 1781895181772901,
+  "category": "test",
+  "key": "testComputeSeaStatusRed",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testComputeSeaStatusRed",
+    "source": "\n// Test: dangerous conditions should return red level\nasync function testComputeSeaStatusRed() {\n  const result = functions.call('computeSeaStatus', {\n    windSpeed: 30,      // strong wind — 40 penalty\n    windGusts: 42,      // strong gusts\n    waveHeight: 3.5,    // rough seas — 25 penalty\n    precipitation: 6,   // heavy rain — 12 penalty\n    pressure: 998,      // low pressure — 8 penalty\n    cloudCover: 90\n  });\n\n  assertEquals(result.level, 'red', 'Dangerous conditions should be red');\n  assertEquals(result.label, 'Dangerous');\n  assert(result.score >= 15 && result.score < 40, 'Red score should be 15-39, got ' + result.score);\n  assert(result.reasons.length >= 3, 'Should have multiple penalty reasons');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqla42mc_cb847336-ad03-4257-abd0-2eb0a8917d03",
+    "turnIndex": 0,
+    "sessionId": "session_mql9z8e3_1671b604-d40e-4378-8c64-47ffcd18173b",
+    "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
+    "toolCallId": "sevt_01TMvBerD6qwCRdNE6hFDDhB"
+  },
+  "createdAt": "2026-06-19T18:53:01.714Z",
+  "undoable": true,
+  "turnId": "turn_mqla42mc_cb847336-ad03-4257-abd0-2eb0a8917d03",
+  "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
+  "rationale": "Verify that dangerous conditions (strong winds, rough seas, heavy rain) return a red level.",
+  "implementation": "Used the existing define_test mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781895181926448
+}
