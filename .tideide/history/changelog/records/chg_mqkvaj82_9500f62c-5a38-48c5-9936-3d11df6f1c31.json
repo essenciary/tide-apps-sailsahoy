@@ -1,0 +1,35 @@
+{
+  "uid": "chg_mqkvaj82_9500f62c-5a38-48c5-9936-3d11df6f1c31",
+  "id": 1781869833942133,
+  "category": "test",
+  "key": "testServeApp",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "testServeApp",
+    "source": "\nasync function testServeApp() {\n  const res = await fetch('/');\n  assertEquals(res.status, 200, 'Should return 200');\n\n  const html = await res.text();\n\n  // Check for required structural elements\n  assert(html.includes('id=\"map\"'), 'Should contain map div');\n  assert(html.includes('id=\"weather-canvas\"'), 'Should contain weather canvas');\n  assert(html.includes('id=\"conditions-panel\"'), 'Should contain conditions panel');\n  assert(html.includes('id=\"compass-panel\"'), 'Should contain compass panel');\n  assert(html.includes('id=\"timeline-panel\"'), 'Should contain timeline panel');\n  assert(html.includes('id=\"info-bar\"'), 'Should contain info bar');\n\n  // Check for asset references\n  assert(html.includes('sailing-weather.css'), 'Should reference app CSS');\n  assert(html.includes('sailing-weather.js'), 'Should reference app JS');\n\n  // Check for Leaflet references\n  assert(html.includes('leaflet'), 'Should reference Leaflet');\n\n  // Check meta tags\n  assert(html.includes('<!DOCTYPE html>'), 'Should have doctype');\n  assert(html.includes('viewport'), 'Should have viewport meta');\n}\n",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "testServeApp",
+    "source": "\nasync function testServeApp() {\n  const BASE = 'http://localhost:3001';\n  const res = await fetch(`${BASE}/`);\n  assertEquals(res.status, 200, 'Should return 200');\n\n  const html = await res.text();\n\n  // Check for required structural elements\n  assert(html.includes('id=\"map\"'), 'Should contain map div');\n  assert(html.includes('id=\"weather-canvas\"'), 'Should contain weather canvas');\n  assert(html.includes('id=\"conditions-panel\"'), 'Should contain conditions panel');\n  assert(html.includes('id=\"compass-panel\"'), 'Should contain compass panel');\n  assert(html.includes('id=\"timeline-panel\"'), 'Should contain timeline panel');\n  assert(html.includes('id=\"info-bar\"'), 'Should contain info bar');\n\n  // Check for asset references\n  assert(html.includes('sailing-weather.css'), 'Should reference app CSS');\n  assert(html.includes('sailing-weather.js'), 'Should reference app JS');\n\n  // Check for Leaflet references\n  assert(html.includes('leaflet'), 'Should reference Leaflet');\n\n  // Check meta tags\n  assert(html.includes('<!DOCTYPE html>'), 'Should have doctype');\n  assert(html.includes('viewport'), 'Should have viewport meta');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_01TEcYrQeT4inZT4CrW7KGN3"
+  },
+  "createdAt": "2026-06-19T11:50:33.936Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Tests that the main page serves correctly with all required elements.",
+  "implementation": "Uses full localhost:3001 URL for fetch call.",
+  "workMessageId": 1781869833966699
+}

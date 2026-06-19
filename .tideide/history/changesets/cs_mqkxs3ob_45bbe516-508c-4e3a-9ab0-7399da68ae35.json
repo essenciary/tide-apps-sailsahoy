@@ -1,0 +1,66 @@
+{
+  "id": "cs_mqkxs3ob_45bbe516-508c-4e3a-9ab0-7399da68ae35",
+  "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+  "title": "Adopt Result&lt;T&gt; pattern in fetchWeather and analyzeDirections",
+  "description": "Replace throw-based error handling in fetchWeather and analyzeDirections with explicit Result objects ({ ok: true, data } | { ok: false, error: { code, message } }). Update all callers — handlers and tests — to inspect .ok instead of relying on try/catch.",
+  "status": "completed",
+  "plan": {
+    "summary": "fetchWeather currently throws on API failure, and analyzeDirections lets those throws propagate. Both handlers rely on withValidatedCoords's try/catch to convert exceptions into 500 responses. This works for the HTTP layer but breaks the project convention that fallible functions return Result<T>, because any other function calling fetchWeather via functions.call would get an unhandled exception.\n\nThis changeset converts both functions to the Result pattern:\n- Success: `{ ok: true, data: <payload> }`\n- Failure: `{ ok: false, error: { code: string, message: string } }`\n\nHandlers will explicitly check `.ok` and return the appropriate HTTP response. The try/catch in withValidatedCoords stays as a safety net for truly unexpected runtime errors (null access, type errors) but is no longer the primary error-handling mechanism.\n\nRequirements:\n1. fetchWeather must return Result instead of throwing on API errors.\n2. analyzeDirections must check .ok on each fetchWeather result and return Result itself.\n3. Handler callbacks must check .ok and map failures to 500 responses.\n4. withValidatedCoords keeps its try/catch as a safety net, not as the primary error path.\n5. All existing tests must be updated to work with the new Result shape and continue passing.\n\nAssumptions:\n- Error codes: WEATHER_API_ERROR for fetchWeather, DIRECTION_ANALYSIS_ERROR for analyzeDirections.\n- If any of the 8 direction fetches fails, the whole analyzeDirections call fails (matching current behavior where one throw crashes Promise.all).\n- The top-level try/catch in withValidatedCoords stays as a belt-and-suspenders safety net.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Update `fetchWeather` to return `{ ok: true, data: { latitude, longitude, timezone, current, hourly } }` on success and `{ ok: false, error: { code: 'WEATHER_API_ERROR', message } }` on failure. Wrap the entire body in a try/catch to also capture unexpected errors (network failures, JSON parse errors). (req 1)",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Update `analyzeDirections` to check `.ok` on each fetchWeather result from Promise.all. If any failed, return `{ ok: false, error: { code: 'DIRECTION_ANALYSIS_ERROR', message } }`. On success, unwrap `.data` from each result for scoring. Return `{ ok: true, data: { origin, directions } }`. (req 2)",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Update `getWeather` handler callback to check the Result from fetchWeather: return `c.json(result.data)` on ok, or `c.json({ error: true, message: result.error.message }, 500)` on failure. (req 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Update `getDirections` handler callback to check the Result from analyzeDirections: same ok/error mapping as getWeather. (req 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Update `withValidatedCoords` — add a comment clarifying the try/catch is a safety net for unexpected runtime errors, not for expected function failures which now use Result. (req 4)",
+        "status": "done"
+      },
+      {
+        "id": "step_5",
+        "description": "Update `testFetchWeatherStructure` to unwrap `.data` from the Result. Add a new test `testFetchWeatherResultError` that verifies a bad-status API response returns `{ ok: false }` (via an impossible lat). Update handler-level tests if their assertions need adjusting. Run all tests. (req 5)",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781874013239514
+  ],
+  "approvalMessageId": 1781874629840624,
+  "workMessageIds": [
+    1781874679326474,
+    1781874721592387,
+    1781874753908175,
+    1781874754781124,
+    1781874763714789,
+    1781874799872287,
+    1781874800319969
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 18,
+    "outputTokens": 10793,
+    "costUsd": 3.6296804999999996,
+    "durationMs": 195650
+  },
+  "createdAt": "2026-06-19T13:00:12.827Z",
+  "updatedAt": "2026-06-19T13:13:45.423Z",
+  "completedAt": "2026-06-19T13:13:36.868Z"
+}

@@ -1,0 +1,32 @@
+{
+  "uid": "chg_mql0f17m_2f19cb7f-ec8a-4cac-9734-c6dddc65109c",
+  "id": 1781878441985230,
+  "category": "asset",
+  "key": "sailing-weather.js",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "afterSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql0bjjx_8dc4102a-184e-43ad-8d0b-e87254c333e8",
+    "turnIndex": 0,
+    "sessionId": "session_mqkwg8hd_00d23935-7940-476c-8ac4-d66c402eab29",
+    "changesetId": "cs_mql03itp_4c959b08-8b8b-437c-9af0-306361bf4759",
+    "toolCallId": "sevt_01Wbvhpkr3Zs6NvK7G4QcuXA"
+  },
+  "createdAt": "2026-06-19T14:14:01.949Z",
+  "undoable": true,
+  "turnId": "turn_mql0bjjx_8dc4102a-184e-43ad-8d0b-e87254c333e8",
+  "changesetId": "cs_mql03itp_4c959b08-8b8b-437c-9af0-306361bf4759",
+  "rationale": "Change default position from Marseille to Barcelona and add Get Location button click handler",
+  "implementation": "Changed boatPosition default to {lat: 41.39, lon: 2.17} (Barcelona). Added handleGetLocation() function with loading/error states on the button. Wired it up in setupEvents(). Kept the silent tryGeolocation on load as a fallback bonus.",
+  "workMessageId": 1781878441972715
+}

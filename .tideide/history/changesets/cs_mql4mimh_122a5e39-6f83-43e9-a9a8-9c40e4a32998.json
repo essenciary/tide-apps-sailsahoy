@@ -1,0 +1,28 @@
+{
+  "id": "cs_mql4mimh_122a5e39-6f83-43e9-a9a8-9c40e4a32998",
+  "sessionId": "session_mql1fh7h_39d4a6ea-4718-440d-bdc8-bd0924a9abc7",
+  "title": "Fix wind particle animation direction (compass-to-screen angle conversion)",
+  "description": null,
+  "status": "abandoned",
+  "plan": {
+    "summary": "The wind particle animation uses `(windDir + 180)` to convert the meteorological 'from' compass bearing to a 'to' direction, then feeds it directly to cos/sin. But cos/sin use math angles (0°=right), not compass bearings (0°=up). This causes particles to flow 90° off from the actual wind direction. The fix is to change `+180` to `+90`, which correctly converts compass-from to screen-angle-to in one step: `screenAngle = compassFrom + 90°`.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Fix the wind angle formula in `initParticles()` inside sailing-weather.js: change `(windDir + 180) * Math.PI / 180` to `(windDir + 90) * Math.PI / 180`, and update the comment to explain the compass→screen conversion.",
+        "status": "pending"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781885510124615
+  ],
+  "approvalMessageId": null,
+  "workMessageIds": [],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": null,
+  "createdAt": "2026-06-19T16:11:49.577Z",
+  "updatedAt": "2026-06-19T16:15:03.046Z",
+  "completedAt": null
+}

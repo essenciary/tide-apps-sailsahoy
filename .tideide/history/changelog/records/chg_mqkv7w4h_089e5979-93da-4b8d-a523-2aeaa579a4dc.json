@@ -1,0 +1,41 @@
+{
+  "uid": "chg_mqkv7w4h_089e5979-93da-4b8d-a523-2aeaa579a4dc",
+  "id": 1781869710732748,
+  "category": "handler",
+  "key": "serveApp",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "serveApp",
+    "source": "\n// Serve the main sailing weather app page\nasync function serveApp(c) {\n  const html = templates.get('sailing-app');\n  if (!html) return c.text('Template not found', 500);\n  return c.html(html);\n}\n",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_01LCkvH74tCDLzx8iTizwgJm"
+  },
+  "createdAt": "2026-06-19T11:48:30.688Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Serves the main sailing weather app page.",
+  "implementation": "Simple handler that returns the sailing-app template as HTML. No server-side data injection needed — the client fetches data via API calls.",
+  "workMessageId": 1781869710713496
+}

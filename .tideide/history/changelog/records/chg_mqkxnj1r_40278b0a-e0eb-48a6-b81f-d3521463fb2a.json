@@ -1,0 +1,31 @@
+{
+  "uid": "chg_mqkxnj1r_40278b0a-e0eb-48a6-b81f-d3521463fb2a",
+  "id": 1781873799491894,
+  "category": "function",
+  "key": "withValidatedCoords",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "withValidatedCoords",
+    "source": "\n// Shared coordinate validation + error wrapper for weather endpoints.\n// Parses lat/lon from query params, validates ranges, calls fn(lat, lon),\n// and catches unexpected errors with a caller-specific label.\nasync function withValidatedCoords(c: any, fn: (lat: number, lon: number) => Promise<any>, errorLabel: string) {\n  const lat = parseFloat(c.req.query('lat'));\n  const lon = parseFloat(c.req.query('lon'));\n\n  // Reject missing or non-numeric coordinates\n  if (isNaN(lat) || isNaN(lon)) {\n    return c.json({ error: true, message: 'lat and lon query parameters are required' }, 400);\n  }\n\n  // Reject out-of-range values\n  if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {\n    return c.json({ error: true, message: 'Invalid coordinates: lat must be -90..90, lon must be -180..180' }, 400);\n  }\n\n  // Delegate to the caller's logic; wrap unexpected failures in a 500\n  try {\n    return await fn(lat, lon);\n  } catch (err) {\n    log.error(errorLabel + ': ' + err.message);\n    return c.json({ error: true, message: errorLabel }, 500);\n  }\n}\n",
+    "module": "weather",
+    "purpose": "Parse and validate lat/lon from query params, then delegate to a callback with error wrapping.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+    "toolCallId": "sevt_01Ni1zE6Yp8u48zdxEeAGV4M"
+  },
+  "createdAt": "2026-06-19T12:56:39.468Z",
+  "undoable": true,
+  "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+  "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+  "rationale": "Both getWeather and getDirections have identical ~15-line blocks for coordinate parsing, NaN checks, range validation, and try/catch error wrapping. Extracting this eliminates the duplication.",
+  "implementation": "Accepts Hono context, an async callback, and an error label. Returns 400 early for missing/invalid coords, delegates to callback on success, wraps unexpected errors in a 500 with the caller-specific label for distinguishable logs.",
+  "workMessageId": 1781873799653930
+}

@@ -1,0 +1,53 @@
+{
+  "id": "cs_mql9kttv_c06da2fe-e5dc-4b1f-84b8-73a919928346",
+  "sessionId": "session_mql6pkal_e0cbb7ad-f966-446c-bab3-73b0c925a159",
+  "title": "Stagger direction analysis API requests to avoid rate limiting",
+  "description": null,
+  "status": "completed",
+  "plan": {
+    "summary": "The `analyzeDirections` function currently fires 8 `fetchWeather` calls simultaneously via `Promise.all`, each of which makes 2 Open-Meteo API calls (weather + marine) — 16 concurrent requests. This consistently triggers Open-Meteo's burst rate limit (429), causing the compass rose to show blank. The fix is to stagger the 8 requests into smaller batches with a short delay between batches, keeping the total time reasonable while staying under the rate limit. I'll batch 2 directions at a time (4 API calls per batch) with a 250ms pause between batches, for a total of ~1s extra latency — a worthwhile tradeoff for reliability.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Update the `analyzeDirections` function to replace `Promise.all` for all 8 fetches with a batched approach: process 2 directions at a time using `Promise.all` for each batch, with a 250ms delay between batches. This keeps the total added latency to ~1s while limiting concurrent API calls to 4 (2 weather + 2 marine). The rest of the scoring/hourly logic stays unchanged.",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Add a config value `DIRECTION_BATCH_SIZE` (default 2) to control how many directions are fetched in parallel per batch, making it tunable without code changes.",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Update the `testDirectionsHourlyStructure` test to verify the staggered approach still returns correct data, and add a new test `testDirectionsBatchConfig` to verify the batch size config is respected.",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Run all tests and verify test coverage.",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781893829630291
+  ],
+  "approvalMessageId": 1781893869487594,
+  "workMessageIds": [
+    1781893890282039,
+    1781893938681653,
+    1781893977046577,
+    1781893977681409
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 11,
+    "outputTokens": 6896,
+    "costUsd": 0.61490475,
+    "durationMs": 146597
+  },
+  "createdAt": "2026-06-19T18:30:28.867Z",
+  "updatedAt": "2026-06-19T18:33:35.859Z",
+  "completedAt": "2026-06-19T18:33:26.029Z"
+}

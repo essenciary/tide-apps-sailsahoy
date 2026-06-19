@@ -1,0 +1,120 @@
+[
+  {
+    "method": "GET",
+    "path": "/",
+    "handlerName": "serveApp",
+    "registeredAt": "2026-06-19T11:48:35.495Z",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather"
+  },
+  {
+    "method": "GET",
+    "path": "/api/directions",
+    "handlerName": "getDirections",
+    "registeredAt": "2026-06-19T11:45:37.668Z",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Direction analysis with scores and ratings for 8 headings",
+          "schema": {
+            "properties": {
+              "directions": {
+                "type": "array"
+              },
+              "origin": {
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Direction analysis error"
+        }
+      },
+      "summary": "Analyze sailing conditions in 8 compass directions",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather"
+  },
+  {
+    "method": "GET",
+    "path": "/api/weather",
+    "handlerName": "getWeather",
+    "registeredAt": "2026-06-19T11:45:37.283Z",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Weather data with current conditions and hourly forecast",
+          "schema": {
+            "properties": {
+              "current": {
+                "type": "object"
+              },
+              "hourly": {
+                "type": "array"
+              },
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error"
+        }
+      },
+      "summary": "Get weather data for a position",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather"
+  }
+]

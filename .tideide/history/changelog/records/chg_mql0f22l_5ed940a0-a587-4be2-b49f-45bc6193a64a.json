@@ -1,0 +1,32 @@
+{
+  "uid": "chg_mql0f22l_5ed940a0-a587-4be2-b49f-45bc6193a64a",
+  "id": 1781878443073548,
+  "category": "asset",
+  "key": "sailing-weather.css",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "sailing-weather.css",
+    "contentBase64": "",
+    "mimeType": "text/css"
+  },
+  "afterSnapshot": {
+    "name": "sailing-weather.css",
+    "contentBase64": "",
+    "mimeType": "text/css"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql0bjjx_8dc4102a-184e-43ad-8d0b-e87254c333e8",
+    "turnIndex": 0,
+    "sessionId": "session_mqkwg8hd_00d23935-7940-476c-8ac4-d66c402eab29",
+    "changesetId": "cs_mql03itp_4c959b08-8b8b-437c-9af0-306361bf4759",
+    "toolCallId": "sevt_01GXeDQai6bT9KfW2iTX54KV"
+  },
+  "createdAt": "2026-06-19T14:14:03.063Z",
+  "undoable": true,
+  "turnId": "turn_mql0bjjx_8dc4102a-184e-43ad-8d0b-e87254c333e8",
+  "changesetId": "cs_mql03itp_4c959b08-8b8b-437c-9af0-306361bf4759",
+  "rationale": "Add styles for the new location button and action-buttons container",
+  "implementation": "Replaced the standalone #refresh-btn positioning with an #action-buttons flex container that holds both buttons. Added #location-btn styles with loading (pulse animation) and error (red border flash) states. Both buttons share the same base nautical dark theme.",
+  "workMessageId": 1781878443141960
+}

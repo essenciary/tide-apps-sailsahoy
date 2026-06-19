@@ -1,0 +1,35 @@
+{
+  "uid": "chg_mql7nupf_1317e290-d3f6-45e9-996b-5d5ea6b882ad",
+  "id": 1781890610754583,
+  "category": "test",
+  "key": "testServeApp",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "testServeApp",
+    "source": "\nasync function testServeApp() {\n  const BASE = 'http://localhost:3001';\n  const res = await fetch(`${BASE}/`);\n  assertEquals(res.status, 200, 'Should return 200');\n\n  const html = await res.text();\n\n  // Check for required structural elements\n  assert(html.includes('id=\"map\"'), 'Should contain map div');\n  assert(html.includes('id=\"weather-canvas\"'), 'Should contain weather canvas');\n  assert(html.includes('id=\"conditions-panel\"'), 'Should contain conditions panel');\n  assert(html.includes('id=\"compass-panel\"'), 'Should contain compass panel');\n  assert(html.includes('id=\"timeline-panel\"'), 'Should contain timeline panel');\n  assert(html.includes('id=\"info-bar\"'), 'Should contain info bar');\n\n  // Check for asset references\n  assert(html.includes('sailing-weather.css'), 'Should reference app CSS');\n  assert(html.includes('sailing-weather.js'), 'Should reference app JS');\n\n  // Check for Leaflet references\n  assert(html.includes('leaflet'), 'Should reference Leaflet');\n\n  // Check meta tags\n  assert(html.includes('<!DOCTYPE html>'), 'Should have doctype');\n  assert(html.includes('viewport'), 'Should have viewport meta');\n}\n",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "testServeApp",
+    "source": "\nasync function testServeApp() {\n  const BASE = 'http://localhost:3001';\n  const res = await fetch(BASE + '/');\n  assertEquals(res.status, 200, 'Should return 200');\n\n  const html = await res.text();\n\n  // Check for required structural elements\n  assert(html.includes('id=\"map\"'), 'Should contain map div');\n  assert(html.includes('id=\"weather-canvas\"'), 'Should contain weather canvas');\n  assert(html.includes('id=\"conditions-panel\"'), 'Should contain conditions panel');\n  assert(html.includes('id=\"compass-panel\"'), 'Should contain compass panel');\n  assert(html.includes('id=\"timeline-panel\"'), 'Should contain timeline panel');\n  assert(html.includes('id=\"info-bar\"'), 'Should contain info bar');\n\n  // Check for asset references\n  assert(html.includes('sailing-weather.css'), 'Should reference app CSS');\n  assert(html.includes('sailing-weather.js'), 'Should reference app JS');\n\n  // Check for Leaflet references\n  assert(html.includes('leaflet'), 'Should reference Leaflet');\n\n  // Check meta tags\n  assert(html.includes('<!DOCTYPE html>'), 'Should have doctype');\n  assert(html.includes('viewport'), 'Should have viewport meta');\n\n  // Check play button is present with correct attributes\n  assert(html.includes('id=\"timeline-play-btn\"'), 'Should contain play button');\n  assert(html.includes('aria-label=\"Play forecast animation\"'), 'Play button should have aria-label');\n  assert(html.includes('data-play-interval=\"1500\"'), 'Play button should have injected config interval');\n\n  // Verify no unresolved template placeholders\n  assert(!html.includes('{{PLAY_INTERVAL_MS}}'), 'Should not contain unresolved placeholder');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql7cgfd_bd523c05-fae8-4421-93b5-999f71e836f2",
+    "turnIndex": 2,
+    "sessionId": "session_mql6pkal_e0cbb7ad-f966-446c-bab3-73b0c925a159",
+    "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
+    "toolCallId": "sevt_01VaM1QhSCCUXhnh9teAq8PT"
+  },
+  "createdAt": "2026-06-19T17:36:50.733Z",
+  "undoable": true,
+  "turnId": "turn_mql7cgfd_bd523c05-fae8-4421-93b5-999f71e836f2",
+  "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
+  "rationale": "Update to verify the play button and its data-play-interval attribute are present in the served HTML.",
+  "implementation": "Add assertions for the play button ID, aria-label, and the injected config data attribute.",
+  "workMessageId": 1781890610903201
+}

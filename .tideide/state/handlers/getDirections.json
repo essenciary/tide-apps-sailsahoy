@@ -1,0 +1,49 @@
+{
+  "name": "getDirections",
+  "source": "\n// Analyze sailing conditions in 8 compass directions — delegates coord validation to shared helper\nasync function getDirections(c) {\n  return functions.call('withValidatedCoords', c, async (lat, lon) => {\n    const result = await functions.call('analyzeDirections', lat, lon);\n\n    // Map Result to HTTP response — success returns data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n    return c.json(result.data);\n  }, 'Failed to analyze directions');\n}\n",
+  "registeredAt": "2026-06-19T18:29:23.364Z",
+  "schema": {
+    "query": {
+      "lat": {
+        "description": "Latitude (-90 to 90)",
+        "required": true,
+        "type": "number"
+      },
+      "lon": {
+        "description": "Longitude (-180 to 180)",
+        "required": true,
+        "type": "number"
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Direction analysis with scores and ratings for 8 headings",
+        "schema": {
+          "properties": {
+            "directions": {
+              "type": "array"
+            },
+            "origin": {
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "400": {
+        "description": "Missing or invalid coordinates"
+      },
+      "500": {
+        "description": "Direction analysis error"
+      }
+    },
+    "summary": "Analyze sailing conditions in 8 compass directions",
+    "tags": [
+      "weather"
+    ]
+  },
+  "module": "weather",
+  "purpose": "Analyze sailing conditions in 8 compass directions, mapping Result to HTTP response.",
+  "runtimeId": "typescript",
+  "language": "typescript"
+}

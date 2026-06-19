@@ -1,0 +1,37 @@
+[
+  {
+    "name": "COMPASS_DIRECTIONS",
+    "value": 8,
+    "description": "Number of cardinal/intercardinal directions to analyze (8 = N/NE/E/SE/S/SW/W/NW)",
+    "updatedAt": "2026-06-19T11:43:50.790Z",
+    "module": "weather"
+  },
+  {
+    "name": "DEFAULT_FORECAST_HOURS",
+    "value": 48,
+    "description": "Number of hours of forecast data to fetch from Open-Meteo",
+    "updatedAt": "2026-06-19T11:43:50.023Z",
+    "module": "weather"
+  },
+  {
+    "name": "DIRECTION_BATCH_SIZE",
+    "value": 2,
+    "description": "Number of directions to fetch in parallel per batch (2 = 4 API calls per batch). Lower = safer for rate limits, higher = faster.",
+    "updatedAt": "2026-06-19T18:31:30.087Z",
+    "module": "weather"
+  },
+  {
+    "name": "DIRECTION_SAMPLE_DISTANCE_NM",
+    "value": 30,
+    "description": "Distance in nautical miles to sample weather in each compass direction",
+    "updatedAt": "2026-06-19T11:43:50.393Z",
+    "module": "weather"
+  },
+  {
+    "name": "TIMELINE_PLAY_INTERVAL_MS",
+    "value": 1500,
+    "description": "Milliseconds between auto-advance steps when playing the forecast timeline",
+    "updatedAt": "2026-06-19T17:28:30.811Z",
+    "module": "weather"
+  }
+]

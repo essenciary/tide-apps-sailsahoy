@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqkv1vui_bdd00d3a-28b8-4dcd-9fa5-a82f221c4e74",
+  "id": 1781869430453284,
+  "category": "config",
+  "key": "DIRECTION_SAMPLE_DISTANCE_NM",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "DIRECTION_SAMPLE_DISTANCE_NM",
+    "value": 30,
+    "description": "Distance in nautical miles to sample weather in each compass direction"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_01U7vUGscGTXND2gu2YBXkJF"
+  },
+  "createdAt": "2026-06-19T11:43:50.393Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Created config \"DIRECTION_SAMPLE_DISTANCE_NM\" to satisfy the requested change.",
+  "implementation": "Used the existing set_config mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781869430400973
+}

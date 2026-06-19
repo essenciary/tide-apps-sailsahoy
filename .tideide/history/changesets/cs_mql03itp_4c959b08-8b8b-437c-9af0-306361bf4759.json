@@ -1,0 +1,52 @@
+{
+  "id": "cs_mql03itp_4c959b08-8b8b-437c-9af0-306361bf4759",
+  "sessionId": "session_mqkwg8hd_00d23935-7940-476c-8ac4-d66c402eab29",
+  "title": "Add visible Get Location button and change default position to Spain",
+  "description": "The app currently defaults to Marseille, France and only tries geolocation silently on page load — which fails in iframe/preview contexts. We need a visible button to trigger geolocation and a sensible default for a user in Spain.",
+  "status": "completed",
+  "plan": {
+    "summary": "Fix two UX issues: (1) Change the default boat position from Marseille, France to Barcelona, Spain (41.39°N, 2.17°E) which is a major sailing hub. (2) Add a visible '📍 My Location' button to the map UI that triggers the browser's geolocation API on click, so users in iframe/preview contexts can still locate themselves. The button will be styled to match the existing dark nautical theme and placed near the refresh button at the bottom-right.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Update sailing-weather.js: change default boatPosition from {lat: 43.3, lon: 5.37} (Marseille) to {lat: 41.39, lon: 2.17} (Barcelona, Spain). Add a 'Get Location' button click handler that calls navigator.geolocation.getCurrentPosition and moves the boat marker + refreshes weather. Keep the silent tryGeolocation on load as a bonus, but the button is the primary UX path. (req 1, 2)",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Update sailing-app template: add a 'Get Location' button element (📍 icon) next to the refresh button at the bottom-right. (req 2)",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Update sailing-weather.css: add styles for the new location button — matching the refresh button's nautical dark theme with hover/active states. (req 2)",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Screenshot and verify both changes are visible and the app loads centered on Spain with the new button visible. (req 1, 2)",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781877905336073
+  ],
+  "approvalMessageId": 1781878279132391,
+  "workMessageIds": [
+    1781878441972715,
+    1781878442527899,
+    1781878443141960
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 12,
+    "outputTokens": 14373,
+    "costUsd": 3.1279005,
+    "durationMs": 212470
+  },
+  "createdAt": "2026-06-19T14:05:04.909Z",
+  "updatedAt": "2026-06-19T14:14:51.576Z",
+  "completedAt": "2026-06-19T14:14:45.246Z"
+}

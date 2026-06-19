@@ -1,0 +1,59 @@
+{
+  "uid": "chg_mql7m0ud_fec05a82-2287-4ac6-8f1e-4ee1e84ad853",
+  "id": 1781890525429142,
+  "category": "handler",
+  "key": "serveApp",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "serveApp",
+    "source": "\n// Serve the main sailing weather app page\nasync function serveApp(c) {\n  const html = templates.get('sailing-app');\n  if (!html) return c.text('Template not found', 500);\n  return c.html(html);\n}\n",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "serveApp",
+    "source": "\n// Serve the main sailing weather app page, injecting server-side config\nasync function serveApp(c) {\n  const rawHtml = templates.get('sailing-app');\n  if (!rawHtml) return c.text('Template not found', 500);\n\n  // Inject the playback interval config into the template\n  const intervalMs = config.get('TIMELINE_PLAY_INTERVAL_MS') || 1500;\n  const html = rawHtml.replace('{{PLAY_INTERVAL_MS}}', String(intervalMs));\n\n  return c.html(html);\n}\n",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Serve the main sailing weather app page with injected config values.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql7cgfd_bd523c05-fae8-4421-93b5-999f71e836f2",
+    "turnIndex": 2,
+    "sessionId": "session_mql6pkal_e0cbb7ad-f966-446c-bab3-73b0c925a159",
+    "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
+    "toolCallId": "sevt_011eg46QL8GDTxa6hTfEj5RY"
+  },
+  "createdAt": "2026-06-19T17:35:25.376Z",
+  "undoable": true,
+  "turnId": "turn_mql7cgfd_bd523c05-fae8-4421-93b5-999f71e836f2",
+  "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
+  "rationale": "Inject TIMELINE_PLAY_INTERVAL_MS into the template so the client-side JS can read it without an extra API call.",
+  "implementation": "Simple string replacement of the {{PLAY_INTERVAL_MS}} placeholder with the config value, falling back to 1500ms.",
+  "workMessageId": 1781890525571910
+}

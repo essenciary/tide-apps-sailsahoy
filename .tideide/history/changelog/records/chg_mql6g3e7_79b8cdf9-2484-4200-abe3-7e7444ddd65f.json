@@ -1,0 +1,32 @@
+{
+  "uid": "chg_mql6g3e7_79b8cdf9-2484-4200-abe3-7e7444ddd65f",
+  "id": 1781888569160203,
+  "category": "asset",
+  "key": "sailing-weather.css",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "sailing-weather.css",
+    "contentBase64": "",
+    "mimeType": "text/css"
+  },
+  "afterSnapshot": {
+    "name": "sailing-weather.css",
+    "contentBase64": "",
+    "mimeType": "text/css"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql66qld_5f945d19-e429-446a-a29a-8faaec3cb503",
+    "turnIndex": 3,
+    "sessionId": "session_mql1fh7h_39d4a6ea-4718-440d-bdc8-bd0924a9abc7",
+    "changesetId": "cs_mql5qsa7_53709843-4a12-40cd-a8ae-ae615de71a1a",
+    "toolCallId": "sevt_01DDipErZcbcUGjGDRdij6Sv"
+  },
+  "createdAt": "2026-06-19T17:02:49.131Z",
+  "undoable": true,
+  "turnId": "turn_mql66qld_5f945d19-e429-446a-a29a-8faaec3cb503",
+  "changesetId": "cs_mql5qsa7_53709843-4a12-40cd-a8ae-ae615de71a1a",
+  "rationale": "Add styles for the new layer toggle panel — glass-morphism panel, custom checkbox styling with accent color, flex-row layout, and mobile responsive adjustments.",
+  "implementation": "Reuses the existing panel pattern (glass-morphism, border, shadow) and positions the layer panel above action buttons with absolute positioning. Custom checkbox uses appearance:none with a checkmark pseudo-element.",
+  "workMessageId": 1781888569295917
+}

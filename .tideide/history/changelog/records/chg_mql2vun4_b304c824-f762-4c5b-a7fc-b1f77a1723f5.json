@@ -1,0 +1,32 @@
+{
+  "uid": "chg_mql2vun4_b304c824-f762-4c5b-a7fc-b1f77a1723f5",
+  "id": 1781882585886941,
+  "category": "asset",
+  "key": "sailing-weather.js",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "afterSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql2o91f_90c9f335-0023-440d-84df-c830cd162f64",
+    "turnIndex": 0,
+    "sessionId": "session_mql1fh7h_39d4a6ea-4718-440d-bdc8-bd0924a9abc7",
+    "changesetId": "cs_mql1smks_e2dfb180-d096-4f8d-bd6f-97d1e61bb971",
+    "toolCallId": "sevt_017AoUrXrv1QTpmE6Zfuz4op"
+  },
+  "createdAt": "2026-06-19T15:23:05.810Z",
+  "undoable": true,
+  "turnId": "turn_mql2o91f_90c9f335-0023-440d-84df-c830cd162f64",
+  "changesetId": "cs_mql1smks_e2dfb180-d096-4f8d-bd6f-97d1e61bb971",
+  "rationale": "Add missing weather fields to the conditions panel: humidity, wave direction, wave period, and always-visible precipitation.",
+  "implementation": "Only the updateConditionsPanel function is modified. Added a Humidity row after Temperature using data.humidity. Expanded the Waves row to append compass direction via degToCompass(data.waveDirection). Added a Wave Period row showing data.wavePeriod in seconds. Changed precipitation to always render (removed the > 0 conditional).",
+  "workMessageId": 1781882585951430
+}

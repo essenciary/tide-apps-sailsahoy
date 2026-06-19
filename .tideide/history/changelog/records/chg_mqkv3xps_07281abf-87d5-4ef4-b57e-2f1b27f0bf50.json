@@ -1,0 +1,70 @@
+{
+  "uid": "chg_mqkv3xps_07281abf-87d5-4ef4-b57e-2f1b27f0bf50",
+  "id": 1781869526158457,
+  "category": "handler",
+  "key": "getDirections",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "getDirections",
+    "source": "\n// Analyze sailing conditions in 8 compass directions from a given position\nasync function getDirections(c) {\n  const lat = parseFloat(c.req.query('lat'));\n  const lon = parseFloat(c.req.query('lon'));\n\n  // Validate coordinates\n  if (isNaN(lat) || isNaN(lon)) {\n    return c.json({ error: true, message: 'lat and lon query parameters are required' }, 400);\n  }\n  if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {\n    return c.json({ error: true, message: 'Invalid coordinates: lat must be -90..90, lon must be -180..180' }, 400);\n  }\n\n  try {\n    const analysis = await functions.call('analyzeDirections', lat, lon);\n    return c.json(analysis);\n  } catch (err) {\n    log.error('Direction analysis failed: ' + err.message);\n    return c.json({ error: true, message: 'Failed to analyze directions' }, 500);\n  }\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Direction analysis with scores and ratings for 8 headings",
+          "schema": {
+            "properties": {
+              "directions": {
+                "type": "array"
+              },
+              "origin": {
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Direction analysis error"
+        }
+      },
+      "summary": "Analyze sailing conditions in 8 compass directions",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_016tPoccFYecS5LsNwEC1tco"
+  },
+  "createdAt": "2026-06-19T11:45:26.127Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "API endpoint for the compass rose direction analysis. Provides scored and rated headings for the UI.",
+  "implementation": "Extracts lat/lon from query params, validates them, then delegates to analyzeDirections function. Returns 8 direction scores with color ratings and text summaries.",
+  "workMessageId": 1781869526173343
+}

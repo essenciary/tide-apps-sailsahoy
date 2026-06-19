@@ -1,0 +1,32 @@
+{
+  "uid": "chg_mql58fi8_0e9bc6de-c11a-4b77-b501-01dc4439759a",
+  "id": 1781886531974510,
+  "category": "asset",
+  "key": "sailing-weather.js",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "afterSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql55sgy_4d367eb1-68f2-4061-9896-983cf11c458f",
+    "turnIndex": 1,
+    "sessionId": "session_mql1fh7h_39d4a6ea-4718-440d-bdc8-bd0924a9abc7",
+    "changesetId": "cs_mql4qnwn_80eb3015-fdad-4914-bb76-5b23cc31e3cb",
+    "toolCallId": "sevt_011Gue167PsLEnnHBqdDgDmi"
+  },
+  "createdAt": "2026-06-19T16:28:51.963Z",
+  "undoable": true,
+  "turnId": "turn_mql55sgy_4d367eb1-68f2-4061-9896-983cf11c458f",
+  "changesetId": "cs_mql4qnwn_80eb3015-fdad-4914-bb76-5b23cc31e3cb",
+  "rationale": "Fix wind particle direction: the old formula (windDir + 180) incorrectly mapped compass bearings to canvas angles, causing particles to blow 90° off. The corrected formula (windDir + 90) properly converts meteorological compass bearings (CW from North) to canvas angles (CCW from East, Y-down).",
+  "implementation": "Single-line change in initParticles(): replaced (windDir + 180) with (windDir + 90). Added a detailed comment block explaining the compass-to-canvas coordinate conversion.",
+  "workMessageId": 1781886532148766
+}

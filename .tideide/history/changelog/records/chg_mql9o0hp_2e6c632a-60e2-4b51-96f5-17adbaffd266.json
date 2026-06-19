@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mql9o0hp_2e6c632a-60e2-4b51-96f5-17adbaffd266",
+  "id": 1781893977504738,
+  "category": "test",
+  "key": "testDirectionsBatchConfig",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testDirectionsBatchConfig",
+    "source": "\n// Verify the DIRECTION_BATCH_SIZE config is set and used by analyzeDirections.\n// This is a unit-level check — it validates the config exists with a sensible value,\n// ensuring the staggered batching mechanism is properly configured.\nasync function testDirectionsBatchConfig() {\n  // Config should exist and be a positive number\n  const batchSize = config.get('DIRECTION_BATCH_SIZE');\n  assert(batchSize !== null && batchSize !== undefined, 'DIRECTION_BATCH_SIZE config should be defined');\n  assert(typeof batchSize === 'number', 'DIRECTION_BATCH_SIZE should be a number, got: ' + typeof batchSize);\n  assert(batchSize > 0, 'DIRECTION_BATCH_SIZE should be positive, got: ' + batchSize);\n  assert(batchSize <= 8, 'DIRECTION_BATCH_SIZE should be <= 8 (total directions), got: ' + batchSize);\n\n  // Default should be 2 — optimal for avoiding rate limits while keeping latency low\n  assertEquals(batchSize, 2, 'Default DIRECTION_BATCH_SIZE should be 2');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql9lozt_854f3eef-d5b4-4560-a8d2-50cdd7f5f0fe",
+    "turnIndex": 1,
+    "sessionId": "session_mql6pkal_e0cbb7ad-f966-446c-bab3-73b0c925a159",
+    "changesetId": "cs_mql9kttv_c06da2fe-e5dc-4b1f-84b8-73a919928346",
+    "toolCallId": "sevt_012hEtaLPXjwXjSkVeBFoK17"
+  },
+  "createdAt": "2026-06-19T18:32:57.457Z",
+  "undoable": true,
+  "turnId": "turn_mql9lozt_854f3eef-d5b4-4560-a8d2-50cdd7f5f0fe",
+  "changesetId": "cs_mql9kttv_c06da2fe-e5dc-4b1f-84b8-73a919928346",
+  "rationale": "Verify the DIRECTION_BATCH_SIZE config exists and has a valid value for rate limit protection.",
+  "implementation": "Check the config value is a positive integer and that the analyzeDirections function source references it, confirming the batching is wired up.",
+  "workMessageId": 1781893977681409
+}

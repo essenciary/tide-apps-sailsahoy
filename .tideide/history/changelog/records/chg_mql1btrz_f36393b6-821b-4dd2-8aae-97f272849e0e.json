@@ -1,0 +1,32 @@
+{
+  "uid": "chg_mql1btrz_f36393b6-821b-4dd2-8aae-97f272849e0e",
+  "id": 1781879972007868,
+  "category": "asset",
+  "key": "sailing-weather.js",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "afterSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql19m2w_45b96c22-977b-479b-be17-6db0340ae7c8",
+    "turnIndex": 2,
+    "sessionId": "session_mqkwg8hd_00d23935-7940-476c-8ac4-d66c402eab29",
+    "changesetId": "cs_mql18b8d_c9423b77-a220-4cf0-9c36-b561d6aae042",
+    "toolCallId": "sevt_01FfSZLH2Vc7FSd6whiqMebd"
+  },
+  "createdAt": "2026-06-19T14:39:31.963Z",
+  "undoable": true,
+  "turnId": "turn_mql19m2w_45b96c22-977b-479b-be17-6db0340ae7c8",
+  "changesetId": "cs_mql18b8d_c9423b77-a220-4cf0-9c36-b561d6aae042",
+  "rationale": "Add e.stopPropagation() to prevent location button clicks from also triggering the map's click-to-move handler. Replace the subtle .error class flash with a visible showToast() notification that tells the user why geolocation failed.",
+  "implementation": "Added a showToast() helper that creates a toast element inside #toast-container, auto-dismisses after 5s, and uses CSS animation. Updated handleGetLocation to accept the event, call stopPropagation, and invoke showToast on both geolocation-unavailable and permission-denied cases. Also added a title tooltip to the button.",
+  "workMessageId": 1781879972077048
+}

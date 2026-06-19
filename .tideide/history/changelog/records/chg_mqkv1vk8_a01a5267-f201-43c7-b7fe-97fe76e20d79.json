@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqkv1vk8_a01a5267-f201-43c7-b7fe-97fe76e20d79",
+  "id": 1781869430059620,
+  "category": "config",
+  "key": "DEFAULT_FORECAST_HOURS",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "DEFAULT_FORECAST_HOURS",
+    "value": 48,
+    "description": "Number of hours of forecast data to fetch from Open-Meteo"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_014afx8Jnb3bf4rvvsbr86Nf"
+  },
+  "createdAt": "2026-06-19T11:43:50.023Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Created config \"DEFAULT_FORECAST_HOURS\" to satisfy the requested change.",
+  "implementation": "Used the existing set_config mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781869430077560
+}

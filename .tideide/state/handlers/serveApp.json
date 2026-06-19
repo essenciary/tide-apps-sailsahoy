@@ -1,0 +1,20 @@
+{
+  "name": "serveApp",
+  "source": "\n// Serve the main sailing weather app page, injecting server-side config\nasync function serveApp(c) {\n  const rawHtml = templates.get('sailing-app');\n  if (!rawHtml) return c.text('Template not found', 500);\n\n  // Inject the playback interval config into the template\n  const intervalMs = config.get('TIMELINE_PLAY_INTERVAL_MS') || 1500;\n  const html = rawHtml.replace('{{PLAY_INTERVAL_MS}}', String(intervalMs));\n\n  return c.html(html);\n}\n",
+  "registeredAt": "2026-06-19T18:29:23.365Z",
+  "schema": {
+    "responses": {
+      "200": {
+        "description": "HTML page with interactive sailing weather map"
+      }
+    },
+    "summary": "Serve the sailing weather app page",
+    "tags": [
+      "weather"
+    ]
+  },
+  "module": "weather",
+  "purpose": "Serve the main sailing weather app page with injected config values.",
+  "runtimeId": "typescript",
+  "language": "typescript"
+}

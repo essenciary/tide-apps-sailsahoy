@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqkxojm4_04209b26-e3c8-4339-9ff2-e462bd5979fb",
+  "id": 1781873846879673,
+  "category": "test",
+  "key": "testWeatherPartialParams",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testWeatherPartialParams",
+    "source": "\n// Verify /api/weather returns 400 when only lat is provided (lon missing → NaN)\nasync function testWeatherPartialParams() {\n  const res = await fetch('http://localhost:3001/api/weather?lat=45');\n  assertEquals(res.status, 400);\n  const body = await res.json();\n  assertEquals(body.error, true);\n  assertEquals(body.message, 'lat and lon query parameters are required');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+    "toolCallId": "sevt_01UVS94pfZSgnmP6ST1749ub"
+  },
+  "createdAt": "2026-06-19T12:57:26.858Z",
+  "undoable": true,
+  "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+  "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+  "rationale": "Created test \"testWeatherPartialParams\" to satisfy the requested change.",
+  "implementation": "Used the existing define_test mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781873846885014
+}

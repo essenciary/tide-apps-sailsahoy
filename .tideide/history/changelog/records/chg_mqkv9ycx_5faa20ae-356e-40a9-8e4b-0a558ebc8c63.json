@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqkv9ycx_5faa20ae-356e-40a9-8e4b-0a558ebc8c63",
+  "id": 1781869806897318,
+  "category": "test",
+  "key": "testFetchWeatherStructure",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testFetchWeatherStructure",
+    "source": "\nasync function testFetchWeatherStructure() {\n  // Fetch weather for Marseille — a known coastal location\n  const result = await functions.call('fetchWeather', 43.3, 5.37);\n\n  // Verify top-level structure\n  assert(result.latitude !== undefined, 'Should have latitude');\n  assert(result.longitude !== undefined, 'Should have longitude');\n  assert(result.current !== undefined, 'Should have current conditions');\n  assert(result.hourly !== undefined, 'Should have hourly forecast');\n  assert(Array.isArray(result.hourly), 'Hourly should be an array');\n  assert(result.hourly.length > 0, 'Should have at least one hourly entry');\n\n  // Verify current conditions fields\n  const curr = result.current;\n  assert(typeof curr.temperature === 'number', 'Temperature should be a number');\n  assert(typeof curr.windSpeed === 'number', 'Wind speed should be a number');\n  assert(typeof curr.windDirection === 'number', 'Wind direction should be a number');\n  assert(typeof curr.windGusts === 'number', 'Wind gusts should be a number');\n  assert(typeof curr.pressure === 'number', 'Pressure should be a number');\n  assert(typeof curr.cloudCover === 'number', 'Cloud cover should be a number');\n\n  // Wind speed should be in knots — reasonable range 0-100\n  assert(curr.windSpeed >= 0 && curr.windSpeed < 100, 'Wind speed in knots should be 0-100');\n\n  // Pressure should be in hPa — reasonable range 950-1050\n  assert(curr.pressure > 900 && curr.pressure < 1100, 'Pressure in hPa should be 900-1100');\n\n  // Temperature in °C — reasonable range -50 to 60\n  assert(curr.temperature > -50 && curr.temperature < 60, 'Temperature in °C should be -50 to 60');\n\n  // Wind direction 0-360 degrees\n  assert(curr.windDirection >= 0 && curr.windDirection <= 360, 'Wind direction should be 0-360');\n\n  // Verify hourly entry structure matches current\n  const hour = result.hourly[0];\n  assert(typeof hour.windSpeed === 'number', 'Hourly wind speed should be a number');\n  assert(typeof hour.temperature === 'number', 'Hourly temperature should be a number');\n  assert(hour.time !== undefined, 'Hourly entry should have a time');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_01Ui9TpTGp5RhBg4ZroGjnkL"
+  },
+  "createdAt": "2026-06-19T11:50:06.895Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Tests the fetchWeather function returns properly structured data with correct unit conversions.",
+  "implementation": "Calls fetchWeather with a known coastal position (Marseille) and verifies the response structure contains all expected fields with reasonable value ranges for nautical/metric units.",
+  "workMessageId": 1781869806992176
+}

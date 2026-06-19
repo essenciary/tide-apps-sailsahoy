@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqkv9yq9_e5374690-3af3-4087-97be-7aeff25899d3",
+  "id": 1781869807412255,
+  "category": "test",
+  "key": "testConfigsExist",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testConfigsExist",
+    "source": "\nasync function testConfigsExist() {\n  // Verify all required configs exist with correct values\n  const forecastHours = config.get('DEFAULT_FORECAST_HOURS');\n  assertEquals(forecastHours, 48, 'DEFAULT_FORECAST_HOURS should be 48');\n\n  const sampleDistance = config.get('DIRECTION_SAMPLE_DISTANCE_NM');\n  assertEquals(sampleDistance, 30, 'DIRECTION_SAMPLE_DISTANCE_NM should be 30');\n\n  const compassDirs = config.get('COMPASS_DIRECTIONS');\n  assertEquals(compassDirs, 8, 'COMPASS_DIRECTIONS should be 8');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_01517wLo6ueXAkdF7PKVnYyw"
+  },
+  "createdAt": "2026-06-19T11:50:07.374Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Verifies all required app configs are set with correct values.",
+  "implementation": "Reads each config value and checks it matches the expected default.",
+  "workMessageId": 1781869807408970
+}

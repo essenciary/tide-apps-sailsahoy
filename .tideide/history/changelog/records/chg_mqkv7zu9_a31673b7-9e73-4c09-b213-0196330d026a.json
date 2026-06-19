@@ -1,0 +1,40 @@
+{
+  "uid": "chg_mqkv7zu9_a31673b7-9e73-4c09-b213-0196330d026a",
+  "id": 1781869715533077,
+  "category": "route",
+  "key": "GET /",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "method": "GET",
+    "path": "/",
+    "handlerName": "serveApp",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_01TuU3pNp8rBT2hKJap1z7Mh"
+  },
+  "createdAt": "2026-06-19T11:48:35.503Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Root route serves the sailing weather app.",
+  "implementation": "GET / → serveApp handler renders the template.",
+  "workMessageId": 1781869715572172
+}

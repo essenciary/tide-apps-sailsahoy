@@ -1,0 +1,116 @@
+{
+  "uid": "chg_mqkxnuv6_f2297ca3-ae0a-4f59-a8ba-d01120e36fff",
+  "id": 1781873814826481,
+  "category": "handler",
+  "key": "getDirections",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "getDirections",
+    "source": "\n// Analyze sailing conditions in 8 compass directions from a given position\nasync function getDirections(c) {\n  const lat = parseFloat(c.req.query('lat'));\n  const lon = parseFloat(c.req.query('lon'));\n\n  // Validate coordinates\n  if (isNaN(lat) || isNaN(lon)) {\n    return c.json({ error: true, message: 'lat and lon query parameters are required' }, 400);\n  }\n  if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {\n    return c.json({ error: true, message: 'Invalid coordinates: lat must be -90..90, lon must be -180..180' }, 400);\n  }\n\n  try {\n    const analysis = await functions.call('analyzeDirections', lat, lon);\n    return c.json(analysis);\n  } catch (err) {\n    log.error('Direction analysis failed: ' + err.message);\n    return c.json({ error: true, message: 'Failed to analyze directions' }, 500);\n  }\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Direction analysis with scores and ratings for 8 headings",
+          "schema": {
+            "properties": {
+              "directions": {
+                "type": "array"
+              },
+              "origin": {
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Direction analysis error"
+        }
+      },
+      "summary": "Analyze sailing conditions in 8 compass directions",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "getDirections",
+    "source": "\n// Analyze sailing conditions in 8 compass directions — delegates coord validation to shared helper\nasync function getDirections(c) {\n  return functions.call('withValidatedCoords', c, async (lat, lon) => {\n    const analysis = await functions.call('analyzeDirections', lat, lon);\n    return c.json(analysis);\n  }, 'Failed to analyze directions');\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Direction analysis with scores and ratings for 8 headings",
+          "schema": {
+            "properties": {
+              "directions": {
+                "type": "array"
+              },
+              "origin": {
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Direction analysis error"
+        }
+      },
+      "summary": "Analyze sailing conditions in 8 compass directions",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+    "toolCallId": "sevt_01NMdcML5NB9g81zj7L6Fw8n"
+  },
+  "createdAt": "2026-06-19T12:56:54.783Z",
+  "undoable": true,
+  "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+  "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+  "rationale": "Replace duplicated validation/error-wrapping code with delegation to the shared withValidatedCoords function.",
+  "implementation": "Delegates to withValidatedCoords with a callback that calls analyzeDirections and returns the JSON. The error label preserves the original 500 message for distinguishable logs.",
+  "workMessageId": 1781873814820993
+}

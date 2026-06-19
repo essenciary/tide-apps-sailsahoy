@@ -1,0 +1,14 @@
+{
+  "name": "testFetchWeatherResultError",
+  "source": "\n// Verify fetchWeather returns an error Result (not a thrown exception) on API failure\nasync function testFetchWeatherResultError() {\n  // Latitude 999 is far outside valid range (-90..90) — Open-Meteo returns 400\n  const result = await functions.call('fetchWeather', 999, 999);\n\n  // Should be a failure Result, not a thrown exception\n  assert(result.ok === false, 'Result should not be ok for invalid coordinates');\n  assert(result.error !== undefined, 'Result should have an error object');\n  assert(result.error.code === 'WEATHER_API_ERROR', 'Error code should be WEATHER_API_ERROR');\n  assert(typeof result.error.message === 'string', 'Error message should be a string');\n  assert(result.error.message.length > 0, 'Error message should not be empty');\n}\n",
+  "registeredAt": "2026-06-19T18:29:23.368Z",
+  "module": "weather",
+  "changesetId": "cs_mqkxs3ob_45bbe516-508c-4e3a-9ab0-7399da68ae35",
+  "lastResult": {
+    "passed": true,
+    "durationMs": 52,
+    "ranAt": "2026-06-19T18:33:07.463Z"
+  },
+  "runtimeId": "typescript",
+  "language": "typescript"
+}

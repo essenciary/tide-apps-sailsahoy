@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mql7d4ym_a1763fc4-9dae-4cd5-8463-3b5e9d4c1956",
+  "id": 1781890110867160,
+  "category": "config",
+  "key": "TIMELINE_PLAY_INTERVAL_MS",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "TIMELINE_PLAY_INTERVAL_MS",
+    "value": 1500,
+    "description": "Milliseconds between auto-advance steps when playing the forecast timeline"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql7cgfd_bd523c05-fae8-4421-93b5-999f71e836f2",
+    "turnIndex": 2,
+    "sessionId": "session_mql6pkal_e0cbb7ad-f966-446c-bab3-73b0c925a159",
+    "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
+    "toolCallId": "sevt_01Vgwe1KMSG7g4tk4YLG8WyN"
+  },
+  "createdAt": "2026-06-19T17:28:30.811Z",
+  "undoable": true,
+  "turnId": "turn_mql7cgfd_bd523c05-fae8-4421-93b5-999f71e836f2",
+  "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
+  "rationale": "Created config \"TIMELINE_PLAY_INTERVAL_MS\" to satisfy the requested change.",
+  "implementation": "Used the existing set_config mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781890110973589
+}

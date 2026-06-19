@@ -1,0 +1,57 @@
+{
+  "id": "cs_mql5qsa7_53709843-4a12-40cd-a8ae-ae615de71a1a",
+  "sessionId": "session_mql1fh7h_39d4a6ea-4718-440d-bdc8-bd0924a9abc7",
+  "title": "Add wave, precipitation, and cloud cover visualizations on map",
+  "description": "Extend the weather canvas overlay with three new animated visualization layers — wave swells, enhanced precipitation (rain + snow), and cloud cover dimming — plus a layer toggle panel to control visibility of each effect.",
+  "status": "completed",
+  "plan": {
+    "summary": "Add three new animated weather visualization layers to the canvas overlay on top of the Leaflet map. Currently the canvas only shows wind streaks and basic rain drops. This extends `initParticles()` and `animateParticles()` in sailing-weather.js with: (1) **Wave swell ripples** — animated curved arc particles that drift across the screen in the wave direction, with arc size proportional to wave height and count proportional to wave period. Rendered as translucent teal arcs. Only shown when marine wave data is available. (2) **Enhanced precipitation** — keep existing rain drops for warm temps, but switch to white slow-drifting snowflake-like particles when temperature < 2°C. Increase rain density scaling for heavier downpours. (3) **Cloud cover dimming** — a semi-transparent dark overlay drawn before particles, with opacity proportional to cloud cover percentage (e.g., 80% clouds → 0.12 alpha dark fill), giving a natural overcast feel. Additionally, a **layer toggle panel** is added to the UI so users can show/hide each visualization layer (wind, waves, precipitation, clouds) independently. Each layer defaults to on. The toggles are wired up in JS with a `layers` state object. The CSS asset and HTML template are updated for the new panel. This approach extends the existing particle system architecture rather than introducing a new rendering system — all layers share the same canvas, animation loop, and respawn logic.\n\nAssumptions:\n- Wave data may be null for inland locations — wave layer gracefully hidden when data absent.\n- Snow threshold at 2°C is a reasonable heuristic (no snow type data from Open-Meteo).\n- Cloud dimming is subtle (max ~0.18 alpha) so the map remains readable.\n- Layer toggle panel goes above the action buttons (bottom-right).",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Update sailing-weather.js: Add a `layers` state object (`{ wind: true, waves: true, precip: true, clouds: true }`) and three new particle/rendering features in `initParticles()`: (a) wave swell arcs — curved arc particles using `ctx.arc()` that move in the wave direction with amplitude/radius scaled by waveHeight, count scaled by wave period, rendered as translucent teal; (b) snow particles — when temp < 2°C and precipitation > 0, create white slowly-drifting dot particles with gentle lateral wobble instead of blue rain streaks; (c) cloud cover dimming — store cloudCover % in a module-level variable. In `animateParticles()`, add rendering branches for the new particle types ('wave', 'snow') and draw a dark overlay rect before all particles when clouds layer is enabled. Each particle type checks its layer toggle before rendering. (Reqs 1-4)",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Update sailing-weather.js: Add layer toggle wiring in `setupEvents()` — find all `.layer-toggle` checkboxes, read their `data-layer` attribute, and update the `layers` state object on change. When a layer is toggled off mid-animation, matching particles are skipped in the render loop (not removed, so re-enabling is instant). Call `initParticles()` when wave/precip toggle changes to refresh particle counts. (Req 5)",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Update sailing-app template: Add a layer toggle panel (`#layer-panel`) positioned above the action buttons in the bottom-right. Contains four labeled checkboxes: Wind, Waves, Precipitation, Clouds — all checked by default. Uses native checkbox inputs with proper labels for accessibility. (Req 5)",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Update sailing-weather.css: Add styles for `#layer-panel` — same glass-morphism panel style as other panels, positioned above action buttons. Style `.layer-toggle` checkboxes with accent color and `.layer-row` with flex layout. Add responsive adjustments for mobile. (Req 5)",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Take screenshot to visually verify the new layer toggle panel and overall UI layout.",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781887388934278
+  ],
+  "approvalMessageId": 1781888132778869,
+  "workMessageIds": [
+    1781888457759435,
+    1781888568761447,
+    1781888569295917
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 16,
+    "outputTokens": 32114,
+    "costUsd": 5.8102395,
+    "durationMs": 504804
+  },
+  "createdAt": "2026-06-19T16:43:08.335Z",
+  "updatedAt": "2026-06-19T17:03:57.450Z",
+  "completedAt": "2026-06-19T17:03:48.379Z"
+}

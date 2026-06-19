@@ -1,0 +1,38 @@
+{
+  "uid": "chg_mqky8052_e2f7a52d-1652-4a83-a8a6-b51541f2a26e",
+  "id": 1781874754765290,
+  "category": "function",
+  "key": "withValidatedCoords",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "withValidatedCoords",
+    "source": "\n// Shared coordinate validation + error wrapper for weather endpoints.\n// Parses lat/lon from query params, validates ranges, calls fn(lat, lon),\n// and catches unexpected errors with a caller-specific label.\nasync function withValidatedCoords(c: any, fn: (lat: number, lon: number) => Promise<any>, errorLabel: string) {\n  const lat = parseFloat(c.req.query('lat'));\n  const lon = parseFloat(c.req.query('lon'));\n\n  // Reject missing or non-numeric coordinates\n  if (isNaN(lat) || isNaN(lon)) {\n    return c.json({ error: true, message: 'lat and lon query parameters are required' }, 400);\n  }\n\n  // Reject out-of-range values\n  if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {\n    return c.json({ error: true, message: 'Invalid coordinates: lat must be -90..90, lon must be -180..180' }, 400);\n  }\n\n  // Delegate to the caller's logic; wrap unexpected failures in a 500\n  try {\n    return await fn(lat, lon);\n  } catch (err) {\n    log.error(errorLabel + ': ' + err.message);\n    return c.json({ error: true, message: errorLabel }, 500);\n  }\n}\n",
+    "module": "weather",
+    "purpose": "Parse and validate lat/lon from query params, then delegate to a callback with error wrapping.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "withValidatedCoords",
+    "source": "\n// Shared coordinate validation + error wrapper for weather endpoints.\n// Parses lat/lon from query params, validates ranges, calls fn(lat, lon),\n// and catches unexpected errors with a caller-specific label.\n//\n// NOTE: The try/catch here is a safety net for truly unexpected runtime errors\n// (null access, type errors, etc.) — NOT for expected failures from functions\n// like fetchWeather or analyzeDirections, which use the Result pattern\n// ({ ok, data/error }) and are checked explicitly in the handler callback.\nasync function withValidatedCoords(c: any, fn: (lat: number, lon: number) => Promise<any>, errorLabel: string) {\n  const lat = parseFloat(c.req.query('lat'));\n  const lon = parseFloat(c.req.query('lon'));\n\n  // Reject missing or non-numeric coordinates\n  if (isNaN(lat) || isNaN(lon)) {\n    return c.json({ error: true, message: 'lat and lon query parameters are required' }, 400);\n  }\n\n  // Reject out-of-range values\n  if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {\n    return c.json({ error: true, message: 'Invalid coordinates: lat must be -90..90, lon must be -180..180' }, 400);\n  }\n\n  // Delegate to the caller's logic; wrap truly unexpected failures in a 500\n  try {\n    return await fn(lat, lon);\n  } catch (err) {\n    log.error(errorLabel + ': ' + err.message);\n    return c.json({ error: true, message: errorLabel }, 500);\n  }\n}\n",
+    "module": "weather",
+    "purpose": "Parse and validate lat/lon from query params, then delegate to a callback with error wrapping.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqky5bpj_5260b2e3-8326-4b56-92f0-ae6af58517a1",
+    "turnIndex": 3,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkxs3ob_45bbe516-508c-4e3a-9ab0-7399da68ae35",
+    "toolCallId": "sevt_018aTPdLJQwsthrMvaPJjhQM"
+  },
+  "createdAt": "2026-06-19T13:12:34.739Z",
+  "undoable": true,
+  "turnId": "turn_mqky5bpj_5260b2e3-8326-4b56-92f0-ae6af58517a1",
+  "changesetId": "cs_mqkxs3ob_45bbe516-508c-4e3a-9ab0-7399da68ae35",
+  "rationale": "Add clarifying comment that the try/catch is a safety net for unexpected runtime errors, not for expected function failures which now use the Result pattern.",
+  "implementation": "Only the comments change — the logic remains identical. The try/catch still catches truly unexpected errors (null access, type errors) that bypass the Result pattern.",
+  "workMessageId": 1781874754781124
+}

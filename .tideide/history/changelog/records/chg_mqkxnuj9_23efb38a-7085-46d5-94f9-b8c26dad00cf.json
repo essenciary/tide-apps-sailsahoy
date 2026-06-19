@@ -1,0 +1,128 @@
+{
+  "uid": "chg_mqkxnuj9_23efb38a-7085-46d5-94f9-b8c26dad00cf",
+  "id": 1781873814359606,
+  "category": "handler",
+  "key": "getWeather",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "getWeather",
+    "source": "\n// Fetch weather data for a lat/lon position — returns nautical/metric units\nasync function getWeather(c) {\n  const lat = parseFloat(c.req.query('lat'));\n  const lon = parseFloat(c.req.query('lon'));\n\n  // Validate coordinates\n  if (isNaN(lat) || isNaN(lon)) {\n    return c.json({ error: true, message: 'lat and lon query parameters are required' }, 400);\n  }\n  if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {\n    return c.json({ error: true, message: 'Invalid coordinates: lat must be -90..90, lon must be -180..180' }, 400);\n  }\n\n  try {\n    const weather = await functions.call('fetchWeather', lat, lon);\n    return c.json(weather);\n  } catch (err) {\n    log.error('Weather fetch failed: ' + err.message);\n    return c.json({ error: true, message: 'Failed to fetch weather data' }, 500);\n  }\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Weather data with current conditions and hourly forecast",
+          "schema": {
+            "properties": {
+              "current": {
+                "type": "object"
+              },
+              "hourly": {
+                "type": "array"
+              },
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error"
+        }
+      },
+      "summary": "Get weather data for a position",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "getWeather",
+    "source": "\n// Fetch weather data for a lat/lon position — delegates coord validation to shared helper\nasync function getWeather(c) {\n  return functions.call('withValidatedCoords', c, async (lat, lon) => {\n    const weather = await functions.call('fetchWeather', lat, lon);\n    return c.json(weather);\n  }, 'Failed to fetch weather data');\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Weather data with current conditions and hourly forecast",
+          "schema": {
+            "properties": {
+              "current": {
+                "type": "object"
+              },
+              "hourly": {
+                "type": "array"
+              },
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error"
+        }
+      },
+      "summary": "Get weather data for a position",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+    "toolCallId": "sevt_01BbxLY8EP6rRiLSa7ZxNdAP"
+  },
+  "createdAt": "2026-06-19T12:56:54.354Z",
+  "undoable": true,
+  "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+  "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+  "rationale": "Replace duplicated validation/error-wrapping code with delegation to the shared withValidatedCoords function.",
+  "implementation": "Delegates to withValidatedCoords with a callback that calls fetchWeather and returns the JSON. The error label preserves the original 500 message for distinguishable logs.",
+  "workMessageId": 1781873814391729
+}

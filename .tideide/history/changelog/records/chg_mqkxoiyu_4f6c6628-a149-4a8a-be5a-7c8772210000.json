@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqkxoiyu_4f6c6628-a149-4a8a-be5a-7c8772210000",
+  "id": 1781873846075749,
+  "category": "test",
+  "key": "testDirectionsMissingParams",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testDirectionsMissingParams",
+    "source": "\n// Verify /api/directions returns 400 when lat/lon are missing\nasync function testDirectionsMissingParams() {\n  const res = await fetch('http://localhost:3001/api/directions');\n  assertEquals(res.status, 400);\n  const body = await res.json();\n  assertEquals(body.error, true);\n  assertEquals(body.message, 'lat and lon query parameters are required');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+    "toolCallId": "sevt_01JbRRZNMDUa3okMxqD5jQX9"
+  },
+  "createdAt": "2026-06-19T12:57:26.017Z",
+  "undoable": true,
+  "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+  "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+  "rationale": "Created test \"testDirectionsMissingParams\" to satisfy the requested change.",
+  "implementation": "Used the existing define_test mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781873846068235
+}

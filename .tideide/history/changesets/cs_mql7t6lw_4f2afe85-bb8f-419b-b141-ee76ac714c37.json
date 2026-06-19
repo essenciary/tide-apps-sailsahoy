@@ -1,0 +1,48 @@
+{
+  "id": "cs_mql7t6lw_4f2afe85-bb8f-419b-b141-ee76ac714c37",
+  "sessionId": "session_mql6pkal_e0cbb7ad-f966-446c-bab3-73b0c925a159",
+  "title": "Update compass rose to animate during timeline playback",
+  "description": "Makes the compass rose Direction Analysis panel update live during timeline playback by computing per-hour sailing condition scores for all 8 directions server-side and rendering them client-side as the timeline advances.",
+  "status": "completed",
+  "plan": {
+    "summary": "The `analyzeDirections` function already fetches full hourly weather data for each of the 8 compass directions, but currently only scores the `.current` snapshot. By scoring the hourly data too and including it in the response, the client-side `updateCompassRose` function can re-render the compass per hour as the timeline plays.\n\nThis requires changes in 3 places:\n1. **analyzeDirections function** — score each hourly entry per direction and add an `hourly` array to each direction result\n2. **sailing-weather.js** — update `updateCompassRose` to accept an optional hour index and use hourly scores when available; call it from `advanceTimeline()` and the slider handler\n3. **Tests** — update the existing direction validation test to verify the new hourly structure\n\nTradeoff: the response payload grows from ~8 direction objects to 8 directions × 48 hours of scores. This is still small (~15-20KB) since each hourly entry is just {score, rating, summary} — no raw weather data is sent per hour.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Update the `analyzeDirections` function to extract the scoring logic (scoreConditions, getRating, buildSummary) and apply it to each hour in the hourly array for every direction. Each direction result gains an `hourly` array of `{ score, rating, summary }` objects indexed by forecast hour.",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Update `sailing-weather.js`: modify `updateCompassRose()` to accept `(directions, hourIndex)`. When hourly data exists and hourIndex > 0, use `dir.hourly[hourIndex]` for score/rating/summary instead of the top-level values. Call `updateCompassRose(directionsData, currentHourIndex)` from `advanceTimeline()`, the slider input handler, and the initial data load.",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Update tests: verify the directions API response includes `hourly` arrays on each direction, and verify the hourly arrays have the expected length and structure (score, rating, summary fields).",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781890860009121
+  ],
+  "approvalMessageId": 1781890923271202,
+  "workMessageIds": [
+    1781891070248328,
+    1781891355576790,
+    1781891386391065,
+    1781891856726311
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 59,
+    "outputTokens": 36109,
+    "costUsd": 10.679607,
+    "durationMs": 976076
+  },
+  "createdAt": "2026-06-19T17:40:59.444Z",
+  "updatedAt": "2026-06-19T17:58:19.204Z",
+  "completedAt": "2026-06-19T17:58:06.701Z"
+}

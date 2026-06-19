@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mql9m52n_007f248c-e374-4023-975c-d8112febd761",
+  "id": 1781893890134497,
+  "category": "config",
+  "key": "DIRECTION_BATCH_SIZE",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "DIRECTION_BATCH_SIZE",
+    "value": 2,
+    "description": "Number of directions to fetch in parallel per batch (2 = 4 API calls per batch). Lower = safer for rate limits, higher = faster."
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql9lozt_854f3eef-d5b4-4560-a8d2-50cdd7f5f0fe",
+    "turnIndex": 1,
+    "sessionId": "session_mql6pkal_e0cbb7ad-f966-446c-bab3-73b0c925a159",
+    "changesetId": "cs_mql9kttv_c06da2fe-e5dc-4b1f-84b8-73a919928346",
+    "toolCallId": "sevt_01S9bsgQ3pMVwzfR85amXwHy"
+  },
+  "createdAt": "2026-06-19T18:31:30.087Z",
+  "undoable": true,
+  "turnId": "turn_mql9lozt_854f3eef-d5b4-4560-a8d2-50cdd7f5f0fe",
+  "changesetId": "cs_mql9kttv_c06da2fe-e5dc-4b1f-84b8-73a919928346",
+  "rationale": "Created config \"DIRECTION_BATCH_SIZE\" to satisfy the requested change.",
+  "implementation": "Used the existing set_config mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781893890282039
+}

@@ -1,0 +1,9 @@
+{
+  "name": "withValidatedCoords",
+  "source": "\n// Shared coordinate validation + error wrapper for weather endpoints.\n// Parses lat/lon from query params, validates ranges, calls fn(lat, lon),\n// and catches unexpected errors with a caller-specific label.\n//\n// NOTE: The try/catch here is a safety net for truly unexpected runtime errors\n// (null access, type errors, etc.) — NOT for expected failures from functions\n// like fetchWeather or analyzeDirections, which use the Result pattern\n// ({ ok, data/error }) and are checked explicitly in the handler callback.\nasync function withValidatedCoords(c: any, fn: (lat: number, lon: number) => Promise<any>, errorLabel: string) {\n  const lat = parseFloat(c.req.query('lat'));\n  const lon = parseFloat(c.req.query('lon'));\n\n  // Reject missing or non-numeric coordinates\n  if (isNaN(lat) || isNaN(lon)) {\n    return c.json({ error: true, message: 'lat and lon query parameters are required' }, 400);\n  }\n\n  // Reject out-of-range values\n  if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {\n    return c.json({ error: true, message: 'Invalid coordinates: lat must be -90..90, lon must be -180..180' }, 400);\n  }\n\n  // Delegate to the caller's logic; wrap truly unexpected failures in a 500\n  try {\n    return await fn(lat, lon);\n  } catch (err) {\n    log.error(errorLabel + ': ' + err.message);\n    return c.json({ error: true, message: errorLabel }, 500);\n  }\n}\n",
+  "registeredAt": "2026-06-19T18:29:23.363Z",
+  "module": "weather",
+  "purpose": "Parse and validate lat/lon from query params, then delegate to a callback with error wrapping.",
+  "runtimeId": "typescript",
+  "language": "typescript"
+}

@@ -1,0 +1,32 @@
+{
+  "uid": "chg_mql6dpar_251ddf50-2e5d-4b84-9056-d11cb03ba55d",
+  "id": 1781888457604839,
+  "category": "asset",
+  "key": "sailing-weather.js",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "afterSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql66qld_5f945d19-e429-446a-a29a-8faaec3cb503",
+    "turnIndex": 3,
+    "sessionId": "session_mql1fh7h_39d4a6ea-4718-440d-bdc8-bd0924a9abc7",
+    "changesetId": "cs_mql5qsa7_53709843-4a12-40cd-a8ae-ae615de71a1a",
+    "toolCallId": "sevt_01453UxuZNtqR6rLxWVAJVFx"
+  },
+  "createdAt": "2026-06-19T17:00:57.552Z",
+  "undoable": true,
+  "turnId": "turn_mql66qld_5f945d19-e429-446a-a29a-8faaec3cb503",
+  "changesetId": "cs_mql5qsa7_53709843-4a12-40cd-a8ae-ae615de71a1a",
+  "rationale": "Add wave swell arcs, snow particles, cloud cover dimming, and layer toggle wiring to the existing particle animation system.",
+  "implementation": "Extends initParticles with three new particle/rendering features while preserving the existing wind/rain system. All layers share the same canvas and animation loop. Layer toggles skip rendering but keep particles alive for instant re-enable.",
+  "workMessageId": 1781888457759435
+}

@@ -1,0 +1,32 @@
+{
+  "uid": "chg_mql7m1f2_6515335a-689d-4036-a601-aedc0f7243c0",
+  "id": 1781890526150866,
+  "category": "asset",
+  "key": "sailing-weather.js",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "afterSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql7cgfd_bd523c05-fae8-4421-93b5-999f71e836f2",
+    "turnIndex": 2,
+    "sessionId": "session_mql6pkal_e0cbb7ad-f966-446c-bab3-73b0c925a159",
+    "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
+    "toolCallId": "sevt_01AiMb4fgQL1yWP5R7Gs1u4h"
+  },
+  "createdAt": "2026-06-19T17:35:26.121Z",
+  "undoable": true,
+  "turnId": "turn_mql7cgfd_bd523c05-fae8-4421-93b5-999f71e836f2",
+  "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
+  "rationale": "Read play interval from the button's data attribute instead of fetching from a config API endpoint.",
+  "implementation": "Replace fetchPlaybackConfig() with a simple DOM read of data-play-interval at boot time. Cleaner than a network round-trip for a single config value.",
+  "workMessageId": 1781890526283292
+}

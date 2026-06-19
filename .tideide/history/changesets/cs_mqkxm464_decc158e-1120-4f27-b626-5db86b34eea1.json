@@ -1,0 +1,62 @@
+{
+  "id": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+  "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+  "title": "Extract shared coordinate validation helper from getWeather and getDirections",
+  "description": null,
+  "status": "completed",
+  "plan": {
+    "summary": "Both `getDirections` and `getWeather` contain identical coordinate parsing, NaN-checking, range-validation, try/catch, and error-response blocks (~15 lines each). The only difference is the inner `functions.call` name and error messages. This changeset extracts a shared `withValidatedCoords(c, fn)` function that handles parsing, validation, and error wrapping, then simplifies both handlers to one-liner delegations.\n\nRequirements:\n1. Extract the duplicated lat/lon parsing, validation, and error wrapping into a shared function.\n2. Simplify both handlers to delegate to the shared function.\n3. Preserve identical behavior: same 400 messages for missing/invalid coords, same 500 wrapping for downstream errors.\n4. Both handlers keep their existing schemas and route bindings untouched.\n\nAssumptions:\n- The error-response shape `{ error: true, message: '...' }` is preserved exactly.\n- The callback receives `(lat, lon)` and returns the Response directly, giving each handler full control over its success response.\n- The 500 error message stays handler-specific (passed as a parameter) so logs remain distinguishable.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Create shared function `withValidatedCoords` in the `weather` module. It accepts a Hono context `c`, a callback `fn(lat, lon)`, and an `errorLabel` string. It parses lat/lon from query params, returns 400 for NaN or out-of-range, calls `fn(lat, lon)` inside a try/catch, and returns 500 with the label on failure. (req 1, 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Update `getWeather` handler to delegate to `withValidatedCoords`, passing a callback that calls `fetchWeather` and returns the JSON response. (req 2, 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Update `getDirections` handler to delegate to `withValidatedCoords`, passing a callback that calls `analyzeDirections` and returns the JSON response. (req 2, 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Write tests to verify validation behavior (missing params → 400, out-of-range → 400) and confirm both handlers still call through correctly. Run tests. (req 3)",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781873733965395
+  ],
+  "approvalMessageId": 1781873773221985,
+  "workMessageIds": [
+    1781873799653930,
+    1781873814391729,
+    1781873814820993,
+    1781873845145956,
+    1781873845615969,
+    1781873846068235,
+    1781873846509528,
+    1781873846885014,
+    1781873847365021,
+    1781873876017924,
+    1781873876482647,
+    1781873876939442,
+    1781873877368220
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 18,
+    "outputTokens": 5983,
+    "costUsd": 2.0823142499999996,
+    "durationMs": 129453
+  },
+  "createdAt": "2026-06-19T12:55:33.532Z",
+  "updatedAt": "2026-06-19T12:58:22.613Z",
+  "completedAt": "2026-06-19T12:58:15.875Z"
+}

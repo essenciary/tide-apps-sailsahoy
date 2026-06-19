@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqkv2i6y_35fc6e28-6d4e-4cd4-9729-e725c8266665",
+  "id": 1781869459383716,
+  "category": "function",
+  "key": "fetchWeather",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "fetchWeather",
+    "source": "\nasync function fetchWeather(lat: number, lon: number) {\n  // Conversion factor: meters per second to knots\n  const MS_TO_KNOTS = 1.94384;\n  const forecastHours = config.get('DEFAULT_FORECAST_HOURS') || 48;\n\n  // Build Open-Meteo API URL — request both atmospheric and marine data\n  const weatherParams = [\n    'temperature_2m', 'relative_humidity_2m', 'precipitation',\n    'pressure_msl', 'cloud_cover', 'wind_speed_10m',\n    'wind_direction_10m', 'wind_gusts_10m'\n  ].join(',');\n\n  const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`\n    + `&current=${weatherParams}`\n    + `&hourly=${weatherParams}`\n    + `&wind_speed_unit=ms`\n    + `&forecast_hours=${forecastHours}`\n    + `&timezone=auto`;\n\n  // Marine API for wave data — separate endpoint\n  const marineParams = 'wave_height,wave_direction,wave_period';\n  const marineUrl = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}`\n    + `&current=${marineParams}`\n    + `&hourly=${marineParams}`\n    + `&forecast_hours=${forecastHours}`\n    + `&timezone=auto`;\n\n  // Fetch both in parallel for speed\n  const [weatherRes, marineRes] = await Promise.all([\n    fetch(weatherUrl),\n    fetch(marineUrl).catch(() => null) // Marine data may not be available inland\n  ]);\n\n  if (!weatherRes.ok) {\n    throw new Error(`Open-Meteo weather API error: ${weatherRes.status}`);\n  }\n\n  const weatherData = await weatherRes.json();\n  const marineData = marineRes && marineRes.ok ? await marineRes.json() : null;\n\n  // Convert current conditions to nautical units\n  const current = {\n    temperature: weatherData.current.temperature_2m,           // °C\n    humidity: weatherData.current.relative_humidity_2m,         // %\n    precipitation: weatherData.current.precipitation,           // mm\n    pressure: weatherData.current.pressure_msl,                 // hPa\n    cloudCover: weatherData.current.cloud_cover,                // %\n    windSpeed: Math.round(weatherData.current.wind_speed_10m * MS_TO_KNOTS * 10) / 10,  // kn\n    windDirection: weatherData.current.wind_direction_10m,      // degrees\n    windGusts: Math.round(weatherData.current.wind_gusts_10m * MS_TO_KNOTS * 10) / 10,  // kn\n    // Marine data — null if unavailable (e.g. inland positions)\n    waveHeight: marineData?.current?.wave_height ?? null,       // m\n    waveDirection: marineData?.current?.wave_direction ?? null,  // degrees\n    wavePeriod: marineData?.current?.wave_period ?? null,       // s\n    time: weatherData.current.time\n  };\n\n  // Build hourly forecast array with converted wind speeds\n  const hourly = weatherData.hourly.time.map((time: string, i: number) => ({\n    time,\n    temperature: weatherData.hourly.temperature_2m[i],\n    humidity: weatherData.hourly.relative_humidity_2m[i],\n    precipitation: weatherData.hourly.precipitation[i],\n    pressure: weatherData.hourly.pressure_msl[i],\n    cloudCover: weatherData.hourly.cloud_cover[i],\n    windSpeed: Math.round(weatherData.hourly.wind_speed_10m[i] * MS_TO_KNOTS * 10) / 10,\n    windDirection: weatherData.hourly.wind_direction_10m[i],\n    windGusts: Math.round(weatherData.hourly.wind_gusts_10m[i] * MS_TO_KNOTS * 10) / 10,\n    // Marine hourly data — may not exist\n    waveHeight: marineData?.hourly?.wave_height?.[i] ?? null,\n    waveDirection: marineData?.hourly?.wave_direction?.[i] ?? null,\n    wavePeriod: marineData?.hourly?.wave_period?.[i] ?? null\n  }));\n\n  return {\n    latitude: lat,\n    longitude: lon,\n    timezone: weatherData.timezone,\n    current,\n    hourly\n  };\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_01Dard9VTT8V4cjYP5ffi88B"
+  },
+  "createdAt": "2026-06-19T11:44:19.354Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Core weather data fetching function that calls Open-Meteo API and normalizes results to nautical/metric units.",
+  "implementation": "Uses Open-Meteo's free forecast + marine API. Wind speeds are converted from m/s to knots (×1.94384). Temperature, pressure, precipitation, and wave data are already in metric units from the API. Returns structured current conditions + hourly forecast array.",
+  "workMessageId": 1781869459523806
+}

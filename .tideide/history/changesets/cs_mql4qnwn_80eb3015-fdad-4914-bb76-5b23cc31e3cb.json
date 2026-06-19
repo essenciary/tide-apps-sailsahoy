@@ -1,0 +1,40 @@
+{
+  "id": "cs_mql4qnwn_80eb3015-fdad-4914-bb76-5b23cc31e3cb",
+  "sessionId": "session_mql1fh7h_39d4a6ea-4718-440d-bdc8-bd0924a9abc7",
+  "title": "Fix wind particle animation direction",
+  "description": null,
+  "status": "completed",
+  "plan": {
+    "summary": "Fix the compass-to-canvas angle conversion in the wind particle animation. The current formula `(windDir + 180) * π/180` incorrectly treats the meteorological compass bearing as a standard math angle, causing particles to blow in the wrong direction (e.g., East wind shows as particles from the South). The correct formula is `(windDir + 90) * π/180`, which properly converts from compass bearing (clockwise from North) to canvas angle (counterclockwise from East, Y-down).",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Fix the windRad formula in initParticles() inside sailing-weather.js: change `(windDir + 180) * Math.PI / 180` to `(windDir + 90) * Math.PI / 180`. Update the comment to explain the compass-to-canvas conversion. This is a single-line fix in the upload_text_asset call.",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Visually verify the fix with screenshot_app — the particle animation should now blow westward for an East wind.",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781885703600542
+  ],
+  "approvalMessageId": 1781886408911511,
+  "workMessageIds": [
+    1781886532148766
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 19,
+    "outputTokens": 11613,
+    "costUsd": 3.06143175,
+    "durationMs": 192425
+  },
+  "createdAt": "2026-06-19T16:15:03.047Z",
+  "updatedAt": "2026-06-19T16:30:01.234Z",
+  "completedAt": "2026-06-19T16:29:53.327Z"
+}

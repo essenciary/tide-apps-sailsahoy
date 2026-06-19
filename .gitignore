@@ -1,0 +1,9 @@
+# Local secrets and environment overrides.
+.env
+
+# Local app/test database rows. Export intentional seed data to fixtures/.
+data/
+
+# Tide IDE local caches and generated backups.
+.tideide/caches/
+.tideide/backups/

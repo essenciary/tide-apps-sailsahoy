@@ -1,0 +1,32 @@
+{
+  "uid": "chg_mql83t9l_722e9073-3d6f-41c9-8306-5c420361ee82",
+  "id": 1781891355429504,
+  "category": "asset",
+  "key": "sailing-weather.js",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "afterSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql7ujqm_bf4125ea-d924-45e7-a335-f21ce4a84f6e",
+    "turnIndex": 0,
+    "sessionId": "session_mql6pkal_e0cbb7ad-f966-446c-bab3-73b0c925a159",
+    "changesetId": "cs_mql7t6lw_4f2afe85-bb8f-419b-b141-ee76ac714c37",
+    "toolCallId": "sevt_01JVm9dMBksaAhzrSeo83UxT"
+  },
+  "createdAt": "2026-06-19T17:49:15.363Z",
+  "undoable": true,
+  "turnId": "turn_mql7ujqm_bf4125ea-d924-45e7-a335-f21ce4a84f6e",
+  "changesetId": "cs_mql7t6lw_4f2afe85-bb8f-419b-b141-ee76ac714c37",
+  "rationale": "Add compass rose animation during timeline playback. updateCompassRose now accepts hourIndex and uses per-direction hourly scores from the API.",
+  "implementation": "6 targeted changes: (1) updateCompassRose accepts hourIndex param with hourly data lookup, (2-3) advanceTimeline calls updateCompassRose on both reset and advance, (4) slider handler calls updateCompassRose, (5) initial load passes currentHourIndex, (6) startPlayback reset calls updateCompassRose.",
+  "workMessageId": 1781891355576790
+}

@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqkv9jyo_84b3f627-4056-4742-9e3f-d2821075dec9",
+  "id": 1781869788249370,
+  "category": "test",
+  "key": "testGetDirectionsValidation",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testGetDirectionsValidation",
+    "source": "\nasync function testGetDirectionsValidation() {\n  // Test missing parameters — should return 400\n  const res1 = await fetch('/api/directions');\n  assertEquals(res1.status, 400, 'Missing params should return 400');\n  const body1 = await res1.json();\n  assert(body1.error === true, 'Should have error flag');\n\n  // Test invalid coordinates — out of range\n  const res2 = await fetch('/api/directions?lat=-100&lon=5');\n  assertEquals(res2.status, 400, 'Out of range lat should return 400');\n\n  // Test non-numeric params\n  const res3 = await fetch('/api/directions?lat=abc&lon=xyz');\n  assertEquals(res3.status, 400, 'Non-numeric params should return 400');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_0168PXqUAmJ6oudBjNHX8P62"
+  },
+  "createdAt": "2026-06-19T11:49:48.239Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Tests the getDirections handler validates lat/lon query parameters correctly.",
+  "implementation": "Same validation pattern as weather handler — tests missing, invalid, and out-of-range coordinates.",
+  "workMessageId": 1781869788318367
+}

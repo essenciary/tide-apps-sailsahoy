@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqkv715x_72e49923-f97a-4275-9d7b-1daede4643b2",
+  "id": 1781869670570353,
+  "category": "asset",
+  "key": "sailing-weather.js",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "sailing-weather.js",
+    "contentBase64": "",
+    "mimeType": "application/javascript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_013RL21sAEb8xJjYXZZ4qFjR"
+  },
+  "createdAt": "2026-06-19T11:47:50.564Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Client-side JS for the sailing weather app — Leaflet map, boat marker, weather animations, compass rose, and timeline slider.",
+  "implementation": "Self-contained IIFE. Initializes Leaflet with dark tiles, creates animated boat SVG marker, renders wind/rain particles on a Canvas overlay, builds interactive compass rose from API data, and provides a timeline slider for forecast scrubbing. All units displayed in nautical/metric (kn, °C, hPa, m).",
+  "workMessageId": 1781869670602173
+}

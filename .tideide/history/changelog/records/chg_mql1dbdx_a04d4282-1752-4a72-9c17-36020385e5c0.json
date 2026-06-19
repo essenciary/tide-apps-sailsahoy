@@ -1,0 +1,32 @@
+{
+  "uid": "chg_mql1dbdx_a04d4282-1752-4a72-9c17-36020385e5c0",
+  "id": 1781880041479856,
+  "category": "asset",
+  "key": "sailing-weather.css",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "sailing-weather.css",
+    "contentBase64": "",
+    "mimeType": "text/css"
+  },
+  "afterSnapshot": {
+    "name": "sailing-weather.css",
+    "contentBase64": "",
+    "mimeType": "text/css"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql19m2w_45b96c22-977b-479b-be17-6db0340ae7c8",
+    "turnIndex": 2,
+    "sessionId": "session_mqkwg8hd_00d23935-7940-476c-8ac4-d66c402eab29",
+    "changesetId": "cs_mql18b8d_c9423b77-a220-4cf0-9c36-b561d6aae042",
+    "toolCallId": "sevt_014V9noRymbRdyr61UHGkafP"
+  },
+  "createdAt": "2026-06-19T14:40:41.442Z",
+  "undoable": true,
+  "turnId": "turn_mql19m2w_45b96c22-977b-479b-be17-6db0340ae7c8",
+  "changesetId": "cs_mql18b8d_c9423b77-a220-4cf0-9c36-b561d6aae042",
+  "rationale": "Add toast notification styles with slide-in animation and auto-fade-out. Remove the #location-btn.error style since it's been replaced by the toast.",
+  "implementation": "Toast container is fixed at bottom-right above action buttons. Individual .toast elements slide in from the right, stay visible for 5s, then fade out via .hiding class. Uses the existing dark nautical design tokens.",
+  "workMessageId": 1781880041522502
+}

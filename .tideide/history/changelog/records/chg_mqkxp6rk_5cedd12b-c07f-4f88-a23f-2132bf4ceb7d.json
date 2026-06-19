@@ -1,0 +1,35 @@
+{
+  "uid": "chg_mqkxp6rk_5cedd12b-c07f-4f88-a23f-2132bf4ceb7d",
+  "id": 1781873876868202,
+  "category": "test",
+  "key": "testWeatherPartialParams",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "testWeatherPartialParams",
+    "source": "\n// Verify /api/weather returns 400 when only lat is provided (lon missing → NaN)\nasync function testWeatherPartialParams() {\n  const res = await fetch('http://localhost:3001/api/weather?lat=45');\n  assertEquals(res.status, 400);\n  const body = await res.json();\n  assertEquals(body.error, true);\n  assertEquals(body.message, 'lat and lon query parameters are required');\n}\n",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "testWeatherPartialParams",
+    "source": "\n// Verify /api/weather returns 400 when only lat is provided — schema catches missing lon\nasync function testWeatherPartialParams() {\n  const res = await fetch('http://localhost:3001/api/weather?lat=45');\n  assertEquals(res.status, 400);\n  const body = await res.json();\n  assertEquals(body.error, 'Validation failed');\n  assert(body.details.some((d) => d.message.includes('lon')), 'Should flag missing lon');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+    "toolCallId": "sevt_01Qbea3WMRkQJ3a2cXpxuoKu"
+  },
+  "createdAt": "2026-06-19T12:57:56.857Z",
+  "undoable": true,
+  "turnId": "turn_mqkxmyqs_8e171b6f-b2d6-42e2-be12-86a55566f42d",
+  "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+  "rationale": "Updated test \"testWeatherPartialParams\" to satisfy the requested change.",
+  "implementation": "Used the existing define_test mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781873876939442
+}

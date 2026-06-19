@@ -1,0 +1,35 @@
+{
+  "uid": "chg_mql7nu9s_f9202ce0-7928-4cbd-94e3-7cf2565cd720",
+  "id": 1781890610227606,
+  "category": "test",
+  "key": "testConfigsExist",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "testConfigsExist",
+    "source": "\nasync function testConfigsExist() {\n  // Verify all required configs exist with correct values\n  const forecastHours = config.get('DEFAULT_FORECAST_HOURS');\n  assertEquals(forecastHours, 48, 'DEFAULT_FORECAST_HOURS should be 48');\n\n  const sampleDistance = config.get('DIRECTION_SAMPLE_DISTANCE_NM');\n  assertEquals(sampleDistance, 30, 'DIRECTION_SAMPLE_DISTANCE_NM should be 30');\n\n  const compassDirs = config.get('COMPASS_DIRECTIONS');\n  assertEquals(compassDirs, 8, 'COMPASS_DIRECTIONS should be 8');\n}\n",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "testConfigsExist",
+    "source": "\nasync function testConfigsExist() {\n  // Verify all required configs exist with correct values\n  const forecastHours = config.get('DEFAULT_FORECAST_HOURS');\n  assertEquals(forecastHours, 48, 'DEFAULT_FORECAST_HOURS should be 48');\n\n  const sampleDistance = config.get('DIRECTION_SAMPLE_DISTANCE_NM');\n  assertEquals(sampleDistance, 30, 'DIRECTION_SAMPLE_DISTANCE_NM should be 30');\n\n  const compassDirs = config.get('COMPASS_DIRECTIONS');\n  assertEquals(compassDirs, 8, 'COMPASS_DIRECTIONS should be 8');\n\n  // Play interval config for timeline auto-advance\n  const playInterval = config.get('TIMELINE_PLAY_INTERVAL_MS');\n  assertEquals(playInterval, 1500, 'TIMELINE_PLAY_INTERVAL_MS should be 1500');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mql7cgfd_bd523c05-fae8-4421-93b5-999f71e836f2",
+    "turnIndex": 2,
+    "sessionId": "session_mql6pkal_e0cbb7ad-f966-446c-bab3-73b0c925a159",
+    "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
+    "toolCallId": "sevt_01WxhdfKoxJHfnnbwqPeHido"
+  },
+  "createdAt": "2026-06-19T17:36:50.171Z",
+  "undoable": true,
+  "turnId": "turn_mql7cgfd_bd523c05-fae8-4421-93b5-999f71e836f2",
+  "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
+  "rationale": "Update to include the new TIMELINE_PLAY_INTERVAL_MS config check.",
+  "implementation": "Extend existing config test with the new play interval config assertion.",
+  "workMessageId": 1781890610318625
+}

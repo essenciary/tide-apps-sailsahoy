@@ -1,0 +1,75 @@
+{
+  "uid": "chg_mqkv46c4_323cfc40-3422-4c37-9b36-1fc49f7584a3",
+  "id": 1781869537309528,
+  "category": "route",
+  "key": "GET /api/weather",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "method": "GET",
+    "path": "/api/weather",
+    "handlerName": "getWeather",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Weather data with current conditions and hourly forecast",
+          "schema": {
+            "properties": {
+              "current": {
+                "type": "object"
+              },
+              "hourly": {
+                "type": "array"
+              },
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error"
+        }
+      },
+      "summary": "Get weather data for a position",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_012U1rLCdGQq5fjmYQAq3KrN"
+  },
+  "createdAt": "2026-06-19T11:45:37.299Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Weather data API endpoint — used by the client map to fetch conditions at the boat's position.",
+  "implementation": "GET with lat/lon query params, delegates to fetchWeather function.",
+  "workMessageId": 1781869537345937
+}

@@ -1,0 +1,133 @@
+{
+  "uid": "chg_mqky871d_c1f15fcb-362c-48e8-87d4-0fc2b035b835",
+  "id": 1781874763688772,
+  "category": "handler",
+  "key": "getDirections",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "getDirections",
+    "source": "\n// Analyze sailing conditions in 8 compass directions — delegates coord validation to shared helper\nasync function getDirections(c) {\n  return functions.call('withValidatedCoords', c, async (lat, lon) => {\n    const analysis = await functions.call('analyzeDirections', lat, lon);\n    return c.json(analysis);\n  }, 'Failed to analyze directions');\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Direction analysis with scores and ratings for 8 headings",
+          "schema": {
+            "properties": {
+              "directions": {
+                "type": "array"
+              },
+              "origin": {
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Direction analysis error"
+        }
+      },
+      "summary": "Analyze sailing conditions in 8 compass directions",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "getDirections",
+    "source": "\n// Analyze sailing conditions in 8 compass directions — delegates coord validation to shared helper\nasync function getDirections(c) {\n  return functions.call('withValidatedCoords', c, async (lat, lon) => {\n    const result = await functions.call('analyzeDirections', lat, lon);\n\n    // Map Result to HTTP response — success returns data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n    return c.json(result.data);\n  }, 'Failed to analyze directions');\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Direction analysis with scores and ratings for 8 headings",
+          "schema": {
+            "properties": {
+              "directions": {
+                "type": "array"
+              },
+              "origin": {
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Direction analysis error"
+        }
+      },
+      "summary": "Analyze sailing conditions in 8 compass directions",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Analyze sailing conditions in 8 compass directions, mapping Result to HTTP response.",
+    "duplicateJustification": "getDirections and getWeather serve different API routes (/api/directions vs /api/weather) and call different business-logic functions (analyzeDirections vs fetchWeather). The Result-checking boilerplate is similar but the endpoints are distinct.",
+    "duplicateCandidates": [
+      {
+        "kind": "handler",
+        "name": "getWeather",
+        "module": "weather",
+        "purpose": "Fetch weather data for a lat/lon position, mapping Result to HTTP response.",
+        "score": 0.92,
+        "reasons": [
+          "similar purpose or leading comments",
+          "exact implementation match",
+          "similar params or route schema",
+          "same module"
+        ]
+      }
+    ],
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqky5bpj_5260b2e3-8326-4b56-92f0-ae6af58517a1",
+    "turnIndex": 3,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkxs3ob_45bbe516-508c-4e3a-9ab0-7399da68ae35",
+    "toolCallId": "sevt_01W25WNKk2qGVi6ZxFMGEruE"
+  },
+  "createdAt": "2026-06-19T13:12:43.675Z",
+  "undoable": true,
+  "turnId": "turn_mqky5bpj_5260b2e3-8326-4b56-92f0-ae6af58517a1",
+  "changesetId": "cs_mqkxs3ob_45bbe516-508c-4e3a-9ab0-7399da68ae35",
+  "rationale": "Handler must now inspect .ok on the analyzeDirections Result and map success/failure to 200/500.",
+  "implementation": "Check result.ok — return result.data on success, or { error: true, message } with 500 on failure.",
+  "workMessageId": 1781874763714789
+}

@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqkv1w5i_36086618-c0e8-450b-bfcb-b1c7edbde10e",
+  "id": 1781869430812709,
+  "category": "config",
+  "key": "COMPASS_DIRECTIONS",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "COMPASS_DIRECTIONS",
+    "value": 8,
+    "description": "Number of cardinal/intercardinal directions to analyze (8 = N/NE/E/SE/S/SW/W/NW)"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+    "turnIndex": 1,
+    "sessionId": "session_mqkpyhwq_25b64e78-6973-4cf9-adce-df24408b5c74",
+    "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+    "toolCallId": "sevt_01Knkrfadrerkha6ZXZBLh6E"
+  },
+  "createdAt": "2026-06-19T11:43:50.790Z",
+  "undoable": true,
+  "turnId": "turn_mqkv1oz5_cc1839de-2ce2-4f4a-89f1-54697456a1f3",
+  "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
+  "rationale": "Created config \"COMPASS_DIRECTIONS\" to satisfy the requested change.",
+  "implementation": "Used the existing set_config mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781869430818656
+}
