@@ -1,14 +1,9 @@
 {
   "name": "testWeatherPartialParams",
   "source": "\n// Verify /api/weather returns 400 when only lat is provided — schema catches missing lon\nasync function testWeatherPartialParams() {\n  const res = await fetch('http://localhost:3001/api/weather?lat=45');\n  assertEquals(res.status, 400);\n  const body = await res.json();\n  assertEquals(body.error, 'Validation failed');\n  assert(body.details.some((d) => d.message.includes('lon')), 'Should flag missing lon');\n}\n",
-  "registeredAt": "2026-06-19T22:44:11.737Z",
+  "registeredAt": "2026-06-20T16:08:11.644Z",
   "module": "weather",
   "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
-  "lastResult": {
-    "passed": true,
-    "durationMs": 0,
-    "ranAt": "2026-06-20T10:36:34.782Z"
-  },
   "runtimeId": "typescript",
   "language": "typescript"
 }

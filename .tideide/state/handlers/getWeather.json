@@ -1,7 +1,7 @@
 {
   "name": "getWeather",
   "source": "\n// Fetch weather data for a lat/lon position — delegates coord validation to shared helper.\n// Enriches the response with sea safety status (current + hourly) for the global indicator.\nasync function getWeather(c: any) {\n  return functions.call('withValidatedCoords', c, async (lat: number, lon: number) => {\n    const result = await functions.call('fetchWeather', lat, lon);\n\n    // Map Result to HTTP response — success returns data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n\n    const weatherData = result.data;\n\n    // Compute overall sea safety for current conditions\n    const seaStatus = functions.call('computeSeaStatus', weatherData.current);\n\n    // Compute sea safety for each hourly forecast entry so timeline can show it\n    const hourlySeaStatus = weatherData.hourly.map((hour: any) =>\n      functions.call('computeSeaStatus', hour)\n    );\n\n    // Attach sea status fields alongside existing weather data\n    return c.json({\n      ...weatherData,\n      seaStatus,\n      hourlySeaStatus\n    });\n  }, 'Failed to fetch weather data');\n}\n",
-  "registeredAt": "2026-06-19T22:44:11.724Z",
+  "registeredAt": "2026-06-20T16:08:11.631Z",
   "schema": {
     "query": {
       "lat": {

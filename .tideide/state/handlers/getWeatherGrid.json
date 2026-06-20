@@ -1,7 +1,7 @@
 {
   "name": "getWeatherGrid",
   "source": "\n// Serve cloud cover + pressure grid data for area overlays.\n// Uses withValidatedCoords for consistent coord parsing + error handling.\nasync function getWeatherGrid(c: any) {\n  return functions.call('withValidatedCoords', c, async (lat: number, lon: number) => {\n    const result = await functions.call('fetchWeatherGrid', lat, lon);\n\n    // Map Result to HTTP — success returns grid data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n\n    return c.json(result.data);\n  }, 'Failed to fetch weather grid data');\n}\n",
-  "registeredAt": "2026-06-20T10:09:51.203Z",
+  "registeredAt": "2026-06-20T16:08:11.632Z",
   "schema": {
     "query": {
       "lat": {

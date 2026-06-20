@@ -1,14 +1,9 @@
 {
   "name": "testWeatherGridEndpoint",
   "source": "\n// Test that /api/weather-grid returns a valid 5x5 grid of cloud/pressure data\nasync function testWeatherGridEndpoint() {\n  const res = await fetch('http://localhost:3001/api/weather-grid?lat=41.35&lon=2.17');\n  assertEquals(res.status, 200, 'Weather grid should return 200');\n\n  const data = await res.json();\n\n  // Should have grid array\n  assert(Array.isArray(data.grid), 'Response should contain a grid array');\n  assertEquals(data.grid.length, 25, 'Grid should have 25 points (5x5)');\n\n  // Check center coordinates are echoed back\n  assert(typeof data.centerLat === 'number', 'Should include centerLat');\n  assert(typeof data.centerLon === 'number', 'Should include centerLon');\n\n  // Validate first grid point structure\n  const point = data.grid[0];\n  assert(typeof point.lat === 'number', 'Grid point should have lat');\n  assert(typeof point.lon === 'number', 'Grid point should have lon');\n  assert(typeof point.cloudCover === 'number', 'Grid point should have cloudCover');\n  assert(typeof point.pressure === 'number', 'Grid point should have pressure');\n  assert(Array.isArray(point.hourly), 'Grid point should have hourly array');\n\n  // Validate hourly entry structure\n  if (point.hourly.length > 0) {\n    const hourEntry = point.hourly[0];\n    assert(typeof hourEntry.time === 'string', 'Hourly entry should have time');\n    assert(typeof hourEntry.cloudCover === 'number', 'Hourly entry should have cloudCover');\n    assert(typeof hourEntry.pressure === 'number', 'Hourly entry should have pressure');\n  }\n\n  // Validate pressure range (sanity check — should be 900-1100 hPa)\n  assert(point.pressure > 900 && point.pressure < 1100, 'Pressure should be in reasonable range');\n\n  // Validate cloud cover range (0-100%)\n  assert(point.cloudCover >= 0 && point.cloudCover <= 100, 'Cloud cover should be 0-100%');\n}\n",
-  "registeredAt": "2026-06-20T10:16:41.103Z",
+  "registeredAt": "2026-06-20T16:08:11.643Z",
   "module": "weather",
   "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
-  "lastResult": {
-    "passed": true,
-    "durationMs": 65,
-    "ranAt": "2026-06-20T10:36:34.782Z"
-  },
   "runtimeId": "typescript",
   "language": "typescript"
 }
