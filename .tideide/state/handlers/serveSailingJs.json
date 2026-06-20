@@ -1,0 +1,9 @@
+{
+  "name": "serveSailingJs",
+  "source": "\n// Serve the modified sailing weather JS from the database\n// The JS includes water detection utilities for land/water snapping\nasync function serveSailingJs(c: any) {\n  const rows = await db.query(\"SELECT content FROM _temp_build WHERE id = 1\");\n  if (rows.length === 0) {\n    return c.text(\"// Asset not found\", 404);\n  }\n\n  // Set JavaScript MIME type and no-cache for development\n  c.header(\"Content-Type\", \"application/javascript; charset=utf-8\");\n  c.header(\"Cache-Control\", \"no-cache\");\n  return c.body(rows[0].content);\n}\n",
+  "registeredAt": "2026-06-20T09:17:01.981Z",
+  "module": "sailing",
+  "purpose": "Serve the sailing weather JavaScript with water detection utilities from the database.",
+  "runtimeId": "typescript",
+  "language": "typescript"
+}

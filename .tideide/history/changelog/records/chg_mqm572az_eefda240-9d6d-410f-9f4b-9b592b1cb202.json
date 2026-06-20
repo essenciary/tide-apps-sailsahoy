@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqm572az_eefda240-9d6d-410f-9f4b-9b592b1cb202",
+  "id": 1781946934413793,
+  "category": "asset",
+  "key": "sailing-water-detect.css",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "sailing-water-detect.css",
+    "contentBase64": "LyogPT09PT0gV2F0ZXIgRGV0ZWN0aW9uIOKAlCBCb2F0IFNuYXAgUHVsc2UgQW5pbWF0aW9uID09PT09ICovCi8qIFdoZW4gdGhlIGJvYXQgaXMgbW92ZWQgZnJvbSBsYW5kIHRvIG5lYXJlc3Qgd2F0ZXIsIHRoZSBtYXJrZXIKICAgZ2V0cyBhIGJyaWVmIGdsb3cvcHVsc2UgdG8gaW5kaWNhdGUgcmVwb3NpdGlvbmluZyAqLwoKQGtleWZyYW1lcyBib2F0LXNuYXAtZ2xvdyB7CiAgMCUgewogICAgZmlsdGVyOiBkcm9wLXNoYWRvdygwIDAgNHB4IHJnYmEoNTYsIDE4OSwgMjQ4LCAwLjUpKTsKICAgIHRyYW5zZm9ybTogc2NhbGUoMSk7CiAgfQogIDMwJSB7CiAgICBmaWx0ZXI6IGRyb3Atc2hhZG93KDAgMCAyMHB4IHJnYmEoNTYsIDE4OSwgMjQ4LCAxKSkgZHJvcC1zaGFkb3coMCAwIDQwcHggcmdiYSg1NiwgMTg5LCAyNDgsIDAuNSkpOwogICAgdHJhbnNmb3JtOiBzY2FsZSgxLjI1KTsKICB9CiAgNjAlIHsKICAgIGZpbHRlcjogZHJvcC1zaGFkb3coMCAwIDEycHggcmdiYSgzNCwgMTk3LCA5NCwgMC44KSkgZHJvcC1zaGFkb3coMCAwIDI0cHggcmdiYSgzNCwgMTk3LCA5NCwgMC4zKSk7CiAgICB0cmFuc2Zvcm06IHNjYWxlKDEuMSk7CiAgfQogIDEwMCUgewogICAgZmlsdGVyOiBkcm9wLXNoYWRvdygwIDAgNHB4IHJnYmEoMCwgMCwgMCwgMC41KSk7CiAgICB0cmFuc2Zvcm06IHNjYWxlKDEpOwogIH0KfQoKLmJvYXQtbWFya2VyLmJvYXQtc25hcC1wdWxzZSB7CiAgYW5pbWF0aW9uOiBib2F0LXNuYXAtZ2xvdyAxLjVzIGVhc2Utb3V0IGZvcndhcmRzOwp9CgovKiBPdmVycmlkZSB0aGUgdG9hc3QgYm9yZGVyIGNvbG9yIGZvciB3YXRlci1kZXRlY3Rpb24gdG9hc3RzIChhbmNob3IgaWNvbikgKi8KLnRvYXN0IHsKICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4zNXMgY3ViaWMtYmV6aWVyKDAuMjIsIDEsIDAuMzYsIDEpLCBvcGFjaXR5IDAuMzVzIGVhc2UsCiAgICAgICAgICAgICAgYm9yZGVyLWNvbG9yIDAuM3MgZWFzZTsKfQo=",
+    "mimeType": "text/css"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqm4j11g_fb0ebabf-0443-46ae-ba82-5356eee0dabe",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqm4ggvv_c6ea3a4d-2952-4e9f-9425-dc3992aba9b1",
+    "toolCallId": "sevt_01SL8ESEUhxXD8Pn4nFrWSJt"
+  },
+  "createdAt": "2026-06-20T09:15:34.365Z",
+  "undoable": true,
+  "turnId": "turn_mqm4j11g_fb0ebabf-0443-46ae-ba82-5356eee0dabe",
+  "changesetId": "cs_mqm4ggvv_c6ea3a4d-2952-4e9f-9425-dc3992aba9b1",
+  "rationale": "Add boat-snap-pulse animation CSS for visual feedback when boat is snapped to nearest water from land.",
+  "implementation": "Separate CSS file to avoid modifying the large existing stylesheet. Includes pulse/glow animation for the boat marker and styling for info toast messages about water detection.",
+  "workMessageId": 1781946934554122
+}

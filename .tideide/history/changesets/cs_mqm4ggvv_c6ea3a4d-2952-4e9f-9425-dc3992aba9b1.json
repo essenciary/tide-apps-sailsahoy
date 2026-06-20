@@ -1,0 +1,73 @@
+{
+  "id": "cs_mqm4ggvv_c6ea3a4d-2952-4e9f-9425-dc3992aba9b1",
+  "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+  "title": "Land detection with automatic snap-to-nearest-water using OSM tile pixel sampling",
+  "description": null,
+  "status": "completed",
+  "plan": {
+    "summary": "Add client-side land/water detection using OSM tile pixel sampling, and automatically snap the boat to the nearest water position when placed on land. The approach uses standard OpenStreetMap tiles (which have a consistent water color #aad3df) loaded into a hidden canvas. When the user drags the boat, clicks the map, or geolocates, we sample the pixel at that position on the OSM tile — if it's not water, we scan outward in expanding circles to find the nearest water pixel and snap the boat there with a toast notification.\n\nThis is entirely client-side (no new APIs or server changes needed), instant (no network round-trip for detection — just a single tile image load that gets cached), and free. At zoom 10, each pixel ≈ 152m, giving sub-kilometer coastline precision.\n\nThe marine API already silently fails for land coordinates, but that's a 1-2s network round-trip — the tile approach prevents the boat from ever visually sitting on land.\n\n**Requirements extracted:**\n1. Detect when boat position is on land (drag, click, or geolocation)\n2. Find the closest water position and snap the boat there\n3. Provide visual/toast feedback when the boat is repositioned\n4. Graceful degradation if tile loading fails (allow the position, show warning)\n\n**Assumptions:**\n- Using zoom 10 tiles for detection (~152m/pixel precision) — good enough for sailing\n- Water detection via RGB color matching against OSM's standard water color (#aad3df / RGB 170,211,223)\n- If no water found within a single tile (~40km), show a warning and don't move the boat\n- Tile images are cached in-memory so repeated nearby checks are instant\n- Standard OSM tile server (tile.openstreetmap.org) supports CORS for canvas pixel reading",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Step 1 — Add water detection utility functions to sailing-weather.js: Add `latLonToTilePixel(lat, lon, zoom)` to convert coordinates to tile X/Y and pixel position within the tile. Add `tilePixelToLatLon(tileX, tileY, px, py, zoom)` for reverse conversion. Add `isWaterPixel(r, g, b)` heuristic that checks if an RGB value matches OSM water color (B > 200, G > 180, R > 130, R < 200, B-R > 20). These are pure math helpers. (req 1, 2)",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Step 2 — Add tile loading with canvas pixel sampling: Add `loadTileToCanvas(tileX, tileY, zoom)` that loads a standard OSM tile (`https://tile.openstreetmap.org/{z}/{x}/{y}.png`) into a hidden 256×256 canvas with `crossOrigin='anonymous'`. Returns a Promise resolving to the canvas 2D context. Add an in-memory tile cache (Map keyed by 'z/x/y') so repeat checks near the same location are instant. (req 1, 2, 4)",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Step 3 — Add nearest-water scanning algorithm: Add `findNearestWater(lat, lon, callback)` that: (a) loads the tile at zoom 10 containing the position, (b) checks the exact pixel — if water, calls callback(lat, lon, false), (c) if land, scans outward in expanding square rings (up to 128px = ~19km radius), (d) on first water pixel found, converts back to lat/lon and calls callback(newLat, newLon, true), (e) if no water found in tile, calls callback(null, null, true) for graceful failure. The scan uses getImageData on the canvas context. (req 1, 2, 4)",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Step 4 — Create validateAndSetBoatPosition wrapper: Add `validateAndSetBoatPosition(lat, lon, source)` that replaces direct position-setting. It calls `findNearestWater`, then: if on water → sets boatPosition, moves marker, calls updateInfoBar + refreshData normally; if snapped to water → shows toast ('Moved to nearest water — {source} was on land'), sets corrected position; if no water found → shows toast ('No water nearby — position not changed'), keeps previous position. The `source` param is for the toast message ('drag', 'click', 'geolocation'). (req 1, 2, 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Step 5 — Wire all position-setting events through the validator: Update the `dragend` handler, `map.on('click')` handler, geolocation success callback, and silent tryGeolocation callback to call `validateAndSetBoatPosition` instead of directly setting boatPosition/setLatLng/refreshData. Each passes its source label. (req 1, 2, 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_5",
+        "description": "Step 6 — Add visual feedback CSS: Add a brief boat marker pulse/glow animation when the boat is snapped to water, so the user sees it was repositioned. Add to sailing-weather.css. (req 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_6",
+        "description": "Step 7 — Tests and visual verification: Write tests validating the app still loads and the API works. Run check_export_types. Take screenshots to verify the feature. (all reqs)",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781945694207488
+  ],
+  "approvalMessageId": 1781945813220172,
+  "workMessageIds": [
+    1781946845230970,
+    1781946853374301,
+    1781946860745875,
+    1781946893100798,
+    1781946934554122,
+    1781946961300276,
+    1781947022249085,
+    1781947022928569,
+    1781947038644552
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 32,
+    "outputTokens": 66044,
+    "costUsd": 4.355887500000001,
+    "durationMs": 1292112
+  },
+  "createdAt": "2026-06-20T08:54:53.562Z",
+  "updatedAt": "2026-06-20T09:18:25.117Z",
+  "completedAt": "2026-06-20T09:18:09.350Z"
+}

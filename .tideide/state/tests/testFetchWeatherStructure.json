@@ -1,13 +1,13 @@
 {
   "name": "testFetchWeatherStructure",
   "source": "\n// Verify fetchWeather returns a Result with the correct data structure\nasync function testFetchWeatherStructure() {\n  // Fetch weather for Marseille — a known coastal location\n  const result = await functions.call('fetchWeather', 43.3, 5.37);\n\n  // Verify Result wrapper — must be a success\n  assert(result.ok === true, 'Result should be ok');\n  assert(result.data !== undefined, 'Result should have data');\n\n  // Unwrap the data payload\n  const data = result.data;\n\n  // Verify top-level structure\n  assert(data.latitude !== undefined, 'Should have latitude');\n  assert(data.longitude !== undefined, 'Should have longitude');\n  assert(data.current !== undefined, 'Should have current conditions');\n  assert(data.hourly !== undefined, 'Should have hourly forecast');\n  assert(Array.isArray(data.hourly), 'Hourly should be an array');\n  assert(data.hourly.length > 0, 'Should have at least one hourly entry');\n\n  // Verify current conditions fields\n  const curr = data.current;\n  assert(typeof curr.temperature === 'number', 'Temperature should be a number');\n  assert(typeof curr.windSpeed === 'number', 'Wind speed should be a number');\n  assert(typeof curr.windDirection === 'number', 'Wind direction should be a number');\n  assert(typeof curr.windGusts === 'number', 'Wind gusts should be a number');\n  assert(typeof curr.pressure === 'number', 'Pressure should be a number');\n  assert(typeof curr.cloudCover === 'number', 'Cloud cover should be a number');\n\n  // Wind speed should be in knots — reasonable range 0-100\n  assert(curr.windSpeed >= 0 && curr.windSpeed < 100, 'Wind speed in knots should be 0-100');\n\n  // Pressure should be in hPa — reasonable range 950-1050\n  assert(curr.pressure > 900 && curr.pressure < 1100, 'Pressure in hPa should be 900-1100');\n\n  // Temperature in °C — reasonable range -50 to 60\n  assert(curr.temperature > -50 && curr.temperature < 60, 'Temperature in °C should be -50 to 60');\n\n  // Wind direction 0-360 degrees\n  assert(curr.windDirection >= 0 && curr.windDirection <= 360, 'Wind direction should be 0-360');\n\n  // Verify hourly entry structure matches current\n  const hour = data.hourly[0];\n  assert(typeof hour.windSpeed === 'number', 'Hourly wind speed should be a number');\n  assert(typeof hour.temperature === 'number', 'Hourly temperature should be a number');\n  assert(hour.time !== undefined, 'Hourly entry should have a time');\n}\n",
-  "registeredAt": "2026-06-19T18:29:23.368Z",
+  "registeredAt": "2026-06-19T22:44:11.733Z",
   "module": "weather",
   "changesetId": "cs_mqkxs3ob_45bbe516-508c-4e3a-9ab0-7399da68ae35",
   "lastResult": {
     "passed": true,
-    "durationMs": 55,
-    "ranAt": "2026-06-19T18:33:07.463Z"
+    "durationMs": 53,
+    "ranAt": "2026-06-20T09:17:22.992Z"
   },
   "runtimeId": "typescript",
   "language": "typescript"

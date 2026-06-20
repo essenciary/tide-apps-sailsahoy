@@ -66,6 +66,28 @@
   },
   {
     "method": "GET",
+    "path": "/api/sailing-js",
+    "handlerName": "serveSailingJs",
+    "registeredAt": "2026-06-20T09:14:20.512Z",
+    "schema": {
+      "description": "Returns the modified sailing weather JavaScript with water detection utilities",
+      "responses": {
+        "200": {
+          "description": "JavaScript file content"
+        },
+        "404": {
+          "description": "Asset not found"
+        }
+      },
+      "summary": "Serve sailing weather JavaScript",
+      "tags": [
+        "sailing"
+      ]
+    },
+    "module": "sailing"
+  },
+  {
+    "method": "GET",
     "path": "/api/weather",
     "handlerName": "getWeather",
     "registeredAt": "2026-06-19T11:45:37.283Z",

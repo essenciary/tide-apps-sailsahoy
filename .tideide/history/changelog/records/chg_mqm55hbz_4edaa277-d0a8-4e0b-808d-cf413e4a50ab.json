@@ -1,0 +1,44 @@
+{
+  "uid": "chg_mqm55hbz_4edaa277-d0a8-4e0b-808d-cf413e4a50ab",
+  "id": 1781946860564551,
+  "category": "route",
+  "key": "GET /api/sailing-js",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "method": "GET",
+    "path": "/api/sailing-js",
+    "handlerName": "serveSailingJs",
+    "schema": {
+      "description": "Returns the modified sailing weather JavaScript with water detection utilities",
+      "responses": {
+        "200": {
+          "description": "JavaScript file content"
+        },
+        "404": {
+          "description": "Asset not found"
+        }
+      },
+      "summary": "Serve sailing weather JavaScript",
+      "tags": [
+        "sailing"
+      ]
+    },
+    "module": "sailing"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqm4j11g_fb0ebabf-0443-46ae-ba82-5356eee0dabe",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqm4ggvv_c6ea3a4d-2952-4e9f-9425-dc3992aba9b1",
+    "toolCallId": "sevt_01Mi3oVU12A5hKWUNq9aavty"
+  },
+  "createdAt": "2026-06-20T09:14:20.530Z",
+  "undoable": true,
+  "turnId": "turn_mqm4j11g_fb0ebabf-0443-46ae-ba82-5356eee0dabe",
+  "changesetId": "cs_mqm4ggvv_c6ea3a4d-2952-4e9f-9425-dc3992aba9b1",
+  "rationale": "Serve the modified sailing weather JS with water detection from the database.",
+  "implementation": "Route serves JS content from the database to avoid re-uploading the full 45KB asset.",
+  "workMessageId": 1781946860745875
+}

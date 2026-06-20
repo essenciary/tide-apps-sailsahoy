@@ -1,0 +1,142 @@
+{
+  "uid": "chg_mqlhso37_78130d69-7f05-46c6-81ee-d603f18bf7aa",
+  "id": 1781907631625389,
+  "category": "handler",
+  "key": "getWeather",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "getWeather",
+    "source": "\n// Fetch weather data for a lat/lon position — delegates coord validation to shared helper.\n// Enriches the response with sea safety status (current + hourly) for the global indicator.\nasync function getWeather(c: Context) {\n  return functions.call('withValidatedCoords', c, async (lat: number, lon: number) => {\n    const result = await functions.call('fetchWeather', lat, lon);\n\n    // Map Result to HTTP response — success returns data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n\n    const weatherData = result.data;\n\n    // Compute overall sea safety for current conditions\n    const seaStatus = functions.call('computeSeaStatus', weatherData.current);\n\n    // Compute sea safety for each hourly forecast entry so timeline can show it\n    const hourlySeaStatus = weatherData.hourly.map((hour: any) =>\n      functions.call('computeSeaStatus', hour)\n    );\n\n    // Attach sea status fields alongside existing weather data\n    return c.json({\n      ...weatherData,\n      seaStatus,\n      hourlySeaStatus\n    });\n  }, 'Failed to fetch weather data');\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Weather data with current conditions, hourly forecast, and sea safety status",
+          "schema": {
+            "properties": {
+              "current": {
+                "type": "object"
+              },
+              "hourly": {
+                "type": "array"
+              },
+              "hourlySeaStatus": {
+                "type": "array"
+              },
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              },
+              "seaStatus": {
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error"
+        }
+      },
+      "summary": "Get weather data for a position with sea safety indicator",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Fetch weather data for a lat/lon position, mapping Result to HTTP response.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "getWeather",
+    "source": "\n// Fetch weather data for a lat/lon position — delegates coord validation to shared helper.\n// Enriches the response with sea safety status (current + hourly) for the global indicator.\nasync function getWeather(c: any) {\n  return functions.call('withValidatedCoords', c, async (lat: number, lon: number) => {\n    const result = await functions.call('fetchWeather', lat, lon);\n\n    // Map Result to HTTP response — success returns data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n\n    const weatherData = result.data;\n\n    // Compute overall sea safety for current conditions\n    const seaStatus = functions.call('computeSeaStatus', weatherData.current);\n\n    // Compute sea safety for each hourly forecast entry so timeline can show it\n    const hourlySeaStatus = weatherData.hourly.map((hour: any) =>\n      functions.call('computeSeaStatus', hour)\n    );\n\n    // Attach sea status fields alongside existing weather data\n    return c.json({\n      ...weatherData,\n      seaStatus,\n      hourlySeaStatus\n    });\n  }, 'Failed to fetch weather data');\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Weather data with current conditions, hourly forecast, and sea safety status",
+          "schema": {
+            "properties": {
+              "current": {
+                "type": "object"
+              },
+              "hourly": {
+                "type": "array"
+              },
+              "hourlySeaStatus": {
+                "type": "array"
+              },
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              },
+              "seaStatus": {
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error"
+        }
+      },
+      "summary": "Get weather data for a position with sea safety indicator",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Fetch weather data for a lat/lon position, mapping Result to HTTP response.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqlhs7ic_29ad8893-dd99-4b31-89bf-fbdb6dc7f9f4",
+    "turnIndex": 3,
+    "sessionId": "session_mqldsjeh_f90bf0f3-17f1-4d47-8025-425860348796",
+    "changesetId": "cs_mqlhrb94_8ab39e9e-65cf-4bf9-a0a2-a20ca72b77b0",
+    "toolCallId": "sevt_01G47BXY3PwZeWikzQPkBxE3"
+  },
+  "createdAt": "2026-06-19T22:20:31.596Z",
+  "undoable": true,
+  "turnId": "turn_mqlhs7ic_29ad8893-dd99-4b31-89bf-fbdb6dc7f9f4",
+  "changesetId": "cs_mqlhrb94_8ab39e9e-65cf-4bf9-a0a2-a20ca72b77b0",
+  "rationale": "Fix TS2304: replace `c: Context` with `c: any` so the handler compiles in the exported Deno project where Context is not available.",
+  "implementation": "Swap type annotation only — no logic changes.",
+  "workMessageId": 1781907631827422
+}

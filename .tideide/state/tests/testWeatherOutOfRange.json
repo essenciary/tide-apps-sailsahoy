@@ -1,13 +1,13 @@
 {
   "name": "testWeatherOutOfRange",
   "source": "\n// Verify /api/weather returns 400 for out-of-range coordinates\nasync function testWeatherOutOfRange() {\n  const res = await fetch('http://localhost:3001/api/weather?lat=100&lon=50');\n  assertEquals(res.status, 400);\n  const body = await res.json();\n  assertEquals(body.error, true);\n  assertEquals(body.message, 'Invalid coordinates: lat must be -90..90, lon must be -180..180');\n}\n",
-  "registeredAt": "2026-06-19T18:29:23.370Z",
+  "registeredAt": "2026-06-19T22:44:11.736Z",
   "module": "weather",
   "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
   "lastResult": {
     "passed": true,
-    "durationMs": 1,
-    "ranAt": "2026-06-19T18:33:07.463Z"
+    "durationMs": 7,
+    "ranAt": "2026-06-20T09:17:22.992Z"
   },
   "runtimeId": "typescript",
   "language": "typescript"

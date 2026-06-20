@@ -1,0 +1,60 @@
+{
+  "uid": "chg_mqlhoxdr_dbb88d7c-d9bc-4a5c-923b-e955eb3aaf81",
+  "id": 1781907457051088,
+  "category": "handler",
+  "key": "serveApp",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "serveApp",
+    "source": "\n// Serve the main sailing weather app page, injecting server-side config\nasync function serveApp(c) {\n  const rawHtml = templates.get('sailing-app');\n  if (!rawHtml) return c.text('Template not found', 500);\n\n  // Inject the playback interval config into the template\n  const intervalMs = config.get('TIMELINE_PLAY_INTERVAL_MS') || 1500;\n  const html = rawHtml.replace('{{PLAY_INTERVAL_MS}}', String(intervalMs));\n\n  return c.html(html);\n}\n",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Serve the main sailing weather app page with injected config values.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "serveApp",
+    "source": "\n// Serve the main sailing weather app page, injecting server-side config\nasync function serveApp(c: Context) {\n  const rawHtml = templates.get('sailing-app');\n  if (!rawHtml) return c.text('Template not found', 500);\n\n  // Inject the playback interval config into the template\n  const intervalMs = config.get('TIMELINE_PLAY_INTERVAL_MS') || 1500;\n  const html = rawHtml.replace('{{PLAY_INTERVAL_MS}}', String(intervalMs));\n\n  return c.html(html);\n}\n",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Serve the main sailing weather app page with injected config values.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqlhnk7q_f40b866c-b42a-4a27-b1f0-11ef808ade64",
+    "turnIndex": 1,
+    "sessionId": "session_mqldsjeh_f90bf0f3-17f1-4d47-8025-425860348796",
+    "changesetId": "cs_mqlhn5a5_a3798612-57a2-4f13-891f-1732e64731ce",
+    "toolCallId": "sevt_016LpGpDUEPS8E7QhB4W9Yqx"
+  },
+  "createdAt": "2026-06-19T22:17:37.015Z",
+  "undoable": true,
+  "turnId": "turn_mqlhnk7q_f40b866c-b42a-4a27-b1f0-11ef808ade64",
+  "changesetId": "cs_mqlhn5a5_a3798612-57a2-4f13-891f-1732e64731ce",
+  "rationale": "Fix TS7006: add `c: Context` type annotation on the handler parameter.",
+  "implementation": "Add explicit `c: Context` type annotation — no other changes.",
+  "workMessageId": 1781907457244307
+}

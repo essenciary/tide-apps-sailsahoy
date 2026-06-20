@@ -1,0 +1,38 @@
+{
+  "uid": "chg_mqm55bn9_f1fd23c3-0616-4328-ba9e-a9c9493ff4e5",
+  "id": 1781946853173046,
+  "category": "handler",
+  "key": "serveSailingJs",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "serveSailingJs",
+    "source": "\n// Serve the modified sailing weather JS from the database\n// The JS includes water detection utilities for land/water snapping\nasync function serveSailingJs(c: Context) {\n  const rows = await db.query(\"SELECT content FROM _temp_build WHERE id = 1\");\n  if (rows.length === 0) {\n    return c.text(\"// Asset not found\", 404);\n  }\n\n  // Return as JavaScript with no-cache to always serve latest during development\n  return new Response(rows[0].content, {\n    headers: {\n      \"Content-Type\": \"application/javascript; charset=utf-8\",\n      \"Cache-Control\": \"no-cache\"\n    }\n  });\n}\n",
+    "module": "sailing",
+    "purpose": "Serve the sailing weather JavaScript with water detection utilities from the database.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "serveSailingJs",
+    "source": "\n// Serve the modified sailing weather JS from the database\n// The JS includes water detection utilities for land/water snapping\nasync function serveSailingJs(c: Context) {\n  const rows = await db.query(\"SELECT content FROM _temp_build WHERE id = 1\");\n  if (rows.length === 0) {\n    return c.text(\"// Asset not found\", 404);\n  }\n\n  // Set JavaScript MIME type and no-cache for development\n  c.header(\"Content-Type\", \"application/javascript; charset=utf-8\");\n  c.header(\"Cache-Control\", \"no-cache\");\n  return c.body(rows[0].content);\n}\n",
+    "module": "sailing",
+    "purpose": "Serve the sailing weather JavaScript with water detection utilities from the database.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqm4j11g_fb0ebabf-0443-46ae-ba82-5356eee0dabe",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqm4ggvv_c6ea3a4d-2952-4e9f-9425-dc3992aba9b1",
+    "toolCallId": "sevt_01Ft1mc41cipjHLBQ5C8jMtU"
+  },
+  "createdAt": "2026-06-20T09:14:13.161Z",
+  "undoable": true,
+  "turnId": "turn_mqm4j11g_fb0ebabf-0443-46ae-ba82-5356eee0dabe",
+  "changesetId": "cs_mqm4ggvv_c6ea3a4d-2952-4e9f-9425-dc3992aba9b1",
+  "rationale": "Fix TypeScript error by using c.body() instead of raw Response constructor.",
+  "implementation": "Uses c.body() and c.header() Hono methods for type-safe response construction.",
+  "workMessageId": 1781946853374301
+}

@@ -1,0 +1,14 @@
+{
+  "name": "testWeatherApiDataShape",
+  "source": "\n// Verify fetchWeather returns all fields needed for map indicators\nasync function testWeatherApiDataShape() {\n  const result = await functions.call('fetchWeather', 41.39, 2.17) as any;\n  assert(result.ok === true, 'fetchWeather should succeed');\n\n  const data = result.data;\n\n  // Fields needed by updateMapIndicators — temperature badge\n  assert(typeof data.current.temperature === 'number', 'Should have temperature for indicator badge');\n\n  // Pressure badge with H/L annotation\n  assert(typeof data.current.pressure === 'number', 'Should have pressure for indicator badge');\n  assert(data.current.pressure > 900 && data.current.pressure < 1100, 'Pressure should be in valid hPa range');\n\n  // Wind badge with direction arrow\n  assert(typeof data.current.windSpeed === 'number', 'Should have windSpeed for wind indicator');\n  assert(typeof data.current.windDirection === 'number', 'Should have windDirection for wind arrow');\n\n  // Wave height for wave badge (may be null in some areas)\n  assert(data.current.waveHeight === null || typeof data.current.waveHeight === 'number',\n    'waveHeight should be number or null');\n\n  // Hourly data for timeline scrubbing — all fields present\n  assert(data.hourly.length >= 24, 'Should have at least 24 hourly entries');\n  const h = data.hourly[0];\n  assert(typeof h.temperature === 'number', 'Hourly should have temperature');\n  assert(typeof h.pressure === 'number', 'Hourly should have pressure');\n  assert(typeof h.windSpeed === 'number', 'Hourly should have windSpeed');\n  assert(typeof h.windDirection === 'number', 'Hourly should have windDirection');\n}\n",
+  "registeredAt": "2026-06-20T08:20:20.582Z",
+  "module": "weather",
+  "changesetId": "cs_mqm2u63w_94d06f05-f505-4828-9805-3801363235ce",
+  "lastResult": {
+    "passed": true,
+    "durationMs": 51,
+    "ranAt": "2026-06-20T09:17:22.992Z"
+  },
+  "runtimeId": "typescript",
+  "language": "typescript"
+}

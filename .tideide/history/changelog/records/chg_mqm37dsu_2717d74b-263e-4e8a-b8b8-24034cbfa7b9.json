@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqm37dsu_2717d74b-263e-4e8a-b8b8-24034cbfa7b9",
+  "id": 1781943590066060,
+  "category": "test",
+  "key": "testWeatherApiDataShape",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testWeatherApiDataShape",
+    "source": "\n// Verify the weather API returns data with all fields needed for map indicators\nasync function testWeatherApiDataShape() {\n  const resp = await fetch('http://localhost:3001/api/weather?lat=41.39&lon=2.17');\n  assertEquals(resp.status, 200, 'Weather API should return 200');\n  \n  const data = await resp.json();\n  assert(data.current, 'Response should have current weather');\n  \n  // Fields needed by updateMapIndicators\n  assert(typeof data.current.temperature === 'number', 'Should have temperature');\n  assert(typeof data.current.pressure === 'number', 'Should have pressure');\n  assert(typeof data.current.windSpeed === 'number', 'Should have windSpeed');\n  assert(typeof data.current.windDirection === 'number', 'Should have windDirection');\n  \n  // Hourly data for timeline\n  assert(Array.isArray(data.hourly), 'Should have hourly array');\n  assert(data.hourly.length > 0, 'Hourly array should not be empty');\n  \n  var h = data.hourly[0];\n  assert(typeof h.temperature === 'number', 'Hourly should have temperature');\n  assert(typeof h.pressure === 'number', 'Hourly should have pressure');\n  assert(typeof h.windSpeed === 'number', 'Hourly should have windSpeed');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqm2wyga_d0cd0f72-cc3a-4376-9c07-a2e27992adc3",
+    "turnIndex": 0,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqm2u63w_94d06f05-f505-4828-9805-3801363235ce",
+    "toolCallId": "sevt_01L7VaL7rXYXcs9g2XFo37k4"
+  },
+  "createdAt": "2026-06-20T08:19:50.035Z",
+  "undoable": true,
+  "turnId": "turn_mqm2wyga_d0cd0f72-cc3a-4376-9c07-a2e27992adc3",
+  "changesetId": "cs_mqm2u63w_94d06f05-f505-4828-9805-3801363235ce",
+  "rationale": "Created test \"testWeatherApiDataShape\" to satisfy the requested change.",
+  "implementation": "Used the existing define_test mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1781943590267333
+}

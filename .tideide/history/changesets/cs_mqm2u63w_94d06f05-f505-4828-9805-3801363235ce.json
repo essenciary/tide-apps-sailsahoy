@@ -1,0 +1,66 @@
+{
+  "id": "cs_mqm2u63w_94d06f05-f505-4828-9805-3801363235ce",
+  "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+  "title": "Improve weather visualizations: wind arrows, realistic waves, map indicators, and zoom level",
+  "description": "Overhaul the weather canvas rendering and add map-based indicators to address 4 specific issues with the current visual presentation.",
+  "status": "completed",
+  "plan": {
+    "summary": "This changeset addresses 4 user-reported visual issues in the sailing weather app. All changes are primarily in `sailing-weather.js` (the main client-side code) and `sailing-weather.css` (for new map indicator styles).\n\n**What needs to change:**\n1. **Wind particles** are currently short line segments with a single blue color. They need to become longer arrow shapes with arrowheads, color-coded by wind speed intensity (green→yellow→orange→red).\n2. **Wave particles** are drawn as `ctx.arc()` semi-circles that cover the entire screen including land. They need to be replaced with sinusoidal wave curves (∿ shapes), and positioned relative to the boat's screen coordinates so they cluster over water.\n3. **Map indicators** for pressure, temperature, and wind are only shown in the side panel text. The user wants them visible ON the map as Leaflet divIcon markers.\n4. **Zoom level** is DEFAULT_ZOOM=11 (~30nm viewport). Needs to be increased to 13 (~7nm viewport) for a closer view.\n\n**Approach:** All 4 changes are modifications to existing assets — no new routes, handlers, or schemas needed. The JS asset will be rewritten with the new particle rendering logic and a new `updateMapIndicators()` function using Leaflet divIcons. CSS will get styles for the new map indicator badges. The template and layer panel get a new 'Indicators' toggle.\n\n**Assumptions:**\n- Wind color scale: green (<8kn), cyan (8-15kn), yellow (15-25kn), orange (25-33kn), red (>33kn)\n- Wave particles will be positioned within a radius of the boat's screen position, weighted toward the boat center — this isn't a perfect water mask but dramatically reduces land coverage\n- Map indicators will show 3 badges near the boat: temperature, pressure, and a wind barb — using Leaflet divIcon markers that move with the map\n- Zoom 13 is a good sweet spot — shows ~7nm radius, enough to see harbor detail while still showing surrounding water",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Step 1 — Increase zoom level: In `sailing-weather.js`, change `DEFAULT_ZOOM` from 11 to 13. This affects the initial map view and the geolocation/setView calls. (req 4)",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Step 2 — Redesign wind particles as arrows with intensity colors: In the `initParticles` function, increase wind particle trail length from `p.size * 4` to `p.size * 8`. In `animateParticles`, replace the simple line rendering with an arrow shape: draw a longer shaft line plus a V-shaped arrowhead at the tip. Color-code using a `windColor(speed)` helper: green (<8kn), cyan (8-15kn), yellow (15-25kn), orange (25-33kn), red (>33kn). Store `windSpeed` on each particle during init so the renderer can look it up. (req 1)",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Step 3 — Redesign wave particles as sinusoidal curves positioned near water: Replace the `ctx.arc()` semi-circle rendering with a sinusoidal wave curve (draw 2-3 periods of a sine wave using bezierCurveTo). In `initParticles`, position wave particles within a radius around the boat's screen position (using `map.latLngToContainerPoint()`) rather than random screen positions — this clusters them near water since the boat is on water. Reduce wave count slightly for cleaner appearance. Use a teal color gradient based on wave height. (req 2)",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Step 4 — Add map indicators layer: Create a new `updateMapIndicators()` function that adds Leaflet divIcon markers to the map showing: (a) temperature badge with color (blue=cold, green=mild, orange=warm, red=hot), (b) pressure badge with H/L annotation and color, (c) wind speed+direction arrow badge. These are placed at the boat position as a Leaflet LayerGroup. Add a new 'indicators' layer toggle in the layer panel and wire it up. Call `updateMapIndicators()` from `refreshData` and timeline scrub. (req 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Step 5 — Update template and CSS: Add the new 'Indicators' checkbox row to the layer panel in the `sailing-app` template. Add CSS styles for `.map-indicator` badges (temperature, pressure, wind) — small rounded badges with colored backgrounds, positioned as Leaflet divIcons. (req 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_5",
+        "description": "Step 6 — Visual verification and tests: Take a screenshot to verify the new visualizations look correct. Write tests for the handler and route to ensure the app still loads and serves data correctly. Run `check_export_types` to validate.",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781942974165075
+  ],
+  "approvalMessageId": 1781943103808454,
+  "workMessageIds": [
+    1781943332264259,
+    1781943482517684,
+    1781943483324476,
+    1781943589636756,
+    1781943590267333,
+    1781943611589131,
+    1781943620893921
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 26,
+    "outputTokens": 32123,
+    "costUsd": 2.56563925,
+    "durationMs": 559109
+  },
+  "createdAt": "2026-06-20T08:09:33.548Z",
+  "updatedAt": "2026-06-20T08:21:02.713Z",
+  "completedAt": "2026-06-20T08:20:48.449Z"
+}

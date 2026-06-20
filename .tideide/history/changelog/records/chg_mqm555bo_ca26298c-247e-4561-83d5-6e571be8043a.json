@@ -1,0 +1,31 @@
+{
+  "uid": "chg_mqm555bo_ca26298c-247e-4561-83d5-6e571be8043a",
+  "id": 1781946845006524,
+  "category": "handler",
+  "key": "serveSailingJs",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "serveSailingJs",
+    "source": "\n// Serve the modified sailing weather JS from the database\n// The JS includes water detection utilities for land/water snapping\nasync function serveSailingJs(c: Context) {\n  const rows = await db.query(\"SELECT content FROM _temp_build WHERE id = 1\");\n  if (rows.length === 0) {\n    return c.text(\"// Asset not found\", 404);\n  }\n\n  // Return as JavaScript with no-cache to always serve latest during development\n  return new Response(rows[0].content, {\n    headers: {\n      \"Content-Type\": \"application/javascript; charset=utf-8\",\n      \"Cache-Control\": \"no-cache\"\n    }\n  });\n}\n",
+    "module": "sailing",
+    "purpose": "Serve the sailing weather JavaScript with water detection utilities from the database.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqm4j11g_fb0ebabf-0443-46ae-ba82-5356eee0dabe",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqm4ggvv_c6ea3a4d-2952-4e9f-9425-dc3992aba9b1",
+    "toolCallId": "sevt_01NnZmrRt6aLHqL8WWsFHpVP"
+  },
+  "createdAt": "2026-06-20T09:14:04.971Z",
+  "undoable": true,
+  "turnId": "turn_mqm4j11g_fb0ebabf-0443-46ae-ba82-5356eee0dabe",
+  "changesetId": "cs_mqm4ggvv_c6ea3a4d-2952-4e9f-9425-dc3992aba9b1",
+  "rationale": "The modified JS (with water detection code) is stored in the _temp_build table after verification. Serving it via a handler avoids re-uploading the full 45KB asset content while ensuring the verified, correct version is served.",
+  "implementation": "Handler reads the verified JS content from the _temp_build table and serves it with the correct MIME type and cache headers.",
+  "workMessageId": 1781946845230970
+}

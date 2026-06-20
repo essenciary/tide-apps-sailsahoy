@@ -1,0 +1,60 @@
+{
+  "uid": "chg_mqlhsopf_7e1610e5-fecd-4f0b-86eb-ae461a277baf",
+  "id": 1781907632405002,
+  "category": "handler",
+  "key": "serveApp",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "serveApp",
+    "source": "\n// Serve the main sailing weather app page, injecting server-side config\nasync function serveApp(c: Context) {\n  const rawHtml = templates.get('sailing-app');\n  if (!rawHtml) return c.text('Template not found', 500);\n\n  // Inject the playback interval config into the template\n  const intervalMs = config.get('TIMELINE_PLAY_INTERVAL_MS') || 1500;\n  const html = rawHtml.replace('{{PLAY_INTERVAL_MS}}', String(intervalMs));\n\n  return c.html(html);\n}\n",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Serve the main sailing weather app page with injected config values.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "serveApp",
+    "source": "\n// Serve the main sailing weather app page, injecting server-side config\nasync function serveApp(c: any) {\n  const rawHtml = templates.get('sailing-app');\n  if (!rawHtml) return c.text('Template not found', 500);\n\n  // Inject the playback interval config into the template\n  const intervalMs = config.get('TIMELINE_PLAY_INTERVAL_MS') || 1500;\n  const html = rawHtml.replace('{{PLAY_INTERVAL_MS}}', String(intervalMs));\n\n  return c.html(html);\n}\n",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Serve the main sailing weather app page with injected config values.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqlhs7ic_29ad8893-dd99-4b31-89bf-fbdb6dc7f9f4",
+    "turnIndex": 3,
+    "sessionId": "session_mqldsjeh_f90bf0f3-17f1-4d47-8025-425860348796",
+    "changesetId": "cs_mqlhrb94_8ab39e9e-65cf-4bf9-a0a2-a20ca72b77b0",
+    "toolCallId": "sevt_01Krb65uoer2tGYc6oWRtQgA"
+  },
+  "createdAt": "2026-06-19T22:20:32.395Z",
+  "undoable": true,
+  "turnId": "turn_mqlhs7ic_29ad8893-dd99-4b31-89bf-fbdb6dc7f9f4",
+  "changesetId": "cs_mqlhrb94_8ab39e9e-65cf-4bf9-a0a2-a20ca72b77b0",
+  "rationale": "Fix TS2304: replace `c: Context` with `c: any` so the handler compiles in the exported Deno project where Context is not available.",
+  "implementation": "Swap type annotation only — no logic changes.",
+  "workMessageId": 1781907632675603
+}

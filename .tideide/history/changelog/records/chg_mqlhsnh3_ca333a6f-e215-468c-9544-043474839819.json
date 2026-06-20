@@ -1,0 +1,118 @@
+{
+  "uid": "chg_mqlhsnh3_ca333a6f-e215-468c-9544-043474839819",
+  "id": 1781907630822031,
+  "category": "handler",
+  "key": "getDirections",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "getDirections",
+    "source": "\n// Analyze sailing conditions in 8 compass directions — delegates coord validation to shared helper\nasync function getDirections(c: Context) {\n  return functions.call('withValidatedCoords', c, async (lat: number, lon: number) => {\n    const result = await functions.call('analyzeDirections', lat, lon);\n\n    // Map Result to HTTP response — success returns data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n    return c.json(result.data);\n  }, 'Failed to analyze directions');\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Direction analysis with scores and ratings for 8 headings",
+          "schema": {
+            "properties": {
+              "directions": {
+                "type": "array"
+              },
+              "origin": {
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Direction analysis error"
+        }
+      },
+      "summary": "Analyze sailing conditions in 8 compass directions",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Analyze sailing conditions in 8 compass directions, mapping Result to HTTP response.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "getDirections",
+    "source": "\n// Analyze sailing conditions in 8 compass directions — delegates coord validation to shared helper\nasync function getDirections(c: any) {\n  return functions.call('withValidatedCoords', c, async (lat: number, lon: number) => {\n    const result = await functions.call('analyzeDirections', lat, lon);\n\n    // Map Result to HTTP response — success returns data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n    return c.json(result.data);\n  }, 'Failed to analyze directions');\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Direction analysis with scores and ratings for 8 headings",
+          "schema": {
+            "properties": {
+              "directions": {
+                "type": "array"
+              },
+              "origin": {
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Direction analysis error"
+        }
+      },
+      "summary": "Analyze sailing conditions in 8 compass directions",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Analyze sailing conditions in 8 compass directions, mapping Result to HTTP response.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqlhs7ic_29ad8893-dd99-4b31-89bf-fbdb6dc7f9f4",
+    "turnIndex": 3,
+    "sessionId": "session_mqldsjeh_f90bf0f3-17f1-4d47-8025-425860348796",
+    "changesetId": "cs_mqlhrb94_8ab39e9e-65cf-4bf9-a0a2-a20ca72b77b0",
+    "toolCallId": "sevt_01CztgQHHE3GmZZ5vH4RSdAG"
+  },
+  "createdAt": "2026-06-19T22:20:30.798Z",
+  "undoable": true,
+  "turnId": "turn_mqlhs7ic_29ad8893-dd99-4b31-89bf-fbdb6dc7f9f4",
+  "changesetId": "cs_mqlhrb94_8ab39e9e-65cf-4bf9-a0a2-a20ca72b77b0",
+  "rationale": "Fix TS2304: replace `c: Context` with `c: any` so the handler compiles in the exported Deno project where Context is not available.",
+  "implementation": "Swap type annotation only — no logic changes.",
+  "workMessageId": 1781907631080981
+}
