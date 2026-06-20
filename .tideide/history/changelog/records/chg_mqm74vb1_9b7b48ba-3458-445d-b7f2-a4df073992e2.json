@@ -1,0 +1,90 @@
+{
+  "uid": "chg_mqm74vb1_9b7b48ba-3458-445d-b7f2-a4df073992e2",
+  "id": 1781950191274107,
+  "category": "handler",
+  "key": "getWeatherGrid",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "getWeatherGrid",
+    "source": "\n// Serve cloud cover + pressure grid data for area overlays.\n// Uses withValidatedCoords for consistent coord parsing + error handling.\nasync function getWeatherGrid(c: any) {\n  return functions.call('withValidatedCoords', c, async (lat: number, lon: number) => {\n    const result = await functions.call('fetchWeatherGrid', lat, lon);\n\n    // Map Result to HTTP — success returns grid data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n\n    return c.json(result.data);\n  }, 'Failed to fetch weather grid data');\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Center latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Center longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Grid of cloud cover and pressure data points",
+          "schema": {
+            "properties": {
+              "centerLat": {
+                "type": "number"
+              },
+              "centerLon": {
+                "type": "number"
+              },
+              "grid": {
+                "description": "Array of {lat, lon, cloudCover, pressure, hourly} objects",
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error"
+        }
+      },
+      "summary": "Get weather grid data for area overlays",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Serve cloud cover and pressure grid data for area overlays on the map.",
+    "duplicateJustification": "getDirections analyzes sailing conditions in 8 compass directions using fetchWeather with scoring logic. getWeatherGrid fetches a 5x5 spatial grid of cloud_cover and pressure_msl data using fetchWeatherGrid — completely different data source, API call, and purpose (area overlays vs directional sailing scores). They share only the withValidatedCoords pattern.",
+    "duplicateCandidates": [
+      {
+        "kind": "handler",
+        "name": "getDirections",
+        "module": "weather",
+        "purpose": "Analyze sailing conditions in 8 compass directions, mapping Result to HTTP response.",
+        "score": 0.92,
+        "reasons": [
+          "exact implementation match",
+          "similar params or route schema",
+          "same module"
+        ]
+      }
+    ],
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqm73hxj_06c9fa60-42ce-4db2-8496-31c26eab7aca",
+    "turnIndex": 0,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+    "toolCallId": "sevt_01UkmMPdLNQVEcHhBcL5qgu9"
+  },
+  "createdAt": "2026-06-20T10:09:51.216Z",
+  "undoable": true,
+  "turnId": "turn_mqm73hxj_06c9fa60-42ce-4db2-8496-31c26eab7aca",
+  "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+  "rationale": "New endpoint needed for the cloud cover and pressure area overlay features — provides a grid of weather data points around the boat's position.",
+  "implementation": "Delegates coordinate validation to the existing withValidatedCoords helper, then calls fetchWeatherGrid and maps the Result to HTTP response — consistent with the existing getWeather handler pattern.",
+  "workMessageId": 1781950191442239
+}

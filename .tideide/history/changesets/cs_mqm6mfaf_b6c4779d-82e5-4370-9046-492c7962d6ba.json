@@ -1,0 +1,78 @@
+{
+  "id": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+  "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+  "title": "Add weather area overlays: precipitation radar, cloud cover map, and pressure system zones",
+  "description": "Transform the weather visualization from point-based indicators to rich area overlays on the map. Uses RainViewer for real precipitation radar data and a grid-based approach with Open-Meteo for cloud cover and pressure system rendering.",
+  "status": "completed",
+  "plan": {
+    "summary": "Add three weather area overlay layers to the Leaflet map:\n\n1. **Precipitation radar** — integrate RainViewer's free radar tile API to show actual radar imagery as a colored Leaflet tile layer (green→yellow→red for intensity). No backend changes needed — purely client-side tile layer.\n\n2. **Cloud cover areas** — fetch weather data for a 5×5 grid of points (~50km spacing) around the boat from a new backend endpoint, then render semi-transparent white/gray radial gradient blobs on a dedicated Leaflet canvas overlay, sized and positioned by lat/lon. Each blob's opacity scales with cloud_cover percentage.\n\n3. **Pressure system zones** — use the same grid data to render colored gradient zones on the map. Blue for high pressure (≥1020 hPa), red for low pressure (≤1005 hPa), with H/L labels at extremes. Rendered as a Leaflet canvas overlay with radial gradients.\n\nOpen-Meteo supports multi-location queries (comma-separated lat/lon), so the grid fetch is a single API call for all ~25 points — requesting only cloud_cover and pressure_msl to keep it fast.\n\nNew layer toggles ('Radar', 'Cloud Map', 'Pressure Map') will be added to the existing Layers panel so users can toggle each overlay independently. The existing particle-based precipitation, cloud dimming, and pressure badge remain as complementary visualizations.\n\nThe main JS modification approach: add new code sections to the stored JS in _temp_build (new functions for RainViewer, grid fetch, cloud/pressure rendering, and layer setup). The existing particle system and indicator badges are untouched.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Step 1: Create the `/api/weather-grid` backend endpoint — a new handler `getWeatherGrid` and shared function `fetchWeatherGrid`. The function takes center lat/lon, computes a 5×5 grid of coordinates (~0.5° spacing ≈ 55km), and calls Open-Meteo with all 25 lat/lon pairs in a single request (comma-separated), requesting only `cloud_cover` and `pressure_msl` for current+hourly. Returns an array of {lat, lon, cloudCover, pressure} objects. The handler validates coords using the existing `withValidatedCoords` helper and returns the grid data. (Reqs 2, 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Step 2: Add RainViewer precipitation radar integration to the client JS. New functions: `initRainViewer()` fetches the RainViewer maps API (https://api.rainviewer.com/public/weather-maps.json) to get available radar timestamps, creates a Leaflet tile layer using the latest radar frame URL, and adds it to the map with ~0.4 opacity. New `rainRadar` layer variable tracks the tile layer. Called during initialization after initMap(). Toggled by the new 'radar' layer checkbox. (Req 1)",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Step 3: Add cloud cover area rendering to the client JS. New function `fetchAndRenderGridOverlays()` calls `/api/weather-grid`, then `renderCloudAreas(gridData)` creates a Leaflet canvas overlay that draws white radial gradient circles at each grid point's map position. Each circle's opacity scales with cloudCover (0% = invisible, 100% = 0.35 alpha). The overlay hooks into map zoom/pan to reposition circles. Updates on data refresh and timeline scrub (using hourly grid data). Toggled by new 'cloudMap' layer checkbox. (Req 2)",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Step 4: Add pressure system zone rendering to the client JS. New function `renderPressureAreas(gridData)` creates a Leaflet canvas overlay that draws colored radial gradients at each grid point: blue for high pressure (≥1015 hPa, intensity scales above 1015), red/orange for low pressure (≤1015 hPa, intensity scales below 1015). At local extremes (highest/lowest pressure in the grid), render bold 'H' or 'L' labels. Toggled by new 'pressureMap' layer checkbox. (Req 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Step 5: Update the HTML template to add 3 new layer toggle checkboxes to the Layers panel: 'Radar' (data-layer='radar'), 'Cloud Map' (data-layer='cloudMap'), 'Pressure Map' (data-layer='pressureMap'). Add them in a visually separated 'Overlays' subsection below the existing particle toggles. (Reqs 1, 2, 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_5",
+        "description": "Step 6: Update the JS layer toggle handler to recognize the 3 new layer keys. When 'radar' toggles, show/hide the RainViewer tile layer. When 'cloudMap' toggles, show/hide the cloud canvas overlay. When 'pressureMap' toggles, show/hide the pressure canvas overlay. Wire up grid fetch on initial load and on significant map movement. (Reqs 1, 2, 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_6",
+        "description": "Step 7: Add CSS for the new overlays — style the canvas overlays with proper z-index and pointer-events:none so they don't block map interaction. Style the 'Overlays' subsection separator in the layer panel. (Reqs 1, 2, 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_7",
+        "description": "Step 8: Write tests for the new `/api/weather-grid` endpoint — verify it returns valid grid data with lat, lon, cloudCover, pressure fields. Update existing tests if needed. Run all tests and check_export_types. Take a screenshot to visually verify the overlays. (All reqs)",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781949331291952
+  ],
+  "approvalMessageId": 1781950127462578,
+  "workMessageIds": [
+    1781950163804949,
+    1781950191442239,
+    1781950199021291,
+    1781950504380861,
+    1781950529106282,
+    1781950571906875,
+    1781950601439635,
+    1781950619248252,
+    1781950638756690
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 57,
+    "outputTokens": 26671,
+    "costUsd": 3.859935,
+    "durationMs": 663627
+  },
+  "createdAt": "2026-06-20T09:55:30.663Z",
+  "updatedAt": "2026-06-20T10:19:50.876Z",
+  "completedAt": "2026-06-20T10:19:34.179Z"
+}

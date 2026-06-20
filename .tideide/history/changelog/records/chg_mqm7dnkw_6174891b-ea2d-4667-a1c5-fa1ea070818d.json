@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqm7dnkw_6174891b-ea2d-4667-a1c5-fa1ea070818d",
+  "id": 1781950601144437,
+  "category": "test",
+  "key": "testWeatherGridEndpoint",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testWeatherGridEndpoint",
+    "source": "\n// Test that /api/weather-grid returns a valid 5x5 grid of cloud/pressure data\nasync function testWeatherGridEndpoint() {\n  const res = await fetch('http://localhost:3001/api/weather-grid?lat=41.35&lon=2.17');\n  assertEquals(res.status, 200, 'Weather grid should return 200');\n\n  const data = await res.json();\n\n  // Should have grid array\n  assert(Array.isArray(data.grid), 'Response should contain a grid array');\n  assertEquals(data.grid.length, 25, 'Grid should have 25 points (5x5)');\n\n  // Check center coordinates are echoed back\n  assert(typeof data.centerLat === 'number', 'Should include centerLat');\n  assert(typeof data.centerLon === 'number', 'Should include centerLon');\n\n  // Validate first grid point structure\n  const point = data.grid[0];\n  assert(typeof point.lat === 'number', 'Grid point should have lat');\n  assert(typeof point.lon === 'number', 'Grid point should have lon');\n  assert(typeof point.cloudCover === 'number', 'Grid point should have cloudCover');\n  assert(typeof point.pressure === 'number', 'Grid point should have pressure');\n  assert(Array.isArray(point.hourly), 'Grid point should have hourly array');\n\n  // Validate hourly entry structure\n  if (point.hourly.length > 0) {\n    const hourEntry = point.hourly[0];\n    assert(typeof hourEntry.time === 'string', 'Hourly entry should have time');\n    assert(typeof hourEntry.cloudCover === 'number', 'Hourly entry should have cloudCover');\n    assert(typeof hourEntry.pressure === 'number', 'Hourly entry should have pressure');\n  }\n\n  // Validate pressure range (sanity check — should be 900-1100 hPa)\n  assert(point.pressure > 900 && point.pressure < 1100, 'Pressure should be in reasonable range');\n\n  // Validate cloud cover range (0-100%)\n  assert(point.cloudCover >= 0 && point.cloudCover <= 100, 'Cloud cover should be 0-100%');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqm73hxj_06c9fa60-42ce-4db2-8496-31c26eab7aca",
+    "turnIndex": 0,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+    "toolCallId": "sevt_01DcoEh6i7sBfY8Zh8EqCsV7"
+  },
+  "createdAt": "2026-06-20T10:16:41.103Z",
+  "undoable": true,
+  "turnId": "turn_mqm73hxj_06c9fa60-42ce-4db2-8496-31c26eab7aca",
+  "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+  "rationale": "Test the new /api/weather-grid endpoint returns valid grid data with expected fields.",
+  "implementation": "Calls the endpoint with Barcelona coords and validates the response structure — 25 grid points, each with lat, lon, cloudCover, pressure, and hourly array.",
+  "workMessageId": 1781950601439635
+}

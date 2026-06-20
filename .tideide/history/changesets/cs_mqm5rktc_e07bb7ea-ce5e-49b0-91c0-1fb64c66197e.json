@@ -1,0 +1,38 @@
+{
+  "id": "cs_mqm5rktc_e07bb7ea-ce5e-49b0-91c0-1fb64c66197e",
+  "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+  "title": "Run water detection on initial load to prevent boat starting on land",
+  "description": null,
+  "status": "completed",
+  "plan": {
+    "summary": "The boat's default position is Barcelona city center (41.39, 2.17) — on dry land. Water detection only runs when the user drags/clicks or geolocation succeeds, but NOT on initial load or geolocation failure. This means the boat visibly sits on land until the user interacts.\n\nFix: (1) Change the default position to be in the Mediterranean Sea off Barcelona so the map opens over water immediately, and (2) add a validateAndSetBoatPosition call in the boot sequence so even if the default is somehow on land, it gets snapped to water. Also fix the geolocation failure path to validate instead of just calling refreshData.\n\nThis requires modifying the JS content stored in the _temp_build table — same approach as the previous changeset.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Step 1 — Modify the JS in _temp_build: (a) Change default boatPosition from {lat:41.39, lon:2.17} (Barcelona city) to {lat:41.35, lon:2.17} (Mediterranean Sea south of Barcelona). (b) In the DOMContentLoaded boot sequence, after initMap()/setupEvents()/updateInfoBar(), add validateAndSetBoatPosition(boatPosition.lat, boatPosition.lon, 'initial') BEFORE tryGeolocation(). (c) In tryGeolocation's failure callback, change refreshData() to validateAndSetBoatPosition(boatPosition.lat, boatPosition.lon, 'default') so even failed geolocation triggers water validation. (reqs 1, 2, 3)",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Step 2 — Visual verification and tests: Take a screenshot to verify the boat starts on water. Run existing tests to ensure nothing broke. Run check_export_types. (all reqs)",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1781947892075163
+  ],
+  "approvalMessageId": 1781948073885230,
+  "workMessageIds": [],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "costUsd": 0,
+    "durationMs": 0
+  },
+  "createdAt": "2026-06-20T09:31:31.488Z",
+  "updatedAt": "2026-06-20T09:36:24.396Z",
+  "completedAt": "2026-06-20T09:36:14.973Z"
+}

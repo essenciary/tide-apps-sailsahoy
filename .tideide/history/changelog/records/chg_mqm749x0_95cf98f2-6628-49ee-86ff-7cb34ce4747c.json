@@ -1,0 +1,31 @@
+{
+  "uid": "chg_mqm749x0_95cf98f2-6628-49ee-86ff-7cb34ce4747c",
+  "id": 1781950163531343,
+  "category": "function",
+  "key": "fetchWeatherGrid",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "fetchWeatherGrid",
+    "source": "\n// Fetch cloud cover and pressure for a 5×5 grid around center lat/lon.\n// Returns Result: { ok: true, data: { grid: [...] } } or { ok: false, error }.\n// Uses Open-Meteo multi-location API — one request for all 25 points.\nasync function fetchWeatherGrid(centerLat: number, centerLon: number) {\n  try {\n    const GRID_SIZE = 5;\n    const SPACING = 0.5; // degrees (~55km at mid-latitudes)\n    const HALF = Math.floor(GRID_SIZE / 2);\n\n    // Build grid of lat/lon coordinates centered on the given position\n    const lats: number[] = [];\n    const lons: number[] = [];\n    for (let row = -HALF; row <= HALF; row++) {\n      for (let col = -HALF; col <= HALF; col++) {\n        // Clamp to valid ranges\n        const lat = Math.max(-90, Math.min(90, centerLat + row * SPACING));\n        const lon = Math.max(-180, Math.min(180, centerLon + col * SPACING));\n        lats.push(Math.round(lat * 1000) / 1000);\n        lons.push(Math.round(lon * 1000) / 1000);\n      }\n    }\n\n    // Open-Meteo multi-location: comma-separated lat/lon values\n    const latStr = lats.join(',');\n    const lonStr = lons.join(',');\n    const forecastHours = config.get('DEFAULT_FORECAST_HOURS') || 48;\n\n    // Only request cloud_cover and pressure_msl — keep it fast\n    const params = 'cloud_cover,pressure_msl';\n    const url = `https://api.open-meteo.com/v1/forecast`\n      + `?latitude=${latStr}&longitude=${lonStr}`\n      + `&current=${params}`\n      + `&hourly=${params}`\n      + `&forecast_hours=${forecastHours}`\n      + `&timezone=auto`;\n\n    const res = await fetch(url);\n    if (!res.ok) {\n      return {\n        ok: false,\n        error: { code: 'GRID_API_ERROR', message: `Open-Meteo grid API error: ${res.status}` }\n      };\n    }\n\n    const rawData = await res.json();\n\n    // Multi-location response is an array of forecast objects (one per point)\n    // Single-location returns a plain object — normalize to array\n    const forecasts = Array.isArray(rawData) ? rawData : [rawData];\n\n    // Map each forecast to a compact grid point with current + hourly data\n    const grid = forecasts.map((fc: any, i: number) => ({\n      lat: lats[i],\n      lon: lons[i],\n      // Current values\n      cloudCover: fc.current?.cloud_cover ?? 0,\n      pressure: fc.current?.pressure_msl ?? 1013,\n      // Hourly arrays for timeline scrubbing\n      hourly: fc.hourly?.time?.map((time: string, h: number) => ({\n        time,\n        cloudCover: fc.hourly.cloud_cover?.[h] ?? 0,\n        pressure: fc.hourly.pressure_msl?.[h] ?? 1013\n      })) ?? []\n    }));\n\n    return { ok: true, data: { grid, centerLat, centerLon } };\n  } catch (err) {\n    return {\n      ok: false,\n      error: { code: 'GRID_API_ERROR', message: (err as Error).message || 'Unexpected error fetching grid weather' }\n    };\n  }\n}\n",
+    "module": "weather",
+    "purpose": "Fetch cloud cover and pressure data for a 5×5 grid of points around a center position using a single Open-Meteo multi-location call.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqm73hxj_06c9fa60-42ce-4db2-8496-31c26eab7aca",
+    "turnIndex": 0,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+    "toolCallId": "sevt_01V8vd8vh7ymWi2jqy537VhS"
+  },
+  "createdAt": "2026-06-20T10:09:23.495Z",
+  "undoable": true,
+  "turnId": "turn_mqm73hxj_06c9fa60-42ce-4db2-8496-31c26eab7aca",
+  "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+  "rationale": "The cloud cover and pressure area overlays need weather data for multiple surrounding points. Open-Meteo supports comma-separated lat/lon for multi-point queries, so we can fetch all 25 grid points in a single API call.",
+  "implementation": "Uses Open-Meteo's multi-location feature (comma-separated lat/lon) to request cloud_cover and pressure_msl for a 5×5 grid with 0.5° spacing (~55km). Returns both current and hourly data per grid point so timeline scrubbing works.",
+  "workMessageId": 1781950163804949
+}

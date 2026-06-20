@@ -1,0 +1,35 @@
+{
+  "uid": "chg_mqm7e1en_a385376a-ab1d-40c4-b1fe-f25285ef6f31",
+  "id": 1781950619089550,
+  "category": "test",
+  "key": "testServeApp",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "testServeApp",
+    "source": "\nasync function testServeApp() {\n  const BASE = 'http://localhost:3001';\n  const res = await fetch(BASE + '/');\n  assertEquals(res.status, 200, 'Should return 200');\n\n  const html = await res.text();\n\n  // Check for required structural elements\n  assert(html.includes('id=\"map\"'), 'Should contain map div');\n  assert(html.includes('id=\"weather-canvas\"'), 'Should contain weather canvas');\n  assert(html.includes('id=\"conditions-panel\"'), 'Should contain conditions panel');\n  assert(html.includes('id=\"compass-panel\"'), 'Should contain compass panel');\n  assert(html.includes('id=\"timeline-panel\"'), 'Should contain timeline panel');\n  assert(html.includes('id=\"info-bar\"'), 'Should contain info bar');\n\n  // Check for asset references\n  assert(html.includes('sailing-weather.css'), 'Should reference app CSS');\n  assert(html.includes('/api/sailing-js'), 'Should reference app JS via handler');\n  assert(html.includes('sailing-water-detect.css'), 'Should reference water detection CSS');\n\n  // Check for Leaflet references\n  assert(html.includes('leaflet'), 'Should reference Leaflet');\n\n  // Check meta tags\n  assert(html.includes('<!DOCTYPE html>'), 'Should have doctype');\n  assert(html.includes('viewport'), 'Should have viewport meta');\n\n  // Check play button is present with correct attributes\n  assert(html.includes('id=\"timeline-play-btn\"'), 'Should contain play button');\n  assert(html.includes('aria-label=\"Play forecast animation\"'), 'Play button should have aria-label');\n  assert(html.includes('data-play-interval=\"1500\"'), 'Play button should have injected config interval');\n\n  // Verify no unresolved template placeholders\n  assert(!html.includes('{{PLAY_INTERVAL_MS}}'), 'Should not contain unresolved placeholder');\n}\n",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "testServeApp",
+    "source": "\nasync function testServeApp() {\n  const BASE = 'http://localhost:3001';\n  const res = await fetch(BASE + '/');\n  assertEquals(res.status, 200, 'Should return 200');\n\n  const html = await res.text();\n\n  // Check for required structural elements\n  assert(html.includes('id=\"map\"'), 'Should contain map div');\n  assert(html.includes('id=\"weather-canvas\"'), 'Should contain weather canvas');\n  assert(html.includes('id=\"conditions-panel\"'), 'Should contain conditions panel');\n  assert(html.includes('id=\"compass-panel\"'), 'Should contain compass panel');\n  assert(html.includes('id=\"timeline-panel\"'), 'Should contain timeline panel');\n  assert(html.includes('id=\"info-bar\"'), 'Should contain info bar');\n\n  // Check for asset references\n  assert(html.includes('sailing-weather.css'), 'Should reference app CSS');\n  assert(html.includes('/api/sailing-js'), 'Should reference app JS via handler');\n  assert(html.includes('sailing-water-detect.css'), 'Should reference water detection CSS');\n  assert(html.includes('sailing-overlays.css'), 'Should reference overlays CSS');\n\n  // Check for Leaflet references\n  assert(html.includes('leaflet'), 'Should reference Leaflet');\n\n  // Check meta tags\n  assert(html.includes('<!DOCTYPE html>'), 'Should have doctype');\n  assert(html.includes('viewport'), 'Should have viewport meta');\n\n  // Check play button is present with correct attributes\n  assert(html.includes('id=\"timeline-play-btn\"'), 'Should contain play button');\n  assert(html.includes('aria-label=\"Play forecast animation\"'), 'Play button should have aria-label');\n  assert(html.includes('data-play-interval=\"1500\"'), 'Play button should have injected config interval');\n\n  // Verify no unresolved template placeholders\n  assert(!html.includes('{{PLAY_INTERVAL_MS}}'), 'Should not contain unresolved placeholder');\n\n  // Check overlay layer toggles are present\n  assert(html.includes('data-layer=\"radar\"'), 'Should have radar layer toggle');\n  assert(html.includes('data-layer=\"cloudMap\"'), 'Should have cloud map layer toggle');\n  assert(html.includes('data-layer=\"pressureMap\"'), 'Should have pressure map layer toggle');\n  assert(html.includes('layer-separator'), 'Should have layer separator');\n  assert(html.includes('layer-panel-subtitle'), 'Should have overlay subtitle');\n}\n",
+    "module": "sailing",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqm73hxj_06c9fa60-42ce-4db2-8496-31c26eab7aca",
+    "turnIndex": 0,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+    "toolCallId": "sevt_01SNBhm9nFZEiEu4s6mkFWcf"
+  },
+  "createdAt": "2026-06-20T10:16:59.031Z",
+  "undoable": true,
+  "turnId": "turn_mqm73hxj_06c9fa60-42ce-4db2-8496-31c26eab7aca",
+  "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+  "rationale": "Update test to verify the new overlay layer toggle checkboxes and CSS references are present.",
+  "implementation": "Added checks for the 3 new layer toggle checkboxes (radar, cloudMap, pressureMap), the layer separator/subtitle, and the overlays CSS reference.",
+  "workMessageId": 1781950619248252
+}

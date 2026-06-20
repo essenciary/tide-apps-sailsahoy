@@ -1,0 +1,73 @@
+{
+  "uid": "chg_mqm7515o_191151a9-a6d5-493b-ab2b-7ea778766aef",
+  "id": 1781950198874191,
+  "category": "route",
+  "key": "GET /api/weather-grid",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "method": "GET",
+    "path": "/api/weather-grid",
+    "handlerName": "getWeatherGrid",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Center latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Center longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Grid of cloud cover and pressure data points",
+          "schema": {
+            "properties": {
+              "centerLat": {
+                "type": "number"
+              },
+              "centerLon": {
+                "type": "number"
+              },
+              "grid": {
+                "description": "Array of {lat, lon, cloudCover, pressure, hourly} objects",
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error"
+        }
+      },
+      "summary": "Get weather grid data for area overlays",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqm73hxj_06c9fa60-42ce-4db2-8496-31c26eab7aca",
+    "turnIndex": 0,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+    "toolCallId": "sevt_01CQb5iGttFmFHFTEih7Efk7"
+  },
+  "createdAt": "2026-06-20T10:09:58.806Z",
+  "undoable": true,
+  "turnId": "turn_mqm73hxj_06c9fa60-42ce-4db2-8496-31c26eab7aca",
+  "changesetId": "cs_mqm6mfaf_b6c4779d-82e5-4370-9046-492c7962d6ba",
+  "rationale": "New endpoint for the cloud cover and pressure area overlay layers.",
+  "implementation": "Follows the same /api/ path prefix as the other weather endpoints.",
+  "workMessageId": 1781950199021291
+}
