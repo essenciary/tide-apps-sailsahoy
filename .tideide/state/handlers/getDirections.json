@@ -1,7 +1,7 @@
 {
   "name": "getDirections",
   "source": "\n// Analyze sailing conditions in 8 compass directions — delegates coord validation to shared helper\nasync function getDirections(c: any) {\n  return functions.call('withValidatedCoords', c, async (lat: number, lon: number) => {\n    const result = await functions.call('analyzeDirections', lat, lon);\n\n    // Map Result to HTTP response — success returns data, failure returns 500\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n    return c.json(result.data);\n  }, 'Failed to analyze directions');\n}\n",
-  "registeredAt": "2026-06-20T16:08:11.631Z",
+  "registeredAt": "2026-06-20T23:41:53.030Z",
   "schema": {
     "query": {
       "lat": {

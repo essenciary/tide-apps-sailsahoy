@@ -1,7 +1,7 @@
 {
   "name": "testTimelinePlayButton",
   "source": "\nasync function testTimelinePlayButton() {\n  // Verify the play button exists in the template with correct structure\n  const tmpl = templates.get('sailing-app');\n  assert(tmpl, 'sailing-app template should exist');\n\n  // Button should be inside the timeline-header div\n  assert(tmpl.includes('id=\"timeline-play-btn\"'), 'Template should have play button');\n  assert(tmpl.includes('type=\"button\"'), 'Play button should be type=button');\n\n  // Should have a data attribute placeholder for server-side injection\n  assert(tmpl.includes('data-play-interval=\"{{PLAY_INTERVAL_MS}}\"'), 'Template should have config placeholder');\n\n  // Button should be between the label and time display in the header\n  const headerStart = tmpl.indexOf('class=\"timeline-header\"');\n  const btnPos = tmpl.indexOf('id=\"timeline-play-btn\"');\n  const timePos = tmpl.indexOf('id=\"timeline-time\"');\n  assert(headerStart < btnPos, 'Play button should be inside timeline header');\n  assert(btnPos < timePos, 'Play button should come before the time display');\n}\n",
-  "registeredAt": "2026-06-20T16:08:11.642Z",
+  "registeredAt": "2026-06-20T23:41:53.048Z",
   "module": "weather",
   "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
   "runtimeId": "typescript",
