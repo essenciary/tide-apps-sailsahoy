@@ -1,7 +1,7 @@
 {
   "name": "testComputeSeaStatusScoreClamped",
   "source": "\n// Test: score should be clamped 0-100 even with extreme penalties\nasync function testComputeSeaStatusScoreClamped() {\n  // Near-gale winds + rough seas + heavy rain + low pressure — many penalties\n  const result = functions.call('computeSeaStatus', {\n    windSpeed: 35,\n    windGusts: 50,\n    waveHeight: 4.5,\n    precipitation: 10,\n    pressure: 988,\n    cloudCover: 100\n  });\n\n  assert(result.score >= 0, 'Score should never be negative, got ' + result.score);\n  assert(result.score <= 100, 'Score should never exceed 100, got ' + result.score);\n  // With this many penalties, should be red or black\n  assert(result.level === 'red' || result.level === 'black',\n    'Extreme conditions should be red or black, got ' + result.level);\n}\n",
-  "registeredAt": "2026-06-20T23:41:53.037Z",
+  "registeredAt": "2026-06-22T17:49:16.765Z",
   "module": "weather",
   "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
   "runtimeId": "typescript",

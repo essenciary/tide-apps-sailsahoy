@@ -1,7 +1,7 @@
 {
   "name": "testComputeSeaStatusGreen",
   "source": "\n// Test: ideal sailing conditions should return green level\nasync function testComputeSeaStatusGreen() {\n  const result = functions.call('computeSeaStatus', {\n    windSpeed: 12,      // pleasant sailing wind\n    windGusts: 15,      // mild gusts\n    waveHeight: 0.8,    // calm seas\n    precipitation: 0,   // dry\n    pressure: 1015,     // normal pressure\n    cloudCover: 20      // partly cloudy\n  });\n\n  assertEquals(result.level, 'green', 'Ideal conditions should be green');\n  assertEquals(result.label, 'Good to Go');\n  assert(result.score >= 70, 'Green score should be >= 70, got ' + result.score);\n  assert(Array.isArray(result.reasons), 'Reasons should be an array');\n}\n",
-  "registeredAt": "2026-06-20T23:41:53.035Z",
+  "registeredAt": "2026-06-22T17:49:16.764Z",
   "module": "weather",
   "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
   "runtimeId": "typescript",

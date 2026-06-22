@@ -1,7 +1,7 @@
 {
   "name": "testGetDirectionsValidation",
   "source": "\nasync function testGetDirectionsValidation() {\n  const BASE = 'http://localhost:3001';\n\n  // Test missing parameters — schema validation returns 400\n  const res1 = await fetch(`${BASE}/api/directions`);\n  assertEquals(res1.status, 400, 'Missing params should return 400');\n  const body1 = await res1.json();\n  assert(body1.error, 'Should have error field');\n\n  // Test missing lon — schema validation returns 400\n  const res2 = await fetch(`${BASE}/api/directions?lat=43.3`);\n  assertEquals(res2.status, 400, 'Missing lon should return 400');\n}\n",
-  "registeredAt": "2026-06-20T23:41:53.045Z",
+  "registeredAt": "2026-06-22T17:49:16.769Z",
   "module": "weather",
   "changesetId": "cs_mqkqjkbc_f0e212e6-4bda-4ec8-a1a3-0dda7f345bcf",
   "runtimeId": "typescript",

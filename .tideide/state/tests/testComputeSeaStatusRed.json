@@ -1,7 +1,7 @@
 {
   "name": "testComputeSeaStatusRed",
   "source": "\n// Test: dangerous but not life-threatening conditions should return red level\nasync function testComputeSeaStatusRed() {\n  const result = functions.call('computeSeaStatus', {\n    windSpeed: 28,      // strong wind — 40 penalty\n    windGusts: 38,      // gusty — 5 penalty (factor 1.36, gusts > 20)\n    waveHeight: 2.2,    // moderate seas — 15 penalty\n    precipitation: 4,   // moderate rain — 12 penalty\n    pressure: 1010,     // normal pressure — no penalty\n    cloudCover: 80      // no penalty\n  });\n\n  // Total: 100 - 40 - 5 - 15 - 12 = 28 → red (15-39)\n  assertEquals(result.level, 'red', 'Dangerous conditions should be red, got ' + result.level + ' (score ' + result.score + ')');\n  assertEquals(result.label, 'Dangerous');\n  assert(result.score >= 15 && result.score < 40, 'Red score should be 15-39, got ' + result.score);\n  assert(result.reasons.length >= 3, 'Should have multiple penalty reasons');\n}\n",
-  "registeredAt": "2026-06-20T23:41:53.036Z",
+  "registeredAt": "2026-06-22T17:49:16.765Z",
   "module": "weather",
   "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
   "runtimeId": "typescript",
