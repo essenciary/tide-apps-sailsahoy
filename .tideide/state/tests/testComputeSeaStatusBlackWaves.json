@@ -1,14 +1,9 @@
 {
   "name": "testComputeSeaStatusBlackWaves",
   "source": "\n// Test: very rough seas should instantly trigger black\nasync function testComputeSeaStatusBlackWaves() {\n  const result = functions.call('computeSeaStatus', {\n    windSpeed: 10,      // even with light wind\n    windGusts: 12,\n    waveHeight: 6.0,    // very rough seas — instant black trigger\n    precipitation: 0,\n    pressure: 1013,\n    cloudCover: 30\n  });\n\n  assertEquals(result.level, 'black', 'Very rough seas should trigger black');\n  assertEquals(result.score, 0, 'Black from instant trigger should be score 0');\n  assert(result.reasons[0].includes('Very rough seas'), 'Should mention rough seas');\n}\n",
-  "registeredAt": "2026-06-22T18:56:16.310Z",
+  "registeredAt": "2026-06-26T18:48:21.159Z",
   "module": "weather",
   "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
-  "lastResult": {
-    "passed": true,
-    "durationMs": 0,
-    "ranAt": "2026-06-26T17:05:29.726Z"
-  },
   "runtimeId": "typescript",
   "language": "typescript"
 }

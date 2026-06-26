@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqv9v4h3_a346f1b1-bbb3-4616-a63b-f9b53bbda1aa",
+  "id": 1782498971008902,
+  "category": "config",
+  "key": "ROUTE_RISK_ETA_HEADWIND_MULT",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "ROUTE_RISK_ETA_HEADWIND_MULT",
+    "value": 1.8,
+    "description": "Multiplier applied to the ETA-uncertainty drift for headwind legs (the constant-speed assumption is least reliable into the wind). 1 = no extra penalty."
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv9tfi8_f3afbb97-53d7-4257-81b2-41fc190b340f",
+    "turnIndex": 1,
+    "sessionId": "session_mqv9da71_ebb93281-1309-4d59-96c2-89c4a88ad19a",
+    "changesetId": "cs_mqv9sqbg_c5720023-7c80-4bc1-ac54-72be2f59f491",
+    "toolCallId": "sevt_014CKiw3GTpregoENGX5z158"
+  },
+  "createdAt": "2026-06-26T18:36:10.983Z",
+  "undoable": true,
+  "turnId": "turn_mqv9tfi8_f3afbb97-53d7-4257-81b2-41fc190b340f",
+  "changesetId": "cs_mqv9sqbg_c5720023-7c80-4bc1-ac54-72be2f59f491",
+  "rationale": "Headwind legs make ETA less reliable; this scales the drift penalty.",
+  "implementation": "Config-driven like the other route warning thresholds so it is tunable without code changes.",
+  "workMessageId": 1782498971073971
+}

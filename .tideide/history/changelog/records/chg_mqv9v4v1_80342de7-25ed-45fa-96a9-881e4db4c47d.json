@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqv9v4v1_80342de7-25ed-45fa-96a9-881e4db4c47d",
+  "id": 1782498971518348,
+  "category": "config",
+  "key": "ROUTE_RISK_STRONG_WIND_KNOTS",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "ROUTE_RISK_STRONG_WIND_KNOTS",
+    "value": 22,
+    "description": "Wind speed (knots) at or above which a leg counts as 'strong wind' — it degrades ETA reliability (extra ETA-uncertainty drift) and contributes to the wind risk factor."
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv9tfi8_f3afbb97-53d7-4257-81b2-41fc190b340f",
+    "turnIndex": 1,
+    "sessionId": "session_mqv9da71_ebb93281-1309-4d59-96c2-89c4a88ad19a",
+    "changesetId": "cs_mqv9sqbg_c5720023-7c80-4bc1-ac54-72be2f59f491",
+    "toolCallId": "sevt_01LEWQcWC5XgspVsMC2umnw8"
+  },
+  "createdAt": "2026-06-26T18:36:11.485Z",
+  "undoable": true,
+  "turnId": "turn_mqv9tfi8_f3afbb97-53d7-4257-81b2-41fc190b340f",
+  "changesetId": "cs_mqv9sqbg_c5720023-7c80-4bc1-ac54-72be2f59f491",
+  "rationale": "Strong wind both raises the wind factor and reduces speed reliability for ETA.",
+  "implementation": "Mirrors the ROUTE_* config convention and feeds both the wind and ETA factors.",
+  "workMessageId": 1782498971564530
+}

@@ -1,14 +1,9 @@
 {
   "name": "testRoutePlanValidation",
   "source": "\n// Validation test for POST /api/route-plan — confirms bad input yields 400.\nasync function testRoutePlanValidation() {\n  const post = (payload) => fetch('http://localhost:3001/api/route-plan', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(payload)\n  });\n\n  // Missing points entirely\n  const noPoints = await post({ speed: 6 });\n  assertEquals(noPoints.status, 400, 'Missing points should be 400');\n\n  // Too few points (need origin + at least one waypoint)\n  const onePoint = await post({ points: [{ lat: 41.35, lon: 2.17 }] });\n  assertEquals(onePoint.status, 400, 'A single point should be 400');\n\n  // Out-of-range coordinates\n  const badCoords = await post({ points: [{ lat: 41.35, lon: 2.17 }, { lat: 200, lon: 2.5 }] });\n  assertEquals(badCoords.status, 400, 'Out-of-range latitude should be 400');\n\n  // Non-numeric coordinates\n  const nonNumeric = await post({ points: [{ lat: 41.35, lon: 2.17 }, { lat: 'x', lon: 2.5 }] });\n  assertEquals(nonNumeric.status, 400, 'Non-numeric coordinate should be 400');\n\n  // Invalid speed (zero / negative)\n  const zeroSpeed = await post({ points: [{ lat: 41.35, lon: 2.17 }, { lat: 41.55, lon: 2.55 }], speed: 0 });\n  assertEquals(zeroSpeed.status, 400, 'Zero speed should be 400');\n\n  const negSpeed = await post({ points: [{ lat: 41.35, lon: 2.17 }, { lat: 41.55, lon: 2.55 }], speed: -4 });\n  assertEquals(negSpeed.status, 400, 'Negative speed should be 400');\n}\n",
-  "registeredAt": "2026-06-26T17:04:41.820Z",
+  "registeredAt": "2026-06-26T18:48:21.167Z",
   "module": "route",
   "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
-  "lastResult": {
-    "passed": true,
-    "durationMs": 14,
-    "ranAt": "2026-06-26T17:05:29.726Z"
-  },
   "runtimeId": "typescript",
   "language": "typescript"
 }

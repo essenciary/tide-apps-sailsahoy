@@ -98,6 +98,27 @@
     "module": "route"
   },
   {
+    "name": "ROUTE_RISK_ETA_BASE_PCT",
+    "value": 6,
+    "description": "Baseline ETA drift as a percentage of elapsed travel time, used by the per-leg risk score's ETA-uncertainty factor. Higher = the constant-speed ETA is treated as less reliable.",
+    "updatedAt": "2026-06-26T18:36:10.466Z",
+    "module": "route"
+  },
+  {
+    "name": "ROUTE_RISK_ETA_HEADWIND_MULT",
+    "value": 1.8,
+    "description": "Multiplier applied to the ETA-uncertainty drift for headwind legs (the constant-speed assumption is least reliable into the wind). 1 = no extra penalty.",
+    "updatedAt": "2026-06-26T18:36:10.983Z",
+    "module": "route"
+  },
+  {
+    "name": "ROUTE_RISK_STRONG_WIND_KNOTS",
+    "value": 22,
+    "description": "Wind speed (knots) at or above which a leg counts as 'strong wind' — it degrades ETA reliability (extra ETA-uncertainty drift) and contributes to the wind risk factor.",
+    "updatedAt": "2026-06-26T18:36:11.485Z",
+    "module": "route"
+  },
+  {
     "name": "TIMELINE_PLAY_INTERVAL_MS",
     "value": 1500,
     "description": "Milliseconds between auto-advance steps when playing the forecast timeline",

@@ -1,0 +1,67 @@
+{
+  "id": "cs_mqv81rf4_757e384f-bf73-4311-acbd-f127fd305577",
+  "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+  "title": "Sync route planner with the forecast timeline (time-shifted ETA + warnings)",
+  "description": null,
+  "status": "completed",
+  "plan": {
+    "summary": "Right now the Route Planner always departs \"now\" (recomputeRoute posts startTime: Date.now()), so moving the Forecast Timeline changes the on-map weather animation but not the route. This change makes the timeline drive the route's departure time: scrubbing or playing the timeline re-posts the route with the selected forecast hour as startTime, so every leg's ETA shifts and the backend re-resolves each leg's risk warnings (headwind / low visibility / pressure drop / arrival after sunset) against the forecast hour nearest each shifted arrival. No backend logic changes are needed — planRoute already honors startTime and resolves per-leg weather by arrival instant; we only need to feed it the selected time and trigger recomputes on timeline changes. The work is a small, self-contained edit to the existing client route module in the JS bundle (_temp_build id=1), consistent with how the rest of the app already interprets forecast times.\n\nWhy this approach: it reuses the existing /api/route-plan contract (which already accepts startTime) and the existing debounced recomputeRoute, so it's low-risk and keeps the hot weather path untouched. The selected hour is converted to ms with the same new Date(forecastTimeString) convention the timeline/conditions panels already use, so the route's ETA clock and the timeline stay visually consistent. Tradeoff: during playback the route recomputes once per timeline tick (one weather fetch per leg per tick); the existing 400ms debounce coalesces rapid manual scrubs, and the waypoint cap already bounds per-recompute fetches.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Step 1 (reqs 1,2,3): In the JS bundle (_temp_build id=1, served via /api/sailing-js), add a small helper routeStartTimeMs() that returns the currently selected forecast hour as ms — new Date(currentWeather.hourly[currentHourIndex].time).getTime() when weather is loaded, else Date.now() — and change recomputeRoute's POST payload from startTime: Date.now() to startTime: routeStartTimeMs() so the route always departs at the selected timeline hour.",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Step 2 (reqs 2,3): Trigger a guarded recompute (if routeWaypoints.length > 0) when the timeline hour changes — append recomputeRoute() to the slider 'input' handler in setupEvents and to advanceTimeline (both the normal-increment and the wrap-to-0 branches) so the route tracks the displayed hour during manual scrubbing and during playback. The existing 400ms debounce keeps request volume sane.",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Step 3 (req 5): Add a 'Departs' row to the route panel totals (using routePlan.totals.departTimeMs via the existing routeFormatTime) so the time the route is anchored to is visible alongside Total distance / Total time / ETA.",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Step 4 (verify): Re-fetch /api/sailing-js and syntax-validate the served bundle (compile-only) to confirm the edits are well-formed.",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Step 5 (reqs 4,6 — tests): Update testSailingJsEndpoint to assert the timeline→route wiring is present (function routeStartTimeMs, startTime: routeStartTimeMs() used in the POST, and a recompute call in the slider handler). Add testRoutePlanStartTimeShift: POST the same Mediterranean route at two startTimes 6h apart and assert legs[0].departTimeMs and totals.etaMs shift by ~6h and the leg conditions/warnings are re-resolved — directly proving the route honors the timeline-selected time.",
+        "status": "done"
+      },
+      {
+        "id": "step_5",
+        "description": "Step 6 (verify): Run run_tests, check_export_types, and test_coverage; fix until clean. Then browser-test: add a waypoint, scrub the Forecast Timeline, and confirm the route panel's Departs/ETA update; capture a screenshot.",
+        "status": "done"
+      },
+      {
+        "id": "step_6",
+        "description": "Assumptions: (1) The selected forecast hour is interpreted with the app's existing new Date(localTimeString) convention (consistent with the timeline and conditions panels), falling back to now when weather isn't loaded yet. (2) The route follows the timeline whenever waypoints exist, regardless of whether Planning mode is toggled on. (3) 'Weather patterns' is satisfied by the backend re-resolving each leg's forecast hour to the shifted arrival time — no new data source is added. (4) Debounce stays at 400ms; during playback this means ~one recompute per tick, which is acceptable for this app.",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1782495922033928
+  ],
+  "approvalMessageId": 1782496385171167,
+  "workMessageIds": [
+    1782496620405845,
+    1782496647213214,
+    1782496823429595
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 42,
+    "outputTokens": 30699,
+    "costUsd": 3.189883,
+    "durationMs": 438406
+  },
+  "createdAt": "2026-06-26T17:45:21.424Z",
+  "updatedAt": "2026-06-26T18:00:23.568Z",
+  "completedAt": "2026-06-26T18:00:10.292Z"
+}

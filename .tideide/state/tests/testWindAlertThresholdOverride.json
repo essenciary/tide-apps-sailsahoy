@@ -1,14 +1,9 @@
 {
   "name": "testWindAlertThresholdOverride",
   "source": "\n// Verify /api/wind-alert honors the optional `threshold` query override.\n// Using an impossibly high threshold (999 kn) deterministically forces alert=false\n// regardless of live wind conditions, and the response echoes the override.\nasync function testWindAlertThresholdOverride() {\n  const res = await fetch('http://localhost:3001/api/wind-alert?lat=41.35&lon=2.17&threshold=999');\n  assertEquals(res.status, 200, 'Wind alert with override should return 200');\n\n  const data = await res.json();\n  assertEquals(data.threshold, 999, 'Response should echo the overridden threshold');\n  assertEquals(data.alert, false, 'No real gusts exceed 999 kn, so alert must be false');\n}\n",
-  "registeredAt": "2026-06-26T13:44:42.150Z",
+  "registeredAt": "2026-06-26T18:48:21.171Z",
   "module": "weather",
   "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
-  "lastResult": {
-    "passed": true,
-    "durationMs": 54,
-    "ranAt": "2026-06-26T17:05:29.726Z"
-  },
   "runtimeId": "typescript",
   "language": "typescript"
 }

@@ -1,7 +1,7 @@
 {
   "name": "computeWindAlert",
   "source": "\n// Decide whether the current wind gusts warrant an alert.\n// \"Exceed\" = strictly greater than the threshold (gusts > threshold).\n//\n// Pure function: no network or closure dependencies, so it is directly\n// unit-testable. Takes the `current` conditions object from fetchWeather and a\n// numeric threshold (knots), and returns the alert flag, the echoed gust value,\n// the echoed threshold, and a short human-readable message.\nfunction computeWindAlert(current: any, threshold: number) {\n  // Coerce inputs defensively — current may lack windGusts (e.g. inland/null)\n  const gusts = typeof current?.windGusts === 'number' ? current.windGusts : 0;\n  const thresholdKn = typeof threshold === 'number' && !isNaN(threshold) ? threshold : 0;\n\n  // Strictly-greater comparison: gusts must exceed the threshold to alert\n  const alert = gusts > thresholdKn;\n\n  // Round helper — keep displayed numbers to 1 decimal place\n  const round1 = (n: number) => Math.round(n * 10) / 10;\n  const gustsR = round1(gusts);\n  const thresholdR = round1(thresholdKn);\n\n  // Build a short human-readable message for each branch\n  const message = alert\n    ? `⚠️ Wind gusts of ${gustsR} kn exceed the ${thresholdR} kn threshold — strong gusts, sail with caution.`\n    : `Wind gusts of ${gustsR} kn are within the ${thresholdR} kn threshold — conditions look manageable.`;\n\n  return { alert, gusts: gustsR, threshold: thresholdR, message };\n}\n",
-  "registeredAt": "2026-06-26T13:43:29.916Z",
+  "registeredAt": "2026-06-26T18:48:21.149Z",
   "module": "weather",
   "purpose": "Decide whether current wind gusts exceed a threshold and produce a short human-readable message.",
   "runtimeId": "typescript",

@@ -1,0 +1,38 @@
+{
+  "name": "RiskFactor",
+  "fields": [
+    {
+      "description": "Stable factor identifier: wind | visibility | pressure | sunset | eta.",
+      "name": "key",
+      "type": "string"
+    },
+    {
+      "description": "Human-readable factor name (e.g. 'Wind').",
+      "name": "label",
+      "type": "string"
+    },
+    {
+      "description": "Short emoji/glyph used in the panel meter and factor list.",
+      "name": "icon",
+      "type": "string"
+    },
+    {
+      "description": "Points this factor contributed to the total score (0..max).",
+      "name": "points",
+      "type": "number"
+    },
+    {
+      "description": "Maximum points this factor can contribute (its weight cap).",
+      "name": "max",
+      "type": "number"
+    },
+    {
+      "description": "One-line human-readable explanation of why these points were assigned.",
+      "name": "detail",
+      "type": "string"
+    }
+  ],
+  "description": "A single explainable contributor to a leg's risk score (e.g. wind, visibility, pressure, sunset, ETA uncertainty).",
+  "registeredAt": "2026-06-26T18:48:21.156Z",
+  "module": "route"
+}

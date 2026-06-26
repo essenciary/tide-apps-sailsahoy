@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqv9v436_d34e23a2-5475-45d9-8daf-0ba8b3f07ea1",
+  "id": 1782498970489999,
+  "category": "config",
+  "key": "ROUTE_RISK_ETA_BASE_PCT",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "ROUTE_RISK_ETA_BASE_PCT",
+    "value": 6,
+    "description": "Baseline ETA drift as a percentage of elapsed travel time, used by the per-leg risk score's ETA-uncertainty factor. Higher = the constant-speed ETA is treated as less reliable."
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv9tfi8_f3afbb97-53d7-4257-81b2-41fc190b340f",
+    "turnIndex": 1,
+    "sessionId": "session_mqv9da71_ebb93281-1309-4d59-96c2-89c4a88ad19a",
+    "changesetId": "cs_mqv9sqbg_c5720023-7c80-4bc1-ac54-72be2f59f491",
+    "toolCallId": "sevt_01QAWa51agT8S6DhSDja56YW"
+  },
+  "createdAt": "2026-06-26T18:36:10.467Z",
+  "undoable": true,
+  "turnId": "turn_mqv9tfi8_f3afbb97-53d7-4257-81b2-41fc190b340f",
+  "changesetId": "cs_mqv9sqbg_c5720023-7c80-4bc1-ac54-72be2f59f491",
+  "rationale": "The ETA-uncertainty factor needs a tunable baseline drift rate.",
+  "implementation": "Matches the existing route config naming (ROUTE_*) and the config-driven scoring pattern.",
+  "workMessageId": 1782498970524073
+}

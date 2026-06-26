@@ -1,14 +1,9 @@
 {
   "name": "testComputeRoutePlan",
   "source": "\n// Unit test for computeRoutePlan — verifies haversine distance (nm), initial\n// bearing/compass, durations, cumulative depart/arrive timing, speed scaling,\n// and the null guards for too-few points / non-positive speed.\nasync function testComputeRoutePlan() {\n  const start = 1700000000000; // fixed UTC ms for deterministic timing\n\n  // A due-north leg of exactly 1 degree of latitude (~60 nm) from the equator\n  const points = [\n    { lat: 0, lon: 0 },\n    { lat: 1, lon: 0 },\n    { lat: 1, lon: 1 }   // second leg heads roughly east\n  ];\n\n  const plan = functions.call('computeRoutePlan', points, 6, start);\n  assert(plan && Array.isArray(plan.legs), 'Should return a plan with legs');\n  assertEquals(plan.legs.length, 2, 'Three points form two legs');\n\n  // Leg 0: ~60 nm due north\n  const leg0 = plan.legs[0];\n  assert(leg0.distanceNm >= 59.8 && leg0.distanceNm <= 60.3, 'Leg 0 ~60 nm, got ' + leg0.distanceNm);\n  assertEquals(leg0.bearing, 0, 'Due-north bearing should be 0');\n  assertEquals(leg0.bearingCompass, 'N', 'Due-north compass should be N');\n\n  // Duration = distance / speed; at 6 kn, ~60 nm ≈ 10 h\n  assert(leg0.durationHours >= 9.9 && leg0.durationHours <= 10.1, 'Leg 0 ~10h at 6kn, got ' + leg0.durationHours);\n\n  // Timing: leg 0 departs at start; leg 1 departs when leg 0 arrives\n  assertEquals(leg0.departTimeMs, start, 'Leg 0 departs at start time');\n  assertEquals(plan.legs[1].departTimeMs, leg0.arriveTimeMs, 'Leg 1 departs when leg 0 arrives');\n\n  // Leg 1 heads roughly east → bearing near 90\n  const leg1 = plan.legs[1];\n  assert(leg1.bearing > 80 && leg1.bearing < 100, 'Leg 1 heads ~east, got ' + leg1.bearing);\n\n  // Totals aggregate distance/time; ETA equals the final leg's arrival\n  assert(plan.totals.distanceNm >= leg0.distanceNm, 'Total distance includes all legs');\n  assert(Math.abs(plan.totals.etaMs - leg1.arriveTimeMs) <= 1, 'ETA should match final leg arrival');\n\n  // Speed scaling: doubling speed halves the durations\n  const fast = functions.call('computeRoutePlan', points, 12, start);\n  assert(Math.abs(fast.totals.durationHours - plan.totals.durationHours / 2) < 0.05,\n    'Doubling speed should halve total duration');\n\n  // Null guards\n  assertEquals(functions.call('computeRoutePlan', [{ lat: 0, lon: 0 }], 6, start), null, '<2 points returns null');\n  assertEquals(functions.call('computeRoutePlan', points, 0, start), null, 'speed 0 returns null');\n  assertEquals(functions.call('computeRoutePlan', points, -3, start), null, 'negative speed returns null');\n}\n",
-  "registeredAt": "2026-06-26T17:03:58.597Z",
+  "registeredAt": "2026-06-26T18:48:21.159Z",
   "module": "route",
   "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
-  "lastResult": {
-    "passed": true,
-    "durationMs": 0,
-    "ranAt": "2026-06-26T17:05:29.726Z"
-  },
   "runtimeId": "typescript",
   "language": "typescript"
 }

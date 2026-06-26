@@ -1,14 +1,9 @@
 {
   "name": "testComputeSeaStatusNullWaves",
   "source": "\n// Test: null wave data (inland) should still produce valid result\nasync function testComputeSeaStatusNullWaves() {\n  const result = functions.call('computeSeaStatus', {\n    windSpeed: 10,\n    windGusts: 14,\n    waveHeight: null,   // no marine data — inland position\n    precipitation: 0,\n    pressure: 1013,\n    cloudCover: 40\n  });\n\n  assert(result.level !== undefined, 'Should have a level even without wave data');\n  assert(result.score >= 0 && result.score <= 100, 'Score should be 0-100, got ' + result.score);\n  assert(typeof result.label === 'string', 'Label should be a string');\n  assert(Array.isArray(result.reasons), 'Reasons should be an array');\n  // Without waves to penalize, light wind should be green\n  assertEquals(result.level, 'green', 'Light wind with no waves should be green');\n}\n",
-  "registeredAt": "2026-06-22T18:56:16.311Z",
+  "registeredAt": "2026-06-26T18:48:21.160Z",
   "module": "weather",
   "changesetId": "cs_mqla2wnx_485550c1-b493-49a8-9751-a5a2c414ba5b",
-  "lastResult": {
-    "passed": true,
-    "durationMs": 0,
-    "ranAt": "2026-06-26T17:05:29.726Z"
-  },
   "runtimeId": "typescript",
   "language": "typescript"
 }

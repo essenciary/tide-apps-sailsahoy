@@ -1,14 +1,9 @@
 {
   "name": "testComputeBestWindow",
   "source": "\n// Unit test for computeBestWindow — verifies it picks the calmest 3-hour block\n// (lowest combined wind + gust) from a crafted hourly array, with correct\n// averages, score, hour count, and a descriptive reason string.\nasync function testComputeBestWindow() {\n  // Build an hourly array of 8 hours. Indices 3,4,5 are clearly the calmest:\n  // wind 4/5/6 (avg 5), gusts 6/7/8 (avg 7) -> combinedScore 12.\n  // Every other 3-hour block has a higher combined wind+gust.\n  const hourly = [\n    { time: '2026-06-26T00:00', windSpeed: 20, windGusts: 28 },\n    { time: '2026-06-26T01:00', windSpeed: 18, windGusts: 25 },\n    { time: '2026-06-26T02:00', windSpeed: 16, windGusts: 22 },\n    { time: '2026-06-26T03:00', windSpeed: 4,  windGusts: 6 },\n    { time: '2026-06-26T04:00', windSpeed: 5,  windGusts: 7 },\n    { time: '2026-06-26T05:00', windSpeed: 6,  windGusts: 8 },\n    { time: '2026-06-26T06:00', windSpeed: 14, windGusts: 19 },\n    { time: '2026-06-26T07:00', windSpeed: 17, windGusts: 23 }\n  ];\n\n  const window = functions.call('computeBestWindow', hourly, 3, 24);\n\n  // A window should be found\n  assert(window !== null, 'computeBestWindow should return a window');\n\n  // The calmest block starts at index 3\n  assertEquals(window.startIndex, 3, 'Calmest window should start at index 3');\n  assertEquals(window.start, 3, 'start should match startIndex');\n  assertEquals(window.end, 5, 'end should be start + windowHours - 1');\n\n  // Averages: wind (4+5+6)/3 = 5, gust (6+7+8)/3 = 7, combined = 12\n  assertEquals(window.avgWind, 5, 'avgWind should be 5 kn');\n  assertEquals(window.avgGust, 7, 'avgGust should be 7 kn');\n  assertEquals(window.combinedScore, 12, 'combinedScore should be avgWind + avgGust');\n\n  // Exactly 3 hours in the window, in order\n  assertEquals(window.hours.length, 3, 'Window should contain exactly 3 hours');\n  assertEquals(window.hours[0].time, '2026-06-26T03:00', 'First hour time should match');\n  assertEquals(window.startTime, '2026-06-26T03:00', 'startTime should be the first hour');\n  assertEquals(window.endTime, '2026-06-26T05:00', 'endTime should be the last hour');\n\n  // Reason string should be present and mention the start time\n  assert(typeof window.reason === 'string' && window.reason.length > 0, 'reason should be a non-empty string');\n  assert(window.reason.indexOf('03:00') >= 0, 'reason should mention the window start time');\n\n  // Edge case: fewer hours than the window size returns null\n  const tooShort = functions.call('computeBestWindow', hourly.slice(0, 2), 3, 24);\n  assertEquals(tooShort, null, 'Should return null when not enough hours for one window');\n}\n",
-  "registeredAt": "2026-06-26T12:48:12.972Z",
+  "registeredAt": "2026-06-26T18:48:21.157Z",
   "module": "weather",
   "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
-  "lastResult": {
-    "passed": true,
-    "durationMs": 0,
-    "ranAt": "2026-06-26T17:05:29.726Z"
-  },
   "runtimeId": "typescript",
   "language": "typescript"
 }

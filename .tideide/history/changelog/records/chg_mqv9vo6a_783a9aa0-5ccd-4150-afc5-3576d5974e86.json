@@ -1,0 +1,50 @@
+{
+  "uid": "chg_mqv9vo6a_783a9aa0-5ccd-4150-afc5-3576d5974e86",
+  "id": 1782498996525508,
+  "category": "type",
+  "key": "LegRiskScore",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "LegRiskScore",
+    "fields": [
+      {
+        "description": "Total risk score 0..100 (higher = more risk).",
+        "name": "score",
+        "type": "number"
+      },
+      {
+        "description": "Risk tier: low | moderate | high | severe.",
+        "name": "level",
+        "type": "string"
+      },
+      {
+        "description": "One-line summary naming the dominant contributing factor.",
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "description": "The five explainable factor contributions (wind, visibility, pressure, sunset, ETA uncertainty).",
+        "name": "factors",
+        "type": "RiskFactor[]"
+      }
+    ],
+    "description": "The explainable per-leg risk roll-up: a 0–100 score (higher = more risk), a 4-tier level, a one-line headline, and the five contributing factors.",
+    "module": "route"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv9tfi8_f3afbb97-53d7-4257-81b2-41fc190b340f",
+    "turnIndex": 1,
+    "sessionId": "session_mqv9da71_ebb93281-1309-4d59-96c2-89c4a88ad19a",
+    "changesetId": "cs_mqv9sqbg_c5720023-7c80-4bc1-ac54-72be2f59f491",
+    "toolCallId": "sevt_01B3AmYYAqAfYpF43vKmby1e"
+  },
+  "createdAt": "2026-06-26T18:36:36.514Z",
+  "undoable": true,
+  "turnId": "turn_mqv9tfi8_f3afbb97-53d7-4257-81b2-41fc190b340f",
+  "changesetId": "cs_mqv9sqbg_c5720023-7c80-4bc1-ac54-72be2f59f491",
+  "rationale": "planRoute attaches this object to each leg and the panel renders it; declaring it as a type enables dev-view rendering and documents the contract.",
+  "implementation": "Mirrors the object returned by computeLegRiskScore (returnType 'LegRiskScore').",
+  "workMessageId": 1782498996543841
+}

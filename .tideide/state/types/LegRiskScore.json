@@ -1,0 +1,28 @@
+{
+  "name": "LegRiskScore",
+  "fields": [
+    {
+      "description": "Total risk score 0..100 (higher = more risk).",
+      "name": "score",
+      "type": "number"
+    },
+    {
+      "description": "Risk tier: low | moderate | high | severe.",
+      "name": "level",
+      "type": "string"
+    },
+    {
+      "description": "One-line summary naming the dominant contributing factor.",
+      "name": "headline",
+      "type": "string"
+    },
+    {
+      "description": "The five explainable factor contributions (wind, visibility, pressure, sunset, ETA uncertainty).",
+      "name": "factors",
+      "type": "RiskFactor[]"
+    }
+  ],
+  "description": "The explainable per-leg risk roll-up: a 0–100 score (higher = more risk), a 4-tier level, a one-line headline, and the five contributing factors.",
+  "registeredAt": "2026-06-26T18:48:21.156Z",
+  "module": "route"
+}

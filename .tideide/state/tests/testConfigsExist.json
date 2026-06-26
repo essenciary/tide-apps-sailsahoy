@@ -1,14 +1,9 @@
 {
   "name": "testConfigsExist",
   "source": "\nasync function testConfigsExist() {\n  // Verify all required configs exist with correct values\n  const forecastHours = config.get('DEFAULT_FORECAST_HOURS');\n  assertEquals(forecastHours, 48, 'DEFAULT_FORECAST_HOURS should be 48');\n\n  const sampleDistance = config.get('DIRECTION_SAMPLE_DISTANCE_NM');\n  assertEquals(sampleDistance, 30, 'DIRECTION_SAMPLE_DISTANCE_NM should be 30');\n\n  const compassDirs = config.get('COMPASS_DIRECTIONS');\n  assertEquals(compassDirs, 8, 'COMPASS_DIRECTIONS should be 8');\n\n  // Play interval config for timeline auto-advance\n  const playInterval = config.get('TIMELINE_PLAY_INTERVAL_MS');\n  assertEquals(playInterval, 1500, 'TIMELINE_PLAY_INTERVAL_MS should be 1500');\n}\n",
-  "registeredAt": "2026-06-22T18:56:16.313Z",
+  "registeredAt": "2026-06-26T18:48:21.162Z",
   "module": "weather",
   "changesetId": "cs_mql6uu1b_450d0866-6ca5-4ffc-9815-53641f188db7",
-  "lastResult": {
-    "passed": true,
-    "durationMs": 0,
-    "ranAt": "2026-06-26T17:05:29.726Z"
-  },
   "runtimeId": "typescript",
   "language": "typescript"
 }
