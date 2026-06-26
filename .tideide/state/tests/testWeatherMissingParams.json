@@ -1,9 +1,14 @@
 {
   "name": "testWeatherMissingParams",
   "source": "\n// Verify /api/weather returns 400 when lat/lon are missing — caught by schema validation\nasync function testWeatherMissingParams() {\n  const res = await fetch('http://localhost:3001/api/weather');\n  assertEquals(res.status, 400);\n  const body = await res.json();\n  // Route schema validation returns this shape\n  assertEquals(body.error, 'Validation failed');\n  assert(body.details.length > 0, 'Should include validation detail messages');\n}\n",
-  "registeredAt": "2026-06-22T17:49:16.771Z",
+  "registeredAt": "2026-06-22T18:56:16.319Z",
   "module": "weather",
   "changesetId": "cs_mqkxm464_decc158e-1120-4f27-b626-5db86b34eea1",
+  "lastResult": {
+    "passed": true,
+    "durationMs": 1,
+    "ranAt": "2026-06-26T17:05:29.726Z"
+  },
   "runtimeId": "typescript",
   "language": "typescript"
 }

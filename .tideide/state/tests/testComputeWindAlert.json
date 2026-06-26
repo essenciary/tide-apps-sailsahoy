@@ -1,0 +1,14 @@
+{
+  "name": "testComputeWindAlert",
+  "source": "\n// Unit test for computeWindAlert — verifies the strict gusts > threshold rule\n// for both branches (alert and no-alert) with correct echoed fields and a\n// non-empty human-readable message.\nasync function testComputeWindAlert() {\n  // Branch 1: gusts ABOVE the threshold -> alert true\n  const high = functions.call('computeWindAlert', { windGusts: 32.1 }, 25);\n  assertEquals(high.alert, true, 'Gusts above threshold should trigger an alert');\n  assertEquals(high.gusts, 32.1, 'Should echo the gust value');\n  assertEquals(high.threshold, 25, 'Should echo the threshold');\n  assert(typeof high.message === 'string' && high.message.length > 0, 'Alert message should be non-empty');\n  assert(high.message.indexOf('exceed') >= 0, 'Alert message should describe exceeding the threshold');\n\n  // Branch 2: gusts BELOW the threshold -> alert false\n  const low = functions.call('computeWindAlert', { windGusts: 12.4 }, 25);\n  assertEquals(low.alert, false, 'Gusts below threshold should not trigger an alert');\n  assertEquals(low.gusts, 12.4, 'Should echo the gust value');\n  assertEquals(low.threshold, 25, 'Should echo the threshold');\n  assert(typeof low.message === 'string' && low.message.length > 0, 'No-alert message should be non-empty');\n  assert(low.message.indexOf('within') >= 0, 'No-alert message should describe being within the threshold');\n\n  // Edge case: exactly equal to the threshold is NOT an alert (strict >)\n  const equal = functions.call('computeWindAlert', { windGusts: 25 }, 25);\n  assertEquals(equal.alert, false, 'Gusts exactly at threshold should not alert (strictly greater)');\n}\n",
+  "registeredAt": "2026-06-26T13:44:41.013Z",
+  "module": "weather",
+  "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "lastResult": {
+    "passed": true,
+    "durationMs": 0,
+    "ranAt": "2026-06-26T17:05:29.726Z"
+  },
+  "runtimeId": "typescript",
+  "language": "typescript"
+}

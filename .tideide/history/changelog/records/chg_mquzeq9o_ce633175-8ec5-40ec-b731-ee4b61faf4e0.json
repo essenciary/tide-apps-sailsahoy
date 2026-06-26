@@ -1,0 +1,31 @@
+{
+  "uid": "chg_mquzeq9o_ce633175-8ec5-40ec-b731-ee4b61faf4e0",
+  "id": 1782481409981221,
+  "category": "function",
+  "key": "computeWindAlert",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "computeWindAlert",
+    "source": "\n// Decide whether the current wind gusts warrant an alert.\n// \"Exceed\" = strictly greater than the threshold (gusts > threshold).\n//\n// Pure function: no network or closure dependencies, so it is directly\n// unit-testable. Takes the `current` conditions object from fetchWeather and a\n// numeric threshold (knots), and returns the alert flag, the echoed gust value,\n// the echoed threshold, and a short human-readable message.\nfunction computeWindAlert(current: any, threshold: number) {\n  // Coerce inputs defensively — current may lack windGusts (e.g. inland/null)\n  const gusts = typeof current?.windGusts === 'number' ? current.windGusts : 0;\n  const thresholdKn = typeof threshold === 'number' && !isNaN(threshold) ? threshold : 0;\n\n  // Strictly-greater comparison: gusts must exceed the threshold to alert\n  const alert = gusts > thresholdKn;\n\n  // Round helper — keep displayed numbers to 1 decimal place\n  const round1 = (n: number) => Math.round(n * 10) / 10;\n  const gustsR = round1(gusts);\n  const thresholdR = round1(thresholdKn);\n\n  // Build a short human-readable message for each branch\n  const message = alert\n    ? `⚠️ Wind gusts of ${gustsR} kn exceed the ${thresholdR} kn threshold — strong gusts, sail with caution.`\n    : `Wind gusts of ${gustsR} kn are within the ${thresholdR} kn threshold — conditions look manageable.`;\n\n  return { alert, gusts: gustsR, threshold: thresholdR, message };\n}\n",
+    "module": "weather",
+    "purpose": "Decide whether current wind gusts exceed a threshold and produce a short human-readable message.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved — build it, then run the tests and checks to verify.",
+    "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+    "toolCallId": "sevt_01KripbTbRTUp7aVDgwdC2G6"
+  },
+  "createdAt": "2026-06-26T13:43:29.916Z",
+  "undoable": true,
+  "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+  "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "rationale": "The threshold-comparison logic is extracted as a pure function so it is unit-testable without network and keeps the handler thin.",
+  "implementation": "Mirrors the computeBestWindow pattern: a pure, closure-free helper that reads current.windGusts, compares strictly against the threshold, and returns the alert flag plus an echoed gusts/threshold and a per-branch message.",
+  "workMessageId": 1782481409979556
+}

@@ -1,5 +1,19 @@
 [
   {
+    "name": "BEST_WINDOW_HORIZON_HOURS",
+    "value": 24,
+    "description": "How many forecast hours ahead to search for the calmest sailing window.",
+    "updatedAt": "2026-06-26T12:46:16.438Z",
+    "module": "weather"
+  },
+  {
+    "name": "BEST_WINDOW_SIZE_HOURS",
+    "value": 3,
+    "description": "Number of consecutive forecast hours that make up a sailing window.",
+    "updatedAt": "2026-06-26T12:46:15.932Z",
+    "module": "weather"
+  },
+  {
     "name": "COMPASS_DIRECTIONS",
     "value": 8,
     "description": "Number of cardinal/intercardinal directions to analyze (8 = N/NE/E/SE/S/SW/W/NW)",
@@ -28,10 +42,73 @@
     "module": "weather"
   },
   {
+    "name": "ROUTE_DEFAULT_SPEED_KNOTS",
+    "value": 5,
+    "description": "Default boat speed (knots) used for route-plan ETA when the request omits speed. Tunable.",
+    "updatedAt": "2026-06-26T16:49:04.722Z",
+    "module": "route"
+  },
+  {
+    "name": "ROUTE_HEADWIND_ANGLE_DEG",
+    "value": 60,
+    "description": "Half-angle (degrees) within which the wind's FROM direction must align with the leg bearing to count as a headwind.",
+    "updatedAt": "2026-06-26T16:49:05.716Z",
+    "module": "route"
+  },
+  {
+    "name": "ROUTE_HEADWIND_MIN_KNOTS",
+    "value": 10,
+    "description": "Minimum wind speed (knots) for a head-on wind to be flagged as a headwind risk.",
+    "updatedAt": "2026-06-26T16:49:06.236Z",
+    "module": "route"
+  },
+  {
+    "name": "ROUTE_LOW_VIS_CLOUD_PCT",
+    "value": 95,
+    "description": "Cloud cover (%) at or above which a leg is flagged as low visibility (fog/overcast proxy).",
+    "updatedAt": "2026-06-26T16:49:07.322Z",
+    "module": "route"
+  },
+  {
+    "name": "ROUTE_LOW_VIS_PRECIP_MM",
+    "value": 2,
+    "description": "Precipitation (mm/h) at or above which a leg is flagged as low visibility.",
+    "updatedAt": "2026-06-26T16:49:06.821Z",
+    "module": "route"
+  },
+  {
+    "name": "ROUTE_MAX_WAYPOINTS",
+    "value": 12,
+    "description": "Maximum number of user waypoints in a route (excludes the boat origin). Bounds the per-leg weather API calls.",
+    "updatedAt": "2026-06-26T16:49:05.251Z",
+    "module": "route"
+  },
+  {
+    "name": "ROUTE_PRESSURE_DROP_HPA",
+    "value": 3,
+    "description": "Hour-over-hour pressure fall (hPa) at or above which a leg is flagged for a pressure drop nearby.",
+    "updatedAt": "2026-06-26T16:49:08.621Z",
+    "module": "route"
+  },
+  {
+    "name": "ROUTE_PRESSURE_LOW_HPA",
+    "value": 1005,
+    "description": "Mean sea-level pressure (hPa) at or below which a leg is flagged for a nearby low-pressure system.",
+    "updatedAt": "2026-06-26T16:49:08.157Z",
+    "module": "route"
+  },
+  {
     "name": "TIMELINE_PLAY_INTERVAL_MS",
     "value": 1500,
     "description": "Milliseconds between auto-advance steps when playing the forecast timeline",
     "updatedAt": "2026-06-19T17:28:30.811Z",
+    "module": "weather"
+  },
+  {
+    "name": "WIND_GUST_ALERT_THRESHOLD_KNOTS",
+    "value": 25,
+    "description": "Default wind gust alert threshold in knots for GET /api/wind-alert. Gusts strictly greater than this flag an alert. Overridable per-request via the optional `threshold` query param.",
+    "updatedAt": "2026-06-26T13:43:14.890Z",
     "module": "weather"
   }
 ]

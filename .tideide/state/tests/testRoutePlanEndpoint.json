@@ -1,0 +1,14 @@
+{
+  "name": "testRoutePlanEndpoint",
+  "source": "\n// Integration test for POST /api/route-plan — verifies the endpoint returns a\n// valid weather-aware plan (legs + totals + per-leg warnings) for a short\n// Mediterranean route off Barcelona.\nasync function testRoutePlanEndpoint() {\n  const body = {\n    points: [\n      { lat: 41.35, lon: 2.17 },  // origin (boat)\n      { lat: 41.55, lon: 2.55 },  // waypoint 1\n      { lat: 41.80, lon: 3.10 }   // waypoint 2\n    ],\n    speed: 6\n  };\n\n  const res = await fetch('http://localhost:3001/api/route-plan', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(body)\n  });\n  assertEquals(res.status, 200, 'Route plan should return 200');\n\n  const data = await res.json();\n\n  // Echoed speed + totals\n  assertEquals(data.speed, 6, 'Echoes the requested speed');\n  assert(data.totals && typeof data.totals.distanceNm === 'number', 'totals.distanceNm should be a number');\n  assert(typeof data.totals.durationHours === 'number', 'totals.durationHours should be a number');\n  assert(typeof data.totals.etaMs === 'number', 'totals.etaMs should be a number');\n  assert(data.totals.etaMs > data.startTime, 'ETA should be after the start time');\n\n  // Two legs for three points\n  assert(Array.isArray(data.legs), 'legs should be an array');\n  assertEquals(data.legs.length, 2, 'Three points form two legs');\n\n  // Each leg carries geometry + weather assessment\n  for (const leg of data.legs) {\n    assert(typeof leg.distanceNm === 'number', 'leg.distanceNm should be a number');\n    assert(typeof leg.bearing === 'number', 'leg.bearing should be a number');\n    assert(typeof leg.bearingCompass === 'string' && leg.bearingCompass.length > 0, 'leg.bearingCompass should be a non-empty string');\n    assert(typeof leg.durationHours === 'number', 'leg.durationHours should be a number');\n    assert(['ok', 'caution', 'warning'].indexOf(leg.riskLevel) >= 0, 'leg.riskLevel should be a valid tier');\n    assert(Array.isArray(leg.warnings), 'leg.warnings should be an array');\n    // conditions is an object when weather resolved, or null when unavailable\n    assert(leg.conditions === null || typeof leg.conditions === 'object', 'leg.conditions should be object or null');\n  }\n\n  // Total distance should be positive for this real multi-leg route\n  assert(data.totals.distanceNm > 0, 'Total distance should be positive for a real route');\n}\n",
+  "registeredAt": "2026-06-26T17:04:41.290Z",
+  "module": "route",
+  "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "lastResult": {
+    "passed": true,
+    "durationMs": 61,
+    "ranAt": "2026-06-26T17:05:29.726Z"
+  },
+  "runtimeId": "typescript",
+  "language": "typescript"
+}

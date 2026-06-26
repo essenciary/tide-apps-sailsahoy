@@ -1,9 +1,14 @@
 {
   "name": "testIndicatorsLayerToggle",
   "source": "\n// Verify the template includes the new Indicators layer toggle checkbox\nasync function testIndicatorsLayerToggle() {\n  const html = templates.get('sailing-app');\n  assert(html, 'Template sailing-app should exist');\n  \n  // Check that the indicators layer toggle is present\n  assert(html.includes('data-layer=\"indicators\"'), 'Template should have indicators layer toggle');\n  assert(html.includes('id=\"layer-indicators\"'), 'Template should have layer-indicators checkbox ID');\n  assert(html.includes('Indicators'), 'Template should have Indicators label text');\n  \n  // Verify all original layers are still present\n  assert(html.includes('data-layer=\"wind\"'), 'Wind layer toggle should exist');\n  assert(html.includes('data-layer=\"waves\"'), 'Waves layer toggle should exist');\n  assert(html.includes('data-layer=\"precip\"'), 'Precip layer toggle should exist');\n  assert(html.includes('data-layer=\"clouds\"'), 'Clouds layer toggle should exist');\n}\n",
-  "registeredAt": "2026-06-22T17:49:16.769Z",
+  "registeredAt": "2026-06-22T18:56:16.316Z",
   "module": "weather",
   "changesetId": "cs_mqm2u63w_94d06f05-f505-4828-9805-3801363235ce",
+  "lastResult": {
+    "passed": true,
+    "durationMs": 0,
+    "ranAt": "2026-06-26T17:05:29.726Z"
+  },
   "runtimeId": "typescript",
   "language": "typescript"
 }

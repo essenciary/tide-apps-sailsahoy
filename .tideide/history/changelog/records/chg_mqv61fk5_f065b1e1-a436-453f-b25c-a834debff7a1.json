@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqv61fk5_f065b1e1-a436-453f-b25c-a834debff7a1",
+  "id": 1782492546838541,
+  "category": "config",
+  "key": "ROUTE_LOW_VIS_PRECIP_MM",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "ROUTE_LOW_VIS_PRECIP_MM",
+    "value": 2,
+    "description": "Precipitation (mm/h) at or above which a leg is flagged as low visibility."
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+    "turnIndex": 0,
+    "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+    "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+    "toolCallId": "sevt_015CsvJjSEHu36T3crLbqGWn"
+  },
+  "createdAt": "2026-06-26T16:49:06.821Z",
+  "undoable": true,
+  "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+  "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "rationale": "Heavy rain reduces visibility; needs a tunable threshold.",
+  "implementation": "2 mm/h corresponds to moderate rain that degrades visibility at sea.",
+  "workMessageId": 1782492546865537
+}

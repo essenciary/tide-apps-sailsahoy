@@ -19,6 +19,42 @@
   },
   {
     "method": "GET",
+    "path": "/api/best-window",
+    "handlerName": "getBestWindow",
+    "registeredAt": "2026-06-26T12:47:21.257Z",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Calmest sailing window with timing, average wind/gust, score, hourly breakdown, and a reason string"
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error or insufficient forecast data"
+        }
+      },
+      "summary": "Get the calmest sailing window in the upcoming forecast",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather"
+  },
+  {
+    "method": "GET",
     "path": "/api/directions",
     "handlerName": "getDirections",
     "registeredAt": "2026-06-19T11:45:37.668Z",
@@ -63,6 +99,99 @@
       ]
     },
     "module": "weather"
+  },
+  {
+    "method": "POST",
+    "path": "/api/route-plan",
+    "handlerName": "getRoutePlan",
+    "registeredAt": "2026-06-26T16:54:49.187Z",
+    "schema": {
+      "body": {
+        "properties": {
+          "points": {
+            "description": "Ordered points; index 0 is the origin (boat), the rest are waypoints",
+            "items": {
+              "properties": {
+                "lat": {
+                  "description": "Latitude (-90..90)",
+                  "type": "number"
+                },
+                "lon": {
+                  "description": "Longitude (-180..180)",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "speed": {
+            "description": "Boat speed in knots (defaults to ROUTE_DEFAULT_SPEED_KNOTS)",
+            "type": "number"
+          },
+          "startTime": {
+            "description": "Departure time in UTC milliseconds (defaults to now)",
+            "type": "number"
+          }
+        },
+        "required": [
+          "points"
+        ],
+        "type": "object"
+      },
+      "description": "Given an ordered list of points (origin first, then waypoints), returns per-leg distance, bearing, duration and ETA at the given boat speed, plus per-leg weather risk warnings.",
+      "responses": {
+        "200": {
+          "description": "Weather-aware route plan with legs and totals",
+          "schema": {
+            "properties": {
+              "legs": {
+                "type": "array"
+              },
+              "speed": {
+                "type": "number"
+              },
+              "startTime": {
+                "type": "number"
+              },
+              "totals": {
+                "properties": {
+                  "departTimeMs": {
+                    "type": "number"
+                  },
+                  "distanceNm": {
+                    "type": "number"
+                  },
+                  "durationHours": {
+                    "type": "number"
+                  },
+                  "etaMs": {
+                    "type": "number"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Validation error (bad points or speed)"
+        },
+        "502": {
+          "description": "Weather data could not be fetched for the route"
+        }
+      },
+      "summary": "Compute a weather-aware route plan",
+      "tags": [
+        "route"
+      ]
+    },
+    "module": "route"
   },
   {
     "method": "GET",
@@ -184,6 +313,73 @@
         }
       },
       "summary": "Get weather grid data for area overlays",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather"
+  },
+  {
+    "method": "GET",
+    "path": "/api/wind-alert",
+    "handlerName": "getWindAlert",
+    "registeredAt": "2026-06-26T13:44:03.306Z",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        },
+        "threshold": {
+          "description": "Optional gust alert threshold in knots; overrides the WIND_GUST_ALERT_THRESHOLD_KNOTS config default (25)",
+          "required": false,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Wind gust alert for the position",
+          "schema": {
+            "properties": {
+              "alert": {
+                "type": "boolean"
+              },
+              "gusts": {
+                "type": "number"
+              },
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              },
+              "message": {
+                "type": "string"
+              },
+              "threshold": {
+                "type": "number"
+              },
+              "timezone": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error"
+        }
+      },
+      "summary": "Flag whether current wind gusts exceed a threshold",
       "tags": [
         "weather"
       ]

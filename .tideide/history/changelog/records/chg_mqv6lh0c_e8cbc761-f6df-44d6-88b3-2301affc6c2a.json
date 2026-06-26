@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqv6lh0c_e8cbc761-f6df-44d6-88b3-2301affc6c2a",
+  "id": 1782493481846760,
+  "category": "test",
+  "key": "testRoutePlanValidation",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testRoutePlanValidation",
+    "source": "\n// Validation test for POST /api/route-plan — confirms bad input yields 400.\nasync function testRoutePlanValidation() {\n  const post = (payload) => fetch('http://localhost:3001/api/route-plan', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(payload)\n  });\n\n  // Missing points entirely\n  const noPoints = await post({ speed: 6 });\n  assertEquals(noPoints.status, 400, 'Missing points should be 400');\n\n  // Too few points (need origin + at least one waypoint)\n  const onePoint = await post({ points: [{ lat: 41.35, lon: 2.17 }] });\n  assertEquals(onePoint.status, 400, 'A single point should be 400');\n\n  // Out-of-range coordinates\n  const badCoords = await post({ points: [{ lat: 41.35, lon: 2.17 }, { lat: 200, lon: 2.5 }] });\n  assertEquals(badCoords.status, 400, 'Out-of-range latitude should be 400');\n\n  // Non-numeric coordinates\n  const nonNumeric = await post({ points: [{ lat: 41.35, lon: 2.17 }, { lat: 'x', lon: 2.5 }] });\n  assertEquals(nonNumeric.status, 400, 'Non-numeric coordinate should be 400');\n\n  // Invalid speed (zero / negative)\n  const zeroSpeed = await post({ points: [{ lat: 41.35, lon: 2.17 }, { lat: 41.55, lon: 2.55 }], speed: 0 });\n  assertEquals(zeroSpeed.status, 400, 'Zero speed should be 400');\n\n  const negSpeed = await post({ points: [{ lat: 41.35, lon: 2.17 }, { lat: 41.55, lon: 2.55 }], speed: -4 });\n  assertEquals(negSpeed.status, 400, 'Negative speed should be 400');\n}\n",
+    "module": "route",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+    "turnIndex": 0,
+    "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+    "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+    "toolCallId": "sevt_01TXdb7Qo9HL36RawzoCeo6B"
+  },
+  "createdAt": "2026-06-26T17:04:41.820Z",
+  "undoable": true,
+  "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+  "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "rationale": "Verify the endpoint rejects malformed routes (missing/too-few/out-of-range points and bad speed) with 400.",
+  "implementation": "Used the existing define_test mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1782493481871528
+}

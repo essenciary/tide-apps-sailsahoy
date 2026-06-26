@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mquzga06_a16d46d0-e9a1-46e2-a9e6-70a733ce0069",
+  "id": 1782481482201071,
+  "category": "test",
+  "key": "testWindAlertThresholdOverride",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testWindAlertThresholdOverride",
+    "source": "\n// Verify /api/wind-alert honors the optional `threshold` query override.\n// Using an impossibly high threshold (999 kn) deterministically forces alert=false\n// regardless of live wind conditions, and the response echoes the override.\nasync function testWindAlertThresholdOverride() {\n  const res = await fetch('http://localhost:3001/api/wind-alert?lat=41.35&lon=2.17&threshold=999');\n  assertEquals(res.status, 200, 'Wind alert with override should return 200');\n\n  const data = await res.json();\n  assertEquals(data.threshold, 999, 'Response should echo the overridden threshold');\n  assertEquals(data.alert, false, 'No real gusts exceed 999 kn, so alert must be false');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved — build it, then run the tests and checks to verify.",
+    "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+    "toolCallId": "sevt_01LRU1bu3QJ3vcx3birRMG4W"
+  },
+  "createdAt": "2026-06-26T13:44:42.150Z",
+  "undoable": true,
+  "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+  "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "rationale": "Verify the per-request threshold override path works deterministically.",
+  "implementation": "Calls the endpoint with threshold=999 to force alert=false regardless of live conditions, and asserts the echoed threshold reflects the override.",
+  "workMessageId": 1782481482234252
+}

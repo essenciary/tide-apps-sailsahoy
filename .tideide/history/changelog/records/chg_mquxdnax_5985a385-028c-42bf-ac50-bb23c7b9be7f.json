@@ -1,0 +1,31 @@
+{
+  "uid": "chg_mquxdnax_5985a385-028c-42bf-ac50-bb23c7b9be7f",
+  "id": 1782478000211242,
+  "category": "function",
+  "key": "computeBestWindow",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "computeBestWindow",
+    "source": "\n// Find the calmest sailing window within an hourly forecast.\n// \"Calmest\" = lowest combined wind + gust, measured as the mean per-hour\n// (windSpeed + windGusts) across the window. Earliest window wins ties.\n//\n// Pure function: no network or closure dependencies, so it is directly unit-testable.\n// Returns null when there is not enough data to form a single window.\nfunction computeBestWindow(hourly: any[], windowHours: number, horizonHours: number) {\n  // Guard: need a usable array and a positive window size\n  if (!Array.isArray(hourly) || windowHours <= 0) return null;\n\n  // Clamp the search horizon to the data we actually have\n  const horizon = Math.min(horizonHours, hourly.length);\n\n  // Not enough hours to form even one window\n  if (horizon < windowHours) return null;\n\n  // Round helper — keep displayed numbers to 1 decimal place\n  const round1 = (n: number) => Math.round(n * 10) / 10;\n\n  // Slide the window across every valid start index and track the lowest score\n  let best: any = null;\n  for (let start = 0; start <= horizon - windowHours; start++) {\n    const slice = hourly.slice(start, start + windowHours);\n\n    // Sum wind and gust across the window's hours\n    let windSum = 0;\n    let gustSum = 0;\n    for (const h of slice) {\n      windSum += h.windSpeed ?? 0;\n      gustSum += h.windGusts ?? 0;\n    }\n\n    // Per-hour averages — friendlier numbers for the reason string\n    const avgWind = windSum / windowHours;\n    const avgGust = gustSum / windowHours;\n    const combinedScore = avgWind + avgGust;\n\n    // Keep the earliest window with the strictly-lowest combined score\n    if (best === null || combinedScore < best.combinedScore) {\n      best = { start, slice, avgWind, avgGust, combinedScore };\n    }\n  }\n\n  // Should be unreachable given the guards above, but be defensive\n  if (best === null) return null;\n\n  const startHour = best.slice[0];\n  const endHour = best.slice[best.slice.length - 1];\n\n  // Extract HH:MM from an ISO-ish \"YYYY-MM-DDTHH:MM\" time string\n  const hhmm = (t: string) => {\n    if (typeof t !== 'string') return '';\n    const idx = t.indexOf('T');\n    return idx >= 0 ? t.slice(idx + 1, idx + 6) : t;\n  };\n\n  // Classify average wind speed (knots) into a friendly tier label\n  const tierLabel = (kn: number) => {\n    if (kn < 4) return 'very light';\n    if (kn < 8) return 'light';\n    if (kn < 14) return 'moderate';\n    if (kn < 21) return 'fresh';\n    return 'strong';\n  };\n\n  const startTime = hhmm(startHour.time);\n  const endTime = hhmm(endHour.time);\n  const avgWindR = round1(best.avgWind);\n  const avgGustR = round1(best.avgGust);\n\n  // Build the short human-readable reason string\n  const reason = `Calmest window ${startTime}–${endTime} — ${tierLabel(best.avgWind)} winds averaging `\n    + `${avgWindR} kn, gusts to ${avgGustR} kn`;\n\n  return {\n    startIndex: best.start,\n    start: best.start,\n    end: best.start + windowHours - 1,\n    startTime: startHour.time,\n    endTime: endHour.time,\n    avgWind: avgWindR,\n    avgGust: avgGustR,\n    combinedScore: round1(best.combinedScore),\n    // Trimmed per-hour data for the calmest window\n    hours: best.slice.map((h: any) => ({\n      time: h.time,\n      windSpeed: h.windSpeed,\n      windGusts: h.windGusts\n    })),\n    reason\n  };\n}\n",
+    "module": "weather",
+    "purpose": "Find the calmest consecutive sailing window (lowest combined wind + gust) within an hourly forecast.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved — go ahead and build it. Run the tests and type checks to verify nothing is broken, and show me what changed.",
+    "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+    "toolCallId": "sevt_016xcXuQX4eDsdX9hWi56ss9"
+  },
+  "createdAt": "2026-06-26T12:46:40.185Z",
+  "undoable": true,
+  "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+  "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+  "rationale": "The window-finding algorithm is extracted as a pure function so it is unit-testable without network calls and keeps the handler thin.",
+  "implementation": "Slides a fixed-length window across the clamped horizon, scoring each by the mean per-hour (windSpeed + windGusts); earliest window wins ties. Returns a descriptor with a human-readable reason string. Pure — no closure dependencies.",
+  "workMessageId": 1782478000383198
+}

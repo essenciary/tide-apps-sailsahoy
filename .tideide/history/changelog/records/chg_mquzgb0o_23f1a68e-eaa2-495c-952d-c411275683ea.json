@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mquzgb0o_23f1a68e-eaa2-495c-952d-c411275683ea",
+  "id": 1782481483512828,
+  "category": "test",
+  "key": "testWindAlertOutOfRange",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testWindAlertOutOfRange",
+    "source": "\n// Verify /api/wind-alert returns 400 for out-of-range coordinates.\n// These are valid numbers (pass schema typing) but fail the range check in withValidatedCoords.\nasync function testWindAlertOutOfRange() {\n  const res = await fetch('http://localhost:3001/api/wind-alert?lat=100&lon=50');\n  assertEquals(res.status, 400, 'Out-of-range coords should return 400');\n  const body = await res.json();\n  assertEquals(body.error, true, 'Should report an error');\n  assertEquals(body.message, 'Invalid coordinates: lat must be -90..90, lon must be -180..180', 'Should return the range error message');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved — build it, then run the tests and checks to verify.",
+    "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+    "toolCallId": "sevt_01JkRTB6CNAF6UQe45zteySv"
+  },
+  "createdAt": "2026-06-26T13:44:43.464Z",
+  "undoable": true,
+  "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+  "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "rationale": "Verify out-of-range coordinates are rejected by the shared coordinate validator.",
+  "implementation": "Sends numeric-but-out-of-range coords (which pass schema typing) and asserts the withValidatedCoords range-error 400 shape.",
+  "workMessageId": 1782481483541636
+}

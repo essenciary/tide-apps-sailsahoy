@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mquxd4za_ad79c60a-a5e1-468c-a68d-f08e5bb49ffc",
+  "id": 1782477976498691,
+  "category": "config",
+  "key": "BEST_WINDOW_HORIZON_HOURS",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "BEST_WINDOW_HORIZON_HOURS",
+    "value": 24,
+    "description": "How many forecast hours ahead to search for the calmest sailing window."
+  },
+  "context": {
+    "userMessage": "Approved — go ahead and build it. Run the tests and type checks to verify nothing is broken, and show me what changed.",
+    "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+    "toolCallId": "sevt_01WTLyADZSm2pmJJVRTwa8jn"
+  },
+  "createdAt": "2026-06-26T12:46:16.438Z",
+  "undoable": true,
+  "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+  "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+  "rationale": "Avoid a magic number and make the search horizon tunable.",
+  "implementation": "Stored as app config; the algorithm clamps it to the available hourly data length.",
+  "workMessageId": 1782477976504243
+}

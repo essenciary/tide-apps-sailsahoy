@@ -1,0 +1,14 @@
+{
+  "name": "testWindAlertEndpoint",
+  "source": "\n// Integration test for GET /api/wind-alert — verifies the endpoint returns a\n// well-formed gust-alert payload for real coordinates (Mediterranean off Barcelona).\nasync function testWindAlertEndpoint() {\n  const res = await fetch('http://localhost:3001/api/wind-alert?lat=41.35&lon=2.17');\n  assertEquals(res.status, 200, 'Wind alert should return 200');\n\n  const data = await res.json();\n\n  // Position/timezone echoed back\n  assert(typeof data.latitude === 'number', 'Should include latitude');\n  assert(typeof data.longitude === 'number', 'Should include longitude');\n  assert(typeof data.timezone === 'string', 'Should include timezone');\n\n  // Core alert fields\n  assertEquals(typeof data.alert, 'boolean', 'alert should be a boolean');\n  assertEquals(typeof data.gusts, 'number', 'gusts should be a number');\n  assertEquals(data.threshold, 25, 'threshold should default to 25 kn when not overridden');\n  assert(typeof data.message === 'string' && data.message.length > 0, 'message should be a non-empty string');\n\n  // The alert flag must be consistent with the strict gusts > threshold rule\n  assertEquals(data.alert, data.gusts > data.threshold, 'alert should equal gusts > threshold');\n}\n",
+  "registeredAt": "2026-06-26T13:44:41.549Z",
+  "module": "weather",
+  "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "lastResult": {
+    "passed": true,
+    "durationMs": 58,
+    "ranAt": "2026-06-26T17:05:29.726Z"
+  },
+  "runtimeId": "typescript",
+  "language": "typescript"
+}

@@ -1,0 +1,315 @@
+{
+  "id": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+  "title": "Add route planning mode with weather-aware ETA and per-leg risk warnings",
+  "description": null,
+  "status": "completed",
+  "plan": {
+    "summary": "Add a Route Planner mode to the existing Leaflet sailing app. The user toggles planning on, clicks the map to drop ordered waypoints (the boat's water-snapped position is the route origin), and gets a polyline route with per-leg distance, bearing, and an estimated time based on a configurable boat speed — plus total distance, total time, and an ETA clock. Each leg is made weather-aware: the backend fetches the forecast at the leg's destination for the hour matching that leg's estimated arrival time and flags simple risks: 'headwind', 'low visibility', 'pressure drop nearby', and 'arrival after sunset'. The existing wind/waves/radar/cloud/pressure overlays stay available and overlaid in route mode (these are global layers; nothing about them changes). The work follows the app's established patterns exactly: a thin handler delegating to pure, unit-testable functions (geometry + warnings) plus a fetch function in the Result style ({ok,data}/{ok,error}); a new draggable floating panel consistent with the other controls; and CSS/HTML kept out of handlers. The heavy client logic is added as a self-contained module appended to the JS bundle in _temp_build (id=1), matching how prior features (water detection, overlays, draggable panels) were added.\n\nWhy this approach: geometry (distance/bearing/ETA) is computed server-side in a pure function so it is directly testable and so the same call can attach weather warnings in one coherent response; warnings live in a second pure function fed already-resolved numbers, so timezone/forecast-hour resolution (the messy part, tied to the Open-Meteo response shape) is isolated in the orchestrator and covered by an integration test. A dedicated fetchRouteWeather (one request per leg, hourly winds/precip/pressure/cloud + daily sunrise/sunset, no marine call) is used instead of touching the hot shared fetchWeather (which analyzeDirections calls up to 8x) — keeping the shared function and its tests untouched. Tradeoff: route weather costs one API call per leg, so the number of waypoints is capped by config (ROUTE_MAX_WAYPOINTS) and fetches are batched to respect Open-Meteo rate limits.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Step 1 (reqs 3,5,6): Add app configs via set_config (module 'route'): ROUTE_DEFAULT_SPEED_KNOTS=5, ROUTE_MAX_WAYPOINTS=12, ROUTE_HEADWIND_ANGLE_DEG=60, ROUTE_HEADWIND_MIN_KNOTS=10, ROUTE_LOW_VIS_PRECIP_MM=2, ROUTE_LOW_VIS_CLOUD_PCT=95, ROUTE_PRESSURE_LOW_HPA=1005, ROUTE_PRESSURE_DROP_HPA=3 — each with a clear description so the warning thresholds and boat speed default are tunable.",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Step 2 (reqs 2,3): Define pure function computeRoutePlan(points, speedKnots, startTimeMs) in module 'route'. Haversine distance in nautical miles (R=3440.065nm) and initial great-circle bearing per leg, 16-point compass label, durationHours = distanceNm/speed, cumulative depart/arrive UTC ms from startTimeMs. Returns { legs:[{index,from,to,distanceNm,bearing,bearingCompass,durationHours,departTimeMs,arriveTimeMs}], totals:{distanceNm,durationHours,departTimeMs,etaMs} }; returns null for <2 points or speed<=0.",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Step 3 (req 6): Define pure function computeLegWarnings(bearing, hourData, prevHourData, arriveUtcMs, sunsetUtcMs, sunriseUtcMs, thresholds) in module 'route'. Flags: headwind (wind FROM within headwindAngleDeg of the leg bearing AND windSpeed>=headwindMinKnots), low visibility (precipitation>=lowVisPrecipMm OR cloudCover>=lowVisCloudPct), pressure drop nearby (pressure<=pressureLowHpa OR pressure fell >=pressureDropHpa vs prevHourData), arrival after sunset (arriveUtcMs>=sunsetUtcMs or <=sunriseUtcMs when known). Returns { warnings:[{code,label}], riskLevel:'ok'|'caution'|'warning' } (0/1/>=2 warnings).",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Step 4 (req 6): Define function fetchRouteWeather(lat, lon) in module 'route' (Result pattern). One Open-Meteo request: hourly wind_speed_10m/wind_direction_10m/wind_gusts_10m/precipitation/pressure_msl/cloud_cover (m/s→knots), daily sunrise,sunset, forecast_hours=DEFAULT_FORECAST_HOURS, forecast_days=3, timezone=auto; returns { hourly[], daily{time,sunrise,sunset}, timezone, utcOffsetSeconds }. Separate from the shared fetchWeather to avoid changing the directions hot-path; duplication justified.",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Step 5 (reqs 2,3,4,6): Define orchestrator function planRoute(points, speedKnots, startTimeMs, thresholds, maxWaypoints) in module 'route' (Result pattern). Validates point count vs maxWaypoints, runs computeRoutePlan, fetches each leg destination via fetchRouteWeather in small batches (rate-limit friendly), resolves the forecast hour nearest each arrival and the destination's sunrise/sunset for the arrival's local date using utcOffsetSeconds, calls computeLegWarnings, and attaches conditions+warnings+riskLevel per leg. Returns { speed, startTime, totals, legs }.",
+        "status": "done"
+      },
+      {
+        "id": "step_5",
+        "description": "Step 6 (reqs 1,2,3,4,6): Define handler getRoutePlan(c) in module 'route' (POST). Validates the JSON body (points array with numeric in-range lat/lon, length 2..max+1; speed numeric>0 defaulting to ROUTE_DEFAULT_SPEED_KNOTS; optional startTime), reads the 8 route configs into a thresholds object, calls planRoute, and maps Result to HTTP (200 data / 400 validation / 502 weather failure). Register route POST /api/route-plan with a body+response schema (module 'route').",
+        "status": "done"
+      },
+      {
+        "id": "step_6",
+        "description": "Step 7 (reqs 1,2,3,4,5,7,10): Add the client route module to the JS bundle (_temp_build id=1) as a self-contained block: state (routeMode, routeWaypoints, routeLayer, routePlan, routeBoatSpeed); map-click branch (add waypoint in route mode, else move boat as today); addRouteWaypoint/renderRoute (numbered markers + per-leg polylines colored by riskLevel + midpoint distance/bearing labels); recomputeRoute (POST /api/route-plan with [boat,...waypoints], speed, startTime=now; debounced); renderRoutePanel (mode toggle, speed input, empty-state hint, leg list with warning badges, totals + ETA, undo/clear); setupRouteControls; toggleRouteMode/undoRouteWaypoint/clearRoute. Add 'route-panel' to DRAGGABLE_IDS, recompute when the boat (origin) moves, and call setupRouteControls() in boot. Verify served JS via /api/sailing-js.",
+        "status": "done"
+      },
+      {
+        "id": "step_7",
+        "description": "Step 8 (reqs 1,5,7,10): Add #route-panel (a draggable .panel with drag-handle, top-center) to the sailing-app template and a new sailing-route.css asset (panel, toggle button, speed input, leg rows, color-coded warning badges, totals/ETA, empty state, waypoint markers, leg labels); link the stylesheet in <head>.",
+        "status": "done"
+      },
+      {
+        "id": "step_8",
+        "description": "Step 9 (all reqs): Tests + checks. Add define_test: testComputeRoutePlan (geometry/ETA + speed scaling + null guards), testComputeLegWarnings (headwind, low-vis, pressure-drop, after-sunset, clear cases + riskLevel), testRoutePlanEndpoint (POST real Mediterranean coords → legs/totals/warnings shape), testRoutePlanValidation (missing/too-few/out-of-range points and bad speed → 400). Update testServeApp (route-panel + sailing-route.css link + drag-handle count now 7) and testSailingJsEndpoint (route functions present, DRAGGABLE_IDS includes 'route-panel'). Run run_tests, check_export_types, and test_coverage; fix until clean; screenshot the route flow.",
+        "status": "done"
+      },
+      {
+        "id": "step_9",
+        "description": "Assumptions: (1) The boat's current water-snapped position is the route origin; waypoints are kept exactly where clicked (not water-snapped) for predictability. (2) 'current' in the request refers to keeping the existing wind/waves/radar/cloud/pressure overlays available in route mode — the app has no ocean-current dataset, so none is fabricated. (3) ETA is start time (now) + cumulative leg durations at constant boat speed; ETA clock is shown in the viewer's local time while the per-leg 'after sunset' check uses each destination's own timezone. (4) POST is used for /api/route-plan because the ordered waypoint list is structured data. (5) Waypoint count is capped (ROUTE_MAX_WAYPOINTS) to bound per-leg weather API calls.",
+        "status": "done"
+      }
+    ],
+    "acceptanceCriteria": [
+      {
+        "id": "claim_route_mode_waypoints",
+        "text": "Route planning mode is available in the sailing map, uses the boat position as the route origin, and lets the user add ordered waypoints by clicking the map.",
+        "source": "user",
+        "priority": "must"
+      },
+      {
+        "id": "claim_eta_geometry",
+        "text": "Each route leg reports distance, bearing, duration, cumulative totals, and ETA using the configured boat speed.",
+        "source": "user",
+        "priority": "must"
+      },
+      {
+        "id": "claim_weather_risk",
+        "text": "Each leg is evaluated against forecast conditions at its estimated arrival hour and flags headwind, low visibility, pressure drop nearby, and arrival after sunset.",
+        "source": "user",
+        "priority": "must"
+      },
+      {
+        "id": "claim_route_endpoint_validation",
+        "text": "The route planning API validates point count, coordinate ranges, waypoint limits, and boat speed before returning a route plan.",
+        "source": "agent",
+        "priority": "must"
+      },
+      {
+        "id": "claim_route_panel_ui",
+        "text": "The frontend includes a draggable route panel with planning toggle, speed input, undo/clear controls, waypoint rendering, color-coded leg risks, warning badges, totals, and ETA.",
+        "source": "user",
+        "priority": "must"
+      },
+      {
+        "id": "claim_existing_overlays",
+        "text": "Existing wind, waves, radar, cloud, and pressure overlays remain available while route planning is active.",
+        "source": "user",
+        "priority": "should"
+      },
+      {
+        "id": "claim_tunables",
+        "text": "Boat speed default, waypoint cap, and all route warning thresholds are exposed as route configuration values.",
+        "source": "agent",
+        "priority": "should"
+      }
+    ],
+    "verificationPlan": [
+      {
+        "id": "check_route_geometry_tests",
+        "claimIds": [
+          "claim_eta_geometry"
+        ],
+        "kind": "unit",
+        "description": "Run `testComputeRoutePlan` to verify haversine distance, bearing/compass labels, cumulative depart/arrival times, speed scaling, totals, ETA, and null guards."
+      },
+      {
+        "id": "check_route_warning_tests",
+        "claimIds": [
+          "claim_weather_risk"
+        ],
+        "kind": "unit",
+        "description": "Run `testComputeLegWarnings` to cover headwind, low visibility, pressure drop, after-sunset, clear cases, and risk-level tiers."
+      },
+      {
+        "id": "check_route_endpoint_tests",
+        "claimIds": [
+          "claim_route_mode_waypoints",
+          "claim_eta_geometry",
+          "claim_weather_risk",
+          "claim_route_endpoint_validation"
+        ],
+        "kind": "integration",
+        "description": "Run `testRoutePlanEndpoint` and `testRoutePlanValidation` against the registered `POST /api/route-plan` route."
+      },
+      {
+        "id": "check_route_frontend_tests",
+        "claimIds": [
+          "claim_route_panel_ui",
+          "claim_existing_overlays"
+        ],
+        "kind": "integration",
+        "description": "Run updated served-app and sailing-JS endpoint tests to confirm `#route-panel`, `sailing-route.css`, route functions, and `DRAGGABLE_IDS` wiring are present."
+      },
+      {
+        "id": "check_export_coverage",
+        "claimIds": [
+          "claim_tunables",
+          "claim_route_endpoint_validation"
+        ],
+        "kind": "coverage",
+        "description": "Run export type checks and route-module coverage to verify the route module is clean and fully covered."
+      },
+      {
+        "id": "check_live_browser",
+        "claimIds": [
+          "claim_route_mode_waypoints",
+          "claim_route_panel_ui"
+        ],
+        "kind": "e2e",
+        "description": "Exercise the live browser route flow and verify click-to-server-to-render behavior with no console errors."
+      }
+    ],
+    "verificationRuns": [
+      {
+        "id": "vr_mqv5_route_planner_backfill",
+        "status": "passed",
+        "summary": "Backfilled from the completed work log: 39/39 tests passed, export type check was clean, route-module coverage was 100%, and a live browser test confirmed the route click-to-server-to-render loop with no console errors.",
+        "evidence": [
+          {
+            "id": "evidence_route_tests",
+            "kind": "test_result",
+            "status": "passed",
+            "checkId": "check_route_geometry_tests",
+            "summary": "39/39 tests passed, including new route tests for computeRoutePlan geometry/ETA/speed scaling/null guards, computeLegWarnings warning/risk tiers, route endpoint behavior, and validation failures.",
+            "createdAt": "2026-06-26T17:06:47.300Z"
+          },
+          {
+            "id": "evidence_route_endpoint",
+            "kind": "integration",
+            "status": "passed",
+            "checkId": "check_route_endpoint_tests",
+            "summary": "`POST /api/route-plan` was covered with real Mediterranean coordinates plus missing, too-few, out-of-range, and bad-speed validation cases.",
+            "createdAt": "2026-06-26T17:06:47.300Z"
+          },
+          {
+            "id": "evidence_frontend_bundle",
+            "kind": "integration",
+            "status": "passed",
+            "checkId": "check_route_frontend_tests",
+            "summary": "Served app and JS endpoint tests confirmed `#route-panel`, `sailing-route.css`, route client functions, and `route-panel` in `DRAGGABLE_IDS`.",
+            "createdAt": "2026-06-26T17:06:47.300Z"
+          },
+          {
+            "id": "evidence_export_coverage",
+            "kind": "coverage",
+            "status": "passed",
+            "checkId": "check_export_coverage",
+            "summary": "Export type check was clean and route-module coverage reported 100%.",
+            "createdAt": "2026-06-26T17:06:47.300Z"
+          },
+          {
+            "id": "evidence_live_browser",
+            "kind": "e2e",
+            "status": "passed",
+            "checkId": "check_live_browser",
+            "summary": "A live browser test confirmed the route planning click-to-server-to-render loop and reported no console errors.",
+            "createdAt": "2026-06-26T17:06:47.300Z"
+          }
+        ],
+        "claimResults": [
+          {
+            "claimId": "claim_route_mode_waypoints",
+            "status": "passed",
+            "evidenceIds": [
+              "evidence_route_endpoint",
+              "evidence_frontend_bundle",
+              "evidence_live_browser"
+            ]
+          },
+          {
+            "claimId": "claim_eta_geometry",
+            "status": "passed",
+            "evidenceIds": [
+              "evidence_route_tests",
+              "evidence_route_endpoint"
+            ]
+          },
+          {
+            "claimId": "claim_weather_risk",
+            "status": "passed",
+            "evidenceIds": [
+              "evidence_route_tests",
+              "evidence_route_endpoint"
+            ]
+          },
+          {
+            "claimId": "claim_route_endpoint_validation",
+            "status": "passed",
+            "evidenceIds": [
+              "evidence_route_tests",
+              "evidence_route_endpoint"
+            ]
+          },
+          {
+            "claimId": "claim_route_panel_ui",
+            "status": "passed",
+            "evidenceIds": [
+              "evidence_frontend_bundle",
+              "evidence_live_browser"
+            ]
+          },
+          {
+            "claimId": "claim_existing_overlays",
+            "status": "passed",
+            "evidenceIds": [
+              "evidence_frontend_bundle"
+            ]
+          },
+          {
+            "claimId": "claim_tunables",
+            "status": "passed",
+            "evidenceIds": [
+              "evidence_export_coverage"
+            ]
+          }
+        ],
+        "residualRisks": [
+          "No ocean-current overlay was added because the project has no ocean-current data source; existing wind, waves, radar, cloud, and pressure overlays were kept available in route mode."
+        ],
+        "createdAt": "2026-06-26T17:06:47.300Z",
+        "completedAt": "2026-06-26T17:06:47.300Z"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1782492355979372
+  ],
+  "approvalMessageId": 1782492468249891,
+  "workMessageIds": [
+    1782492544805513,
+    1782492545304009,
+    1782492545788924,
+    1782492546260418,
+    1782492546865537,
+    1782492547367290,
+    1782492548187621,
+    1782492548669464,
+    1782492585172312,
+    1782492630077217,
+    1782492707861828,
+    1782492794942260,
+    1782492825728041,
+    1782492876240416,
+    1782492889256878,
+    1782493160077655,
+    1782493205337038,
+    1782493241292798,
+    1782493438740399,
+    1782493439280795,
+    1782493481407823,
+    1782493481871528,
+    1782493516504709,
+    1782493517227939,
+    1782493627384593
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 80,
+    "outputTokens": 91816,
+    "costUsd": 8.4141285,
+    "durationMs": 1159320
+  },
+  "createdAt": "2026-06-26T16:45:55.009Z",
+  "updatedAt": "2026-06-26T17:28:33.738Z",
+  "completedAt": "2026-06-26T17:06:47.300Z"
+}

@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqv61ecj_3e4e617e-40a4-4e80-a164-56bd39a78f66",
+  "id": 1782492545259469,
+  "category": "config",
+  "key": "ROUTE_MAX_WAYPOINTS",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "ROUTE_MAX_WAYPOINTS",
+    "value": 12,
+    "description": "Maximum number of user waypoints in a route (excludes the boat origin). Bounds the per-leg weather API calls."
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+    "turnIndex": 0,
+    "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+    "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+    "toolCallId": "sevt_01SwNh4Y7T85sx1sFKUebgkY"
+  },
+  "createdAt": "2026-06-26T16:49:05.251Z",
+  "undoable": true,
+  "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+  "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "rationale": "Each leg destination triggers one weather fetch; cap waypoints to respect Open-Meteo rate limits.",
+  "implementation": "12 keeps the worst-case fetch count modest while allowing rich routes.",
+  "workMessageId": 1782492545304009
+}

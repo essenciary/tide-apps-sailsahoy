@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mquxfnvp_f0718380-3fa1-4584-a311-936ed4d473aa",
+  "id": 1782478094263503,
+  "category": "test",
+  "key": "testBestWindowMissingParams",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testBestWindowMissingParams",
+    "source": "\n// Verify /api/best-window returns 400 when lat/lon are missing — caught by route schema validation.\nasync function testBestWindowMissingParams() {\n  const res = await fetch('http://localhost:3001/api/best-window');\n  assertEquals(res.status, 400, 'Missing params should return 400');\n  const body = await res.json();\n  // Route schema validation returns this shape\n  assertEquals(body.error, 'Validation failed', 'Should report a schema validation failure');\n  assert(body.details.length > 0, 'Should include validation detail messages');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved — go ahead and build it. Run the tests and type checks to verify nothing is broken, and show me what changed.",
+    "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+    "toolCallId": "sevt_0115srMXohFX1XnQBv9o2yPB"
+  },
+  "createdAt": "2026-06-26T12:48:14.245Z",
+  "undoable": true,
+  "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+  "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+  "rationale": "Verify schema validation rejects requests with no coordinates before the handler runs.",
+  "implementation": "Calls the endpoint with no query params and asserts the 400 schema-validation shape used across weather endpoints.",
+  "workMessageId": 1782478094292017
+}

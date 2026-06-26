@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mquxd4lh_91a1cfce-b6dd-4546-8df8-f5ca6db8d7a1",
+  "id": 1782477975995861,
+  "category": "config",
+  "key": "BEST_WINDOW_SIZE_HOURS",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "BEST_WINDOW_SIZE_HOURS",
+    "value": 3,
+    "description": "Number of consecutive forecast hours that make up a sailing window."
+  },
+  "context": {
+    "userMessage": "Approved — go ahead and build it. Run the tests and type checks to verify nothing is broken, and show me what changed.",
+    "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+    "toolCallId": "sevt_01DbQ6PpG3F6mGpfaFrs4T1t"
+  },
+  "createdAt": "2026-06-26T12:46:15.932Z",
+  "undoable": true,
+  "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+  "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+  "rationale": "Avoid a magic number and make the calmest-window length tunable.",
+  "implementation": "Stored as app config so computeBestWindow and getBestWindow read it via config.get.",
+  "workMessageId": 1782477975981326
+}

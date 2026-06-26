@@ -1,0 +1,84 @@
+{
+  "id": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+  "title": "Add GET /api/wind-alert endpoint flagging gusts over a configurable threshold",
+  "description": null,
+  "status": "completed",
+  "plan": {
+    "summary": "Add a new GET /api/wind-alert endpoint that reports whether the current wind gusts at a position exceed a configurable threshold (default 25 knots). It reuses the existing weather infrastructure exactly like the other weather endpoints: coordinate validation via withValidatedCoords, data fetch via the shared fetchWeather Result function, and a thin handler. The threshold-comparison logic is extracted into a pure, network-free function (computeWindAlert) so it can be unit-tested directly — mirroring the computeBestWindow pattern just added. The threshold is configurable two ways: a tunable app config (WIND_GUST_ALERT_THRESHOLD_KNOTS, default 25) sets the baseline, and an optional `threshold` query param overrides it per request. The response includes a boolean alert flag, the gust value, the effective threshold, and a short human-readable message. Tests cover the pure logic (both branches), the live endpoint shape, the per-request threshold override, and the two 400 validation paths (missing + out-of-range coords). This fits the app because every weather endpoint already follows this validate→fetch→thin-handler+pure-helper structure, so it adds no new architecture.\n\nRequirements extracted:\n1. New endpoint GET /api/wind-alert.\n2. Flags whether CURRENT wind gusts exceed a threshold.\n3. Threshold is configurable, default 25 knots.\n4. Response includes: a boolean, the gust value, and a short human-readable message.\n5. Reuse existing weather fetch (fetchWeather) and coordinate validation (withValidatedCoords).\n6. Include tests and run the checks (run_tests, check_export_types, test_coverage) to verify nothing is broken.\n\nAssumptions:\n- 'Exceed' means strictly greater than the threshold (gusts > threshold).\n- Gust value is the current windGusts (knots) already produced by fetchWeather.\n- Besides the boolean/gusts/message, I'll also echo the effective threshold and lat/lon for a self-describing payload (additive, not a deviation).\n- Allow an optional numeric `threshold` query param to override the config default per request, since 'configurable' implies callers may want to tune it; when absent it falls back to config, then to 25.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Step 1 (req 3): Add app config WIND_GUST_ALERT_THRESHOLD_KNOTS = 25 via set_config (module 'weather', description noting it's the default gust alert threshold in knots, overridable per-request via the threshold query param).",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Step 2 (reqs 2,3,4): Define pure shared function computeWindAlert(current, threshold) in module 'weather'. It reads current.windGusts, computes alert = gusts > threshold, and returns { alert, gusts, threshold, message } where message is a short human-readable string for each branch (e.g. '⚠️ Wind gusts of 32.1 kn exceed the 25 kn threshold — strong gusts, sail with caution.' vs 'Wind gusts of 12.4 kn are within the 25 kn threshold — conditions look manageable.'). No closure dependencies, so it's unit-testable without network.",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Step 3 (reqs 1,2,3,4,5): Define handler getWindAlert(c) in module 'weather' mirroring getWeather/getBestWindow: delegate to functions.call('withValidatedCoords', c, cb). Inside, call fetchWeather (Result) and map failure to 500. Resolve effective threshold: parse optional `threshold` query param (if a valid number, use it), else config.get('WIND_GUST_ALERT_THRESHOLD_KNOTS') || 25. Run computeWindAlert(current, threshold) and return c.json with latitude, longitude, timezone, and the alert fields (alert, gusts, threshold, message). Attach an OpenAPI schema like the other endpoints (lat/lon required, optional threshold query, 200/400/500 responses).",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Step 4 (req 1): Register route GET /api/wind-alert bound to getWindAlert (module 'weather') with the same lat/lon query schema plus an optional `threshold` number query param, so schema validation auto-rejects missing/invalid coords with 400 before the handler runs.",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Step 5 (reqs 2,3,4,6): Define test testComputeWindAlert — unit-test the pure function with a crafted current object covering both branches: gusts above threshold (alert true) and below (alert false), asserting alert flag, echoed gusts, echoed threshold, and a non-empty message each time.",
+        "status": "done"
+      },
+      {
+        "id": "step_5",
+        "description": "Step 6 (reqs 1,4,5,6): Define test testWindAlertEndpoint — integration test against the live endpoint with valid coords; assert 200 and the payload shape (alert boolean, gusts number, threshold number === 25 default, message non-empty string, lat/lon/timezone present).",
+        "status": "done"
+      },
+      {
+        "id": "step_6",
+        "description": "Step 7 (reqs 3,6): Define test testWindAlertThresholdOverride — call with threshold=999 to deterministically force alert=false regardless of live conditions; assert alert === false and threshold === 999 (verifies the configurable/override path).",
+        "status": "done"
+      },
+      {
+        "id": "step_7",
+        "description": "Step 8 (reqs 5,6): Define tests testWindAlertMissingParams (no coords → 400 schema 'Validation failed' shape) and testWindAlertOutOfRange (lat=100&lon=50 → 400 withValidatedCoords range-error message), matching the existing best-window validation tests.",
+        "status": "done"
+      },
+      {
+        "id": "step_8",
+        "description": "Step 9 (req 6): Run run_tests for the new tests then the full suite, run check_export_types, and run test_coverage for the weather module; fix any failures or error diagnostics in the source entities and rerun until clean.",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1782481319835788
+  ],
+  "approvalMessageId": 1782481371501943,
+  "workMessageIds": [
+    1782481394923070,
+    1782481409979556,
+    1782481427955384,
+    1782481443373870,
+    1782481481110155,
+    1782481481601582,
+    1782481482234252,
+    1782481482904306,
+    1782481483541636,
+    1782481525677830
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 20,
+    "outputTokens": 10782,
+    "costUsd": 1.5160339999999999,
+    "durationMs": 154218
+  },
+  "createdAt": "2026-06-26T13:41:59.365Z",
+  "updatedAt": "2026-06-26T13:45:25.668Z",
+  "completedAt": "2026-06-26T13:45:12.236Z"
+}

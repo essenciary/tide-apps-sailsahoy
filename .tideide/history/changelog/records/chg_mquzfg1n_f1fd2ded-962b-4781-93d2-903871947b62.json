@@ -1,0 +1,89 @@
+{
+  "uid": "chg_mquzfg1n_f1fd2ded-962b-4781-93d2-903871947b62",
+  "id": 1782481443354956,
+  "category": "route",
+  "key": "GET /api/wind-alert",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "method": "GET",
+    "path": "/api/wind-alert",
+    "handlerName": "getWindAlert",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        },
+        "threshold": {
+          "description": "Optional gust alert threshold in knots; overrides the WIND_GUST_ALERT_THRESHOLD_KNOTS config default (25)",
+          "required": false,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Wind gust alert for the position",
+          "schema": {
+            "properties": {
+              "alert": {
+                "type": "boolean"
+              },
+              "gusts": {
+                "type": "number"
+              },
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              },
+              "message": {
+                "type": "string"
+              },
+              "threshold": {
+                "type": "number"
+              },
+              "timezone": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error"
+        }
+      },
+      "summary": "Flag whether current wind gusts exceed a threshold",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather"
+  },
+  "context": {
+    "userMessage": "Approved — build it, then run the tests and checks to verify.",
+    "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+    "toolCallId": "sevt_01TBhaWeCepSaE4LzdvJDj5s"
+  },
+  "createdAt": "2026-06-26T13:44:03.323Z",
+  "undoable": true,
+  "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+  "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "rationale": "Expose the wind gust alert at a stable /api path consistent with the other weather endpoints.",
+  "implementation": "Same lat/lon query schema shape as /api/weather plus an optional threshold number param, so schema validation auto-rejects missing/invalid coords with a 400 before the handler runs.",
+  "workMessageId": 1782481443373870
+}

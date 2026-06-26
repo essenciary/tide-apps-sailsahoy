@@ -1,0 +1,69 @@
+{
+  "id": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+  "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+  "title": "Add GET /api/best-window endpoint for calmest 3-hour sailing window",
+  "description": null,
+  "status": "completed",
+  "plan": {
+    "summary": "Add a new GET /api/best-window endpoint that analyzes the next 24 hours of hourly forecast and returns the calmest 3-hour sailing window — the consecutive 3-hour block with the lowest combined wind + gust — plus a short human-readable reason string. This reuses the existing weather infrastructure: the endpoint follows the exact same pattern as getWeather/getWeatherGrid (withValidatedCoords → fetchWeather Result → JSON), so coordinate validation, error handling, and the Open-Meteo data fetch are all shared. The window-finding logic is extracted into a pure, separately-testable shared function (computeBestWindow) that takes an hourly array and returns the best window descriptor — keeping the handler thin and making the algorithm unit-testable without network calls. Two configs make the window size (3h) and horizon (24h) tunable without code changes. Tradeoff: 'combined wind + gust' is defined as the average of (windSpeed + windGusts) across the window's hours; since all windows are the same length, this is equivalent to comparing sums but yields friendly per-hour averages for the reason string.\n\nRequirements:\n1. New endpoint GET /api/best-window taking lat/lon query params (consistent with other weather endpoints).\n2. It returns the calmest 3-hour window within the next 24 hours of forecast.\n3. 'Calmest' = lowest combined wind + gust across the window.\n4. Response includes a short reason string describing the window.\n5. Include tests covering the function, the endpoint, and validation.\n6. Plan first for review (this changeset).\n\nAssumptions:\n- A '3-hour window' = 3 consecutive hourly forecast points; with 24h horizon there are 22 candidate windows (start indices 0..21).\n- 'Combined wind + gust' metric = mean of (windSpeed + windGusts) per hour over the window; lowest wins. Ties broken by earliest window.\n- Window size (3) and horizon (24) are stored as configs BEST_WINDOW_SIZE_HOURS and BEST_WINDOW_HORIZON_HOURS so they are tunable; algorithm clamps the horizon to available hourly data.\n- If fewer than the window size of hours are available (shouldn't happen — fetchWeather returns 48h), the handler returns a 500 with a clear message.\n- Wind/gust values come from fetchWeather's hourly array, already converted to knots.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Step 1 (reqs 3,4): Add two app configs via set_config — BEST_WINDOW_SIZE_HOURS=3 ('Number of consecutive hours in a sailing window') and BEST_WINDOW_HORIZON_HOURS=24 ('How many forecast hours ahead to search for the calmest window'), module 'weather'. These avoid magic numbers and make the window tunable.",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Step 2 (reqs 2,3,4): Define a pure shared function computeBestWindow(hourly, windowHours, horizonHours) in module 'weather'. It clamps horizon to min(horizonHours, hourly.length), slides a windowHours-length window across indices 0..(horizon-windowHours), and for each computes avgWind = mean windSpeed, avgGust = mean windGusts, combinedScore = avgWind + avgGust. It tracks the minimum combinedScore (earliest wins ties). Returns null when fewer than windowHours entries exist; otherwise returns { startIndex, start, end, startTime, endTime, avgWind, avgGust, combinedScore, hours:[{time,windSpeed,windGusts}], reason }. The reason is built from a wind-tier label (very light/light/moderate/fresh/strong) and the HH:MM start–end times, e.g. 'Calmest window 02:00–05:00 — light winds averaging 6 kn, gusts to 9 kn'. Rounds displayed values to 1 decimal.",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Step 3 (reqs 1,2,3,4): Define handler getBestWindow(c) in module 'weather' that delegates to functions.call('withValidatedCoords', c, ...). Inside the callback it calls fetchWeather(lat,lon); if the Result fails, return 500 with the error message. Otherwise call computeBestWindow with the configured size/horizon; if it returns null, return 500 ('Not enough forecast data to determine a sailing window'); else return c.json({ latitude, longitude, timezone, window }). Attach an OpenAPI schema (lat/lon required query params; 200/400/500 responses) matching the other weather handlers.",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Step 4 (req 1): Register route GET /api/best-window bound to getBestWindow, module 'weather', with the same query/param schema shape as /api/weather so schema validation auto-rejects missing/invalid coords with 400.",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Step 5 (req 5): Add tests in module 'weather': (a) testComputeBestWindow — unit test computeBestWindow with a crafted hourly array (one clearly calmest 3h block) asserting it picks the correct startIndex, correct avgWind/avgGust/combinedScore, exactly 3 hours, and a non-empty reason string; (b) testBestWindowEndpoint — fetch /api/best-window?lat=41.35&lon=2.17, assert 200 and validate the response shape (window with start/end/avgWind/avgGust/combinedScore numbers, hours length 3, reason string); (c) testBestWindowMissingParams — assert 400 + 'Validation failed' when no params; (d) testBestWindowOutOfRange — assert 400 + range message for lat=100&lon=50.",
+        "status": "done"
+      },
+      {
+        "id": "step_5",
+        "description": "Step 6 (req 5): Run run_tests for the new tests (and full suite), run check_export_types, and fix any failures or error diagnostics until clean. Then run test_coverage for the 'weather' module to confirm the new handler and function are covered.",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1782477531970552
+  ],
+  "approvalMessageId": 1782477957914035,
+  "workMessageIds": [
+    1782477975981326,
+    1782477976504243,
+    1782478000383198,
+    1782478019991658,
+    1782478041323750,
+    1782478093041296,
+    1782478093657118,
+    1782478094292017,
+    1782478094898964,
+    1782478145234738
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 26,
+    "outputTokens": 12625,
+    "costUsd": 1.76156575,
+    "durationMs": 187323
+  },
+  "createdAt": "2026-06-26T12:38:51.323Z",
+  "updatedAt": "2026-06-26T12:49:05.237Z",
+  "completedAt": "2026-06-26T12:48:50.111Z"
+}

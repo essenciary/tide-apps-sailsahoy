@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mqv6kk46_c337ccde-44ff-40df-83be-7ef2e8f198ed",
+  "id": 1782493439214476,
+  "category": "test",
+  "key": "testComputeLegWarnings",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testComputeLegWarnings",
+    "source": "\n// Unit test for computeLegWarnings — exercises each risk flag in isolation,\n// a clear case, and the riskLevel tiers (ok/caution/warning).\nasync function testComputeLegWarnings() {\n  // Explicit thresholds so the test is independent of config values\n  const t = {\n    headwindAngleDeg: 60, headwindMinKnots: 10,\n    lowVisPrecipMm: 2, lowVisCloudPct: 95,\n    pressureLowHpa: 1005, pressureDropHpa: 3\n  };\n\n  const codesOf = (r) => r.warnings.map((w) => w.code);\n\n  // --- Headwind: wind FROM the heading direction, strong enough ---\n  const headwind = functions.call('computeLegWarnings', 90,\n    { windDirection: 90, windSpeed: 15, precipitation: 0, cloudCover: 10, pressure: 1015 },\n    null, 1000, 5000, 100, t);\n  assert(codesOf(headwind).indexOf('headwind') >= 0, 'Head-on strong wind flags headwind');\n  assertEquals(headwind.riskLevel, 'caution', 'Single warning is caution');\n\n  // Wind from astern is NOT a headwind\n  const tailwind = functions.call('computeLegWarnings', 90,\n    { windDirection: 270, windSpeed: 15, precipitation: 0, cloudCover: 10, pressure: 1015 },\n    null, 1000, 5000, 100, t);\n  assert(codesOf(tailwind).indexOf('headwind') < 0, 'Tailwind should not flag headwind');\n\n  // Light head-on wind (below min knots) is NOT a headwind\n  const lightHead = functions.call('computeLegWarnings', 90,\n    { windDirection: 90, windSpeed: 5, precipitation: 0, cloudCover: 10, pressure: 1015 },\n    null, 1000, 5000, 100, t);\n  assert(codesOf(lightHead).indexOf('headwind') < 0, 'Light head-on wind should not flag headwind');\n\n  // --- Low visibility via heavy precipitation ---\n  const rain = functions.call('computeLegWarnings', 90,\n    { windDirection: 270, windSpeed: 5, precipitation: 4, cloudCover: 10, pressure: 1015 },\n    null, 1000, 5000, 100, t);\n  assert(codesOf(rain).indexOf('low_visibility') >= 0, 'Heavy precip flags low visibility');\n\n  // --- Low visibility via near-total overcast ---\n  const overcast = functions.call('computeLegWarnings', 90,\n    { windDirection: 270, windSpeed: 5, precipitation: 0, cloudCover: 97, pressure: 1015 },\n    null, 1000, 5000, 100, t);\n  assert(codesOf(overcast).indexOf('low_visibility') >= 0, 'Near-total overcast flags low visibility');\n\n  // --- Pressure drop via low absolute pressure ---\n  const lowP = functions.call('computeLegWarnings', 90,\n    { windDirection: 270, windSpeed: 5, precipitation: 0, cloudCover: 10, pressure: 1000 },\n    null, 1000, 5000, 100, t);\n  assert(codesOf(lowP).indexOf('pressure_drop') >= 0, 'Low absolute pressure flags pressure drop');\n\n  // --- Pressure drop via a sharp hour-over-hour fall ---\n  const fallP = functions.call('computeLegWarnings', 90,\n    { windDirection: 270, windSpeed: 5, precipitation: 0, cloudCover: 10, pressure: 1009 },\n    { pressure: 1014 }, 1000, 5000, 100, t);\n  assert(codesOf(fallP).indexOf('pressure_drop') >= 0, 'Sharp pressure fall flags pressure drop');\n\n  // --- Arrival after sunset ---\n  const night = functions.call('computeLegWarnings', 90,\n    { windDirection: 270, windSpeed: 5, precipitation: 0, cloudCover: 10, pressure: 1015 },\n    null, 6000, 5000, 100, t);\n  assert(codesOf(night).indexOf('after_sunset') >= 0, 'Arrival past sunset flags after_sunset');\n\n  // --- Clear case: no warnings, riskLevel ok ---\n  const clear = functions.call('computeLegWarnings', 90,\n    { windDirection: 270, windSpeed: 5, precipitation: 0, cloudCover: 10, pressure: 1015 },\n    null, 1000, 5000, 100, t);\n  assertEquals(clear.warnings.length, 0, 'Benign conditions produce no warnings');\n  assertEquals(clear.riskLevel, 'ok', 'No warnings is ok');\n\n  // --- Two concurrent warnings → riskLevel warning ---\n  const twoRisks = functions.call('computeLegWarnings', 90,\n    { windDirection: 270, windSpeed: 5, precipitation: 4, cloudCover: 10, pressure: 1015 },\n    null, 6000, 5000, 100, t);\n  assert(twoRisks.warnings.length >= 2, 'Should have low-vis + after-sunset');\n  assertEquals(twoRisks.riskLevel, 'warning', 'Two or more warnings is warning');\n}\n",
+    "module": "route",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+    "turnIndex": 0,
+    "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+    "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+    "toolCallId": "sevt_01Jg1cVB5KTRxiduDHkDVp8K"
+  },
+  "createdAt": "2026-06-26T17:03:59.190Z",
+  "undoable": true,
+  "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+  "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "rationale": "Verify each per-leg risk flag (headwind, low visibility, pressure drop, after sunset), the clear case, and the riskLevel tiers.",
+  "implementation": "Used the existing define_test mutation path so validation, changelog, and rebuild behavior stay consistent.",
+  "workMessageId": 1782493439280795
+}

@@ -1,0 +1,117 @@
+{
+  "uid": "chg_mqv68hog_d7d2ff4b-0903-48b9-acf5-df795be8edf7",
+  "id": 1782492876171349,
+  "category": "handler",
+  "key": "getRoutePlan",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "getRoutePlan",
+    "source": "\n// Turn a posted ordered point list into a weather-aware route plan.\n// Body: { points: [{lat,lon}, ...], speed?: number, startTime?: number(ms) }.\n// points[0] is the origin (the boat); the rest are waypoints in visiting order.\nasync function getRoutePlan(c: any) {\n  // Tunable budget + default speed from config\n  const maxWaypoints = (config.get('ROUTE_MAX_WAYPOINTS') as number) ?? 12;\n  const defaultSpeed = (config.get('ROUTE_DEFAULT_SPEED_KNOTS') as number) ?? 5;\n\n  // Parse the JSON body defensively — malformed JSON is a 400\n  let body: any;\n  try {\n    body = await c.req.json();\n  } catch (err) {\n    return c.json({ error: true, message: 'Request body must be valid JSON' }, 400);\n  }\n\n  // --- Validate the points array ---\n  const rawPoints = body && body.points;\n  if (!Array.isArray(rawPoints) || rawPoints.length < 2) {\n    return c.json({ error: true, message: 'Provide at least 2 points: the origin and one waypoint' }, 400);\n  }\n  // Cap waypoints (excludes the origin) to bound per-leg weather calls\n  if (rawPoints.length - 1 > maxWaypoints) {\n    return c.json({ error: true, message: 'Too many waypoints — maximum is ' + maxWaypoints }, 400);\n  }\n\n  // Each point must have in-range numeric lat/lon; normalize to {lat,lon}\n  const points: any[] = [];\n  for (let i = 0; i < rawPoints.length; i++) {\n    const p = rawPoints[i];\n    const lat = p ? Number(p.lat) : NaN;\n    const lon = p ? Number(p.lon) : NaN;\n    if (isNaN(lat) || isNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {\n      return c.json({ error: true, message: 'Point ' + i + ' has invalid coordinates (lat -90..90, lon -180..180)' }, 400);\n    }\n    points.push({ lat, lon });\n  }\n\n  // --- Validate optional speed (positive knots) ---\n  let speed = defaultSpeed;\n  if (body.speed !== undefined && body.speed !== null) {\n    const s = Number(body.speed);\n    if (isNaN(s) || s <= 0) {\n      return c.json({ error: true, message: 'speed must be a positive number (knots)' }, 400);\n    }\n    speed = s;\n  }\n\n  // --- Validate optional startTime (UTC ms); default to now ---\n  let startTime = Date.now();\n  if (body.startTime !== undefined && body.startTime !== null) {\n    const t = Number(body.startTime);\n    if (isNaN(t)) {\n      return c.json({ error: true, message: 'startTime must be a timestamp in milliseconds' }, 400);\n    }\n    startTime = t;\n  }\n\n  // Assemble the tunable warning thresholds from config\n  const thresholds = {\n    headwindAngleDeg: (config.get('ROUTE_HEADWIND_ANGLE_DEG') as number) ?? 60,\n    headwindMinKnots: (config.get('ROUTE_HEADWIND_MIN_KNOTS') as number) ?? 10,\n    lowVisPrecipMm: (config.get('ROUTE_LOW_VIS_PRECIP_MM') as number) ?? 2,\n    lowVisCloudPct: (config.get('ROUTE_LOW_VIS_CLOUD_PCT') as number) ?? 95,\n    pressureLowHpa: (config.get('ROUTE_PRESSURE_LOW_HPA') as number) ?? 1005,\n    pressureDropHpa: (config.get('ROUTE_PRESSURE_DROP_HPA') as number) ?? 3\n  };\n\n  // Delegate to the orchestrator; wrap unexpected runtime errors in a 500\n  try {\n    const result: any = await functions.call('planRoute', points, speed, startTime, thresholds, maxWaypoints);\n\n    // Map the Result to HTTP: validation -> 400, weather outage -> 502\n    if (!result.ok) {\n      const status = result.error.code === 'ROUTE_WEATHER_API_ERROR' ? 502 : 400;\n      return c.json({ error: true, message: result.error.message }, status);\n    }\n\n    return c.json(result.data);\n  } catch (err) {\n    log.error('Failed to compute route plan: ' + (err as Error).message);\n    return c.json({ error: true, message: 'Failed to compute route plan' }, 500);\n  }\n}\n",
+    "schema": {
+      "body": {
+        "properties": {
+          "points": {
+            "description": "Ordered points; index 0 is the origin (boat), the rest are waypoints",
+            "items": {
+              "properties": {
+                "lat": {
+                  "description": "Latitude (-90..90)",
+                  "type": "number"
+                },
+                "lon": {
+                  "description": "Longitude (-180..180)",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "speed": {
+            "description": "Boat speed in knots (defaults to ROUTE_DEFAULT_SPEED_KNOTS)",
+            "type": "number"
+          },
+          "startTime": {
+            "description": "Departure time in UTC milliseconds (defaults to now)",
+            "type": "number"
+          }
+        },
+        "required": [
+          "points"
+        ],
+        "type": "object"
+      },
+      "description": "Given an ordered list of points (origin first, then waypoints), returns per-leg distance, bearing, duration and ETA at the given boat speed, plus per-leg weather risk warnings.",
+      "responses": {
+        "200": {
+          "description": "Weather-aware route plan with legs and totals",
+          "schema": {
+            "properties": {
+              "legs": {
+                "type": "array"
+              },
+              "speed": {
+                "type": "number"
+              },
+              "startTime": {
+                "type": "number"
+              },
+              "totals": {
+                "properties": {
+                  "departTimeMs": {
+                    "type": "number"
+                  },
+                  "distanceNm": {
+                    "type": "number"
+                  },
+                  "durationHours": {
+                    "type": "number"
+                  },
+                  "etaMs": {
+                    "type": "number"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Validation error (bad points or speed)"
+        },
+        "502": {
+          "description": "Weather data could not be fetched for the route"
+        }
+      },
+      "summary": "Compute a weather-aware route plan",
+      "tags": [
+        "route"
+      ]
+    },
+    "module": "route",
+    "purpose": "Validate a posted route (origin + waypoints + speed) and return a weather-aware plan with per-leg distance, bearing, ETA, and risk warnings.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+    "turnIndex": 0,
+    "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+    "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+    "toolCallId": "sevt_01NWumXLvR9Yjj8W2oufbGrW"
+  },
+  "createdAt": "2026-06-26T16:54:36.160Z",
+  "undoable": true,
+  "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+  "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "rationale": "The client needs a single endpoint that turns clicked waypoints into a full weather-aware route plan.",
+  "implementation": "Thin handler in the app's style: explicit body validation, config-driven thresholds, delegates to the planRoute orchestrator, and maps the Result to 200/400/502.",
+  "workMessageId": 1782492876240416
+}

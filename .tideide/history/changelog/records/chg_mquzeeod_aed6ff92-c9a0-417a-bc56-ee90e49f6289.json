@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mquzeeod_aed6ff92-c9a0-417a-bc56-ee90e49f6289",
+  "id": 1782481394909995,
+  "category": "config",
+  "key": "WIND_GUST_ALERT_THRESHOLD_KNOTS",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "WIND_GUST_ALERT_THRESHOLD_KNOTS",
+    "value": 25,
+    "description": "Default wind gust alert threshold in knots for GET /api/wind-alert. Gusts strictly greater than this flag an alert. Overridable per-request via the optional `threshold` query param."
+  },
+  "context": {
+    "userMessage": "Approved — build it, then run the tests and checks to verify.",
+    "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+    "toolCallId": "sevt_01KhAiLGeKmQj6GihutJ4Nog"
+  },
+  "createdAt": "2026-06-26T13:43:14.890Z",
+  "undoable": true,
+  "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+  "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "rationale": "Make the gust alert threshold tunable instead of hardcoding 25 knots.",
+  "implementation": "Stored as an app config the handler reads via config.get, matching the BEST_WINDOW_* config pattern.",
+  "workMessageId": 1782481394923070
+}

@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mquxfneh_8d8b4904-5d94-423c-8582-9c7104584987",
+  "id": 1782478093671071,
+  "category": "test",
+  "key": "testBestWindowEndpoint",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testBestWindowEndpoint",
+    "source": "\n// Integration test for GET /api/best-window — verifies the endpoint returns a\n// valid calmest-window payload for real coordinates (Mediterranean off Barcelona).\nasync function testBestWindowEndpoint() {\n  const res = await fetch('http://localhost:3001/api/best-window?lat=41.35&lon=2.17');\n  assertEquals(res.status, 200, 'Best window should return 200');\n\n  const data = await res.json();\n\n  // Position/timezone echoed back\n  assert(typeof data.latitude === 'number', 'Should include latitude');\n  assert(typeof data.longitude === 'number', 'Should include longitude');\n  assert(typeof data.timezone === 'string', 'Should include timezone');\n\n  // The window object and its fields\n  const w = data.window;\n  assert(w && typeof w === 'object', 'Response should contain a window object');\n  assert(typeof w.startIndex === 'number', 'window.startIndex should be a number');\n  assert(typeof w.start === 'number', 'window.start should be a number');\n  assert(typeof w.end === 'number', 'window.end should be a number');\n  assert(typeof w.startTime === 'string', 'window.startTime should be a string');\n  assert(typeof w.endTime === 'string', 'window.endTime should be a string');\n  assert(typeof w.avgWind === 'number', 'window.avgWind should be a number');\n  assert(typeof w.avgGust === 'number', 'window.avgGust should be a number');\n  assert(typeof w.combinedScore === 'number', 'window.combinedScore should be a number');\n\n  // The combined score should equal avgWind + avgGust (within rounding tolerance)\n  assert(Math.abs(w.combinedScore - (w.avgWind + w.avgGust)) <= 0.1, 'combinedScore should match avgWind + avgGust');\n\n  // Exactly 3 hours (default window size) with expected fields\n  assert(Array.isArray(w.hours), 'window.hours should be an array');\n  assertEquals(w.hours.length, 3, 'window should contain 3 hours by default');\n  const h = w.hours[0];\n  assert(typeof h.time === 'string', 'hour should have a time');\n  assert(typeof h.windSpeed === 'number', 'hour should have windSpeed');\n  assert(typeof h.windGusts === 'number', 'hour should have windGusts');\n\n  // A human-readable reason string\n  assert(typeof w.reason === 'string' && w.reason.length > 0, 'window.reason should be a non-empty string');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved — go ahead and build it. Run the tests and type checks to verify nothing is broken, and show me what changed.",
+    "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+    "toolCallId": "sevt_015SSjYwMpycSBCVxd7S2Acp"
+  },
+  "createdAt": "2026-06-26T12:48:13.625Z",
+  "undoable": true,
+  "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+  "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+  "rationale": "Integration test that the live /api/best-window endpoint returns a well-formed calmest-window payload.",
+  "implementation": "Fetches the endpoint with valid coords and validates the window shape: numeric timing/score fields, 3 hours, and a reason string.",
+  "workMessageId": 1782478093657118
+}

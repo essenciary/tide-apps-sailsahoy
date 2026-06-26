@@ -1,0 +1,58 @@
+{
+  "uid": "chg_mquxej03_d143ca87-8c94-42c0-8912-c7022c51979b",
+  "id": 1782478041305460,
+  "category": "route",
+  "key": "GET /api/best-window",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "method": "GET",
+    "path": "/api/best-window",
+    "handlerName": "getBestWindow",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Calmest sailing window with timing, average wind/gust, score, hourly breakdown, and a reason string"
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error or insufficient forecast data"
+        }
+      },
+      "summary": "Get the calmest sailing window in the upcoming forecast",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather"
+  },
+  "context": {
+    "userMessage": "Approved — go ahead and build it. Run the tests and type checks to verify nothing is broken, and show me what changed.",
+    "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+    "toolCallId": "sevt_01D9V4J8wAqrXi9ZsH6uGhp3"
+  },
+  "createdAt": "2026-06-26T12:47:21.267Z",
+  "undoable": true,
+  "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+  "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+  "rationale": "Expose the calmest-window analysis at a stable /api path consistent with the other weather endpoints.",
+  "implementation": "Same query schema shape as /api/weather so schema validation auto-rejects missing/invalid coords with a 400 before the handler runs.",
+  "workMessageId": 1782478041323750
+}

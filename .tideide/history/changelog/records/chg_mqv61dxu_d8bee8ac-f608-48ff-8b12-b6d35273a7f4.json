@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqv61dxu_d8bee8ac-f608-48ff-8b12-b6d35273a7f4",
+  "id": 1782492544733243,
+  "category": "config",
+  "key": "ROUTE_DEFAULT_SPEED_KNOTS",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "ROUTE_DEFAULT_SPEED_KNOTS",
+    "value": 5,
+    "description": "Default boat speed (knots) used for route-plan ETA when the request omits speed. Tunable."
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+    "turnIndex": 0,
+    "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+    "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+    "toolCallId": "sevt_01Sksxh8fuDiwSGkpiKyPRsy"
+  },
+  "createdAt": "2026-06-26T16:49:04.722Z",
+  "undoable": true,
+  "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+  "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "rationale": "Route ETA needs a sensible default cruising speed.",
+  "implementation": "5 kn is a realistic average sailing speed; kept as config so users can tune it.",
+  "workMessageId": 1782492544805513
+}

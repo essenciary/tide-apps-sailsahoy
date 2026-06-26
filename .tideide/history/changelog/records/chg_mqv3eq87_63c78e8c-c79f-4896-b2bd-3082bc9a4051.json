@@ -1,0 +1,35 @@
+{
+  "uid": "chg_mqv3eq87_63c78e8c-c79f-4896-b2bd-3082bc9a4051",
+  "id": 1782488128379578,
+  "category": "test",
+  "key": "testServeApp",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "testServeApp",
+    "source": "\nasync function testServeApp() {\n  const BASE = 'http://localhost:3001';\n  const res = await fetch(BASE + '/');\n  assertEquals(res.status, 200, 'Should return 200');\n\n  const html = await res.text();\n\n  // Check for required structural elements\n  assert(html.includes('id=\"map\"'), 'Should contain map div');\n  assert(html.includes('id=\"weather-canvas\"'), 'Should contain weather canvas');\n  assert(html.includes('id=\"conditions-panel\"'), 'Should contain conditions panel');\n  assert(html.includes('id=\"compass-panel\"'), 'Should contain compass panel');\n  assert(html.includes('id=\"timeline-panel\"'), 'Should contain timeline panel');\n  assert(html.includes('id=\"info-bar\"'), 'Should contain info bar');\n\n  // Check for asset references\n  assert(html.includes('sailing-weather.css'), 'Should reference app CSS');\n  assert(html.includes('/api/sailing-js'), 'Should reference app JS via handler');\n  assert(html.includes('sailing-water-detect.css'), 'Should reference water detection CSS');\n  assert(html.includes('sailing-overlays.css'), 'Should reference overlays CSS');\n\n  // Check for Leaflet references\n  assert(html.includes('leaflet'), 'Should reference Leaflet');\n\n  // Check meta tags\n  assert(html.includes('<!DOCTYPE html>'), 'Should have doctype');\n  assert(html.includes('viewport'), 'Should have viewport meta');\n\n  // Check play button is present with correct attributes\n  assert(html.includes('id=\"timeline-play-btn\"'), 'Should contain play button');\n  assert(html.includes('aria-label=\"Play forecast animation\"'), 'Play button should have aria-label');\n  assert(html.includes('data-play-interval=\"1500\"'), 'Play button should have injected config interval');\n\n  // Verify no unresolved template placeholders\n  assert(!html.includes('{{PLAY_INTERVAL_MS}}'), 'Should not contain unresolved placeholder');\n\n  // Check overlay layer toggles are present\n  assert(html.includes('data-layer=\"radar\"'), 'Should have radar layer toggle');\n  assert(html.includes('data-layer=\"cloudMap\"'), 'Should have cloud map layer toggle');\n  assert(html.includes('data-layer=\"pressureMap\"'), 'Should have pressure map layer toggle');\n  assert(html.includes('layer-separator'), 'Should have layer separator');\n  assert(html.includes('layer-panel-subtitle'), 'Should have overlay subtitle');\n}\n",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "testServeApp",
+    "source": "\nasync function testServeApp() {\n  const BASE = 'http://localhost:3001';\n  const res = await fetch(BASE + '/');\n  assertEquals(res.status, 200, 'Should return 200');\n\n  const html = await res.text();\n\n  // Check for required structural elements\n  assert(html.includes('id=\"map\"'), 'Should contain map div');\n  assert(html.includes('id=\"weather-canvas\"'), 'Should contain weather canvas');\n  assert(html.includes('id=\"conditions-panel\"'), 'Should contain conditions panel');\n  assert(html.includes('id=\"compass-panel\"'), 'Should contain compass panel');\n  assert(html.includes('id=\"timeline-panel\"'), 'Should contain timeline panel');\n  assert(html.includes('id=\"info-bar\"'), 'Should contain info bar');\n  assert(html.includes('id=\"layer-panel\"'), 'Should contain layer panel');\n  assert(html.includes('id=\"action-buttons\"'), 'Should contain action buttons');\n\n  // Check for asset references\n  assert(html.includes('sailing-weather.css'), 'Should reference app CSS');\n  assert(html.includes('/api/sailing-js'), 'Should reference app JS via handler');\n  assert(html.includes('sailing-water-detect.css'), 'Should reference water detection CSS');\n  assert(html.includes('sailing-overlays.css'), 'Should reference overlays CSS');\n  assert(html.includes('sailing-drag.css'), 'Should reference draggable handle CSS');\n\n  // Check for Leaflet references\n  assert(html.includes('leaflet'), 'Should reference Leaflet');\n\n  // Check meta tags\n  assert(html.includes('<!DOCTYPE html>'), 'Should have doctype');\n  assert(html.includes('viewport'), 'Should have viewport meta');\n\n  // Check play button is present with correct attributes\n  assert(html.includes('id=\"timeline-play-btn\"'), 'Should contain play button');\n  assert(html.includes('aria-label=\"Play forecast animation\"'), 'Play button should have aria-label');\n  assert(html.includes('data-play-interval=\"1500\"'), 'Play button should have injected config interval');\n\n  // Verify no unresolved template placeholders\n  assert(!html.includes('{{PLAY_INTERVAL_MS}}'), 'Should not contain unresolved placeholder');\n\n  // Check overlay layer toggles are present\n  assert(html.includes('data-layer=\"radar\"'), 'Should have radar layer toggle');\n  assert(html.includes('data-layer=\"cloudMap\"'), 'Should have cloud map layer toggle');\n  assert(html.includes('data-layer=\"pressureMap\"'), 'Should have pressure map layer toggle');\n  assert(html.includes('layer-separator'), 'Should have layer separator');\n  assert(html.includes('layer-panel-subtitle'), 'Should have overlay subtitle');\n\n  // Check draggable grip handles — one per floating control (6 total)\n  assert(html.includes('class=\"drag-handle\"'), 'Should contain drag handles');\n  assert(html.includes('class=\"grip-dots\"'), 'Should contain grip dots');\n  const handleCount = html.split('class=\"drag-handle\"').length - 1;\n  assertEquals(handleCount, 6, 'Should render a drag handle for all six floating controls');\n}\n",
+    "module": "sailing",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv38s5t_31905426-65f2-44f9-976f-d98e3f37cf4e",
+    "turnIndex": 0,
+    "sessionId": "session_mqv2u01a_4b2d76f8-c40f-4340-943b-eeccd6f493c6",
+    "changesetId": "cs_mqv2zrsn_a7089074-ffdc-4658-b6c2-dd2337e5038a",
+    "toolCallId": "sevt_011fBkWm61KRzVdf3eNjccEW"
+  },
+  "createdAt": "2026-06-26T15:35:28.327Z",
+  "undoable": true,
+  "turnId": "turn_mqv38s5t_31905426-65f2-44f9-976f-d98e3f37cf4e",
+  "changesetId": "cs_mqv2zrsn_a7089074-ffdc-4658-b6c2-dd2337e5038a",
+  "rationale": "The template now loads the drag stylesheet and renders a grip handle in each floating control; the test must lock in that markup.",
+  "implementation": "Add assertions for the sailing-drag.css link, the .drag-handle/.grip-dots markup, and that exactly six handles are rendered (one per control), plus presence of layer-panel and action-buttons.",
+  "workMessageId": 1782488128383533
+}

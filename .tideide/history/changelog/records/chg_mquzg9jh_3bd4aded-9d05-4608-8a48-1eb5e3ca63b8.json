@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mquzg9jh_3bd4aded-9d05-4608-8a48-1eb5e3ca63b8",
+  "id": 1782481481595221,
+  "category": "test",
+  "key": "testWindAlertEndpoint",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testWindAlertEndpoint",
+    "source": "\n// Integration test for GET /api/wind-alert — verifies the endpoint returns a\n// well-formed gust-alert payload for real coordinates (Mediterranean off Barcelona).\nasync function testWindAlertEndpoint() {\n  const res = await fetch('http://localhost:3001/api/wind-alert?lat=41.35&lon=2.17');\n  assertEquals(res.status, 200, 'Wind alert should return 200');\n\n  const data = await res.json();\n\n  // Position/timezone echoed back\n  assert(typeof data.latitude === 'number', 'Should include latitude');\n  assert(typeof data.longitude === 'number', 'Should include longitude');\n  assert(typeof data.timezone === 'string', 'Should include timezone');\n\n  // Core alert fields\n  assertEquals(typeof data.alert, 'boolean', 'alert should be a boolean');\n  assertEquals(typeof data.gusts, 'number', 'gusts should be a number');\n  assertEquals(data.threshold, 25, 'threshold should default to 25 kn when not overridden');\n  assert(typeof data.message === 'string' && data.message.length > 0, 'message should be a non-empty string');\n\n  // The alert flag must be consistent with the strict gusts > threshold rule\n  assertEquals(data.alert, data.gusts > data.threshold, 'alert should equal gusts > threshold');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved — build it, then run the tests and checks to verify.",
+    "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+    "toolCallId": "sevt_01MMM1d9YnV8jCjmN3fzNAhz"
+  },
+  "createdAt": "2026-06-26T13:44:41.549Z",
+  "undoable": true,
+  "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+  "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "rationale": "Integration test that the live /api/wind-alert endpoint returns a well-formed alert payload.",
+  "implementation": "Fetches the endpoint with valid coords and validates the payload shape: alert boolean, numeric gusts, default threshold of 25, non-empty message, and echoed position/timezone.",
+  "workMessageId": 1782481481601582
+}

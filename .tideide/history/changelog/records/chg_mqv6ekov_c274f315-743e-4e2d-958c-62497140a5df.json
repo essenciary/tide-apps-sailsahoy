@@ -1,0 +1,60 @@
+{
+  "uid": "chg_mqv6ekov_c274f315-743e-4e2d-958c-62497140a5df",
+  "id": 1782493160058094,
+  "category": "handler",
+  "key": "serveApp",
+  "action": "update",
+  "beforeSnapshot": {
+    "name": "serveApp",
+    "source": "\n// Serve the main sailing weather app page, injecting server-side config\nasync function serveApp(c: any) {\n  const rawHtml = templates.get('sailing-app');\n  if (!rawHtml) return c.text('Template not found', 500);\n\n  // Inject the playback interval config into the template\n  const intervalMs = config.get('TIMELINE_PLAY_INTERVAL_MS') || 1500;\n  const html = rawHtml.replace('{{PLAY_INTERVAL_MS}}', String(intervalMs));\n\n  return c.html(html);\n}\n",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Serve the main sailing weather app page with injected config values.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "afterSnapshot": {
+    "name": "serveApp",
+    "source": "\n// Serve the main sailing weather app page, injecting server-side config\nasync function serveApp(c: any) {\n  const rawHtml = templates.get('sailing-app');\n  if (!rawHtml) return c.text('Template not found', 500);\n\n  // Inject the playback interval config into the template\n  const intervalMs = config.get('TIMELINE_PLAY_INTERVAL_MS') || 1500;\n  // Inject the default boat speed for the route planner's speed input\n  const defaultSpeed = config.get('ROUTE_DEFAULT_SPEED_KNOTS') || 5;\n\n  const html = rawHtml\n    .replace('{{PLAY_INTERVAL_MS}}', String(intervalMs))\n    .replace('{{ROUTE_DEFAULT_SPEED}}', String(defaultSpeed));\n\n  return c.html(html);\n}\n",
+    "schema": {
+      "responses": {
+        "200": {
+          "description": "HTML page with interactive sailing weather map"
+        }
+      },
+      "summary": "Serve the sailing weather app page",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Serve the main sailing weather app page with injected config values.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+    "turnIndex": 0,
+    "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+    "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+    "toolCallId": "sevt_01FaU57vMYcgN5mHCgTdS8Av"
+  },
+  "createdAt": "2026-06-26T16:59:19.999Z",
+  "undoable": true,
+  "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+  "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "rationale": "The route panel's speed input should default to the configurable ROUTE_DEFAULT_SPEED_KNOTS, so the page must inject it like it already injects the playback interval.",
+  "implementation": "Add a second placeholder replacement for {{ROUTE_DEFAULT_SPEED}} alongside the existing {{PLAY_INTERVAL_MS}} injection; no structural change.",
+  "workMessageId": 1782493160077655
+}

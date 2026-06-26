@@ -1,0 +1,14 @@
+{
+  "name": "testBestWindowMissingParams",
+  "source": "\n// Verify /api/best-window returns 400 when lat/lon are missing — caught by route schema validation.\nasync function testBestWindowMissingParams() {\n  const res = await fetch('http://localhost:3001/api/best-window');\n  assertEquals(res.status, 400, 'Missing params should return 400');\n  const body = await res.json();\n  // Route schema validation returns this shape\n  assertEquals(body.error, 'Validation failed', 'Should report a schema validation failure');\n  assert(body.details.length > 0, 'Should include validation detail messages');\n}\n",
+  "registeredAt": "2026-06-26T12:48:14.245Z",
+  "module": "weather",
+  "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+  "lastResult": {
+    "passed": true,
+    "durationMs": 1,
+    "ranAt": "2026-06-26T17:05:29.726Z"
+  },
+  "runtimeId": "typescript",
+  "language": "typescript"
+}

@@ -1,0 +1,109 @@
+{
+  "uid": "chg_mquxe2ix_cd6468b1-02ed-4393-b58f-cb3f86b82da3",
+  "id": 1782478019922697,
+  "category": "handler",
+  "key": "getBestWindow",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "getBestWindow",
+    "source": "\n// Return the calmest sailing window (lowest combined wind + gust) in the\n// upcoming forecast for a position. Delegates coord validation to the shared\n// helper and reuses fetchWeather; the window-finding itself lives in the pure\n// computeBestWindow function so this handler stays thin.\nasync function getBestWindow(c: any) {\n  return functions.call('withValidatedCoords', c, async (lat: number, lon: number) => {\n    // Reuse the shared weather fetch (Result pattern)\n    const result = await functions.call('fetchWeather', lat, lon);\n\n    // Map a fetch failure to a 500 with the underlying message\n    if (!result.ok) {\n      return c.json({ error: true, message: result.error.message }, 500);\n    }\n\n    const weatherData = result.data;\n\n    // Read tunable window/horizon from config (fall back to sensible defaults)\n    const windowHours = config.get('BEST_WINDOW_SIZE_HOURS') || 3;\n    const horizonHours = config.get('BEST_WINDOW_HORIZON_HOURS') || 24;\n\n    // Compute the calmest window over the hourly forecast\n    const window = functions.call('computeBestWindow', weatherData.hourly, windowHours, horizonHours);\n\n    // Defensive: should not happen since fetchWeather returns 48h of data\n    if (!window) {\n      return c.json({ error: true, message: 'Not enough forecast data to determine a sailing window' }, 500);\n    }\n\n    // Echo position/timezone alongside the window for client display\n    return c.json({\n      latitude: weatherData.latitude,\n      longitude: weatherData.longitude,\n      timezone: weatherData.timezone,\n      window\n    });\n  }, 'Failed to compute best sailing window');\n}\n",
+    "schema": {
+      "query": {
+        "lat": {
+          "description": "Latitude (-90 to 90)",
+          "required": true,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude (-180 to 180)",
+          "required": true,
+          "type": "number"
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Calmest sailing window with timing, average wind/gust, score, hourly breakdown, and a reason string",
+          "schema": {
+            "properties": {
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              },
+              "timezone": {
+                "type": "string"
+              },
+              "window": {
+                "properties": {
+                  "avgGust": {
+                    "type": "number"
+                  },
+                  "avgWind": {
+                    "type": "number"
+                  },
+                  "combinedScore": {
+                    "type": "number"
+                  },
+                  "end": {
+                    "type": "integer"
+                  },
+                  "endTime": {
+                    "type": "string"
+                  },
+                  "hours": {
+                    "type": "array"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "start": {
+                    "type": "integer"
+                  },
+                  "startIndex": {
+                    "type": "integer"
+                  },
+                  "startTime": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Missing or invalid coordinates"
+        },
+        "500": {
+          "description": "Weather API error or insufficient forecast data"
+        }
+      },
+      "summary": "Get the calmest sailing window in the upcoming forecast",
+      "tags": [
+        "weather"
+      ]
+    },
+    "module": "weather",
+    "purpose": "Return the calmest sailing window in the upcoming forecast for a lat/lon position.",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved — go ahead and build it. Run the tests and type checks to verify nothing is broken, and show me what changed.",
+    "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+    "toolCallId": "sevt_01F7Wzd1Ky4KEkdxhA2ybQcG"
+  },
+  "createdAt": "2026-06-26T12:46:59.913Z",
+  "undoable": true,
+  "turnId": "turn_mquxcqof_aee3b287-3599-4b10-9b15-95236d5ede5b",
+  "changesetId": "cs_mqux3liz_44d4b8d9-719c-4bd1-821c-baf843fa138c",
+  "rationale": "New endpoint required to surface the lowest combined wind + gust block within the forecast horizon, with a reason string.",
+  "implementation": "Mirrors getWeather: delegates coordinate validation to withValidatedCoords, fetches weather via the shared fetchWeather Result, then runs the pure computeBestWindow with config-driven window/horizon and maps the result to JSON.",
+  "workMessageId": 1782478019991658
+}

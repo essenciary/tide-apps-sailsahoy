@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mquzg94l_21f2ffbe-5382-4b17-b3cf-f862a0c9ecd7",
+  "id": 1782481481054966,
+  "category": "test",
+  "key": "testComputeWindAlert",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testComputeWindAlert",
+    "source": "\n// Unit test for computeWindAlert — verifies the strict gusts > threshold rule\n// for both branches (alert and no-alert) with correct echoed fields and a\n// non-empty human-readable message.\nasync function testComputeWindAlert() {\n  // Branch 1: gusts ABOVE the threshold -> alert true\n  const high = functions.call('computeWindAlert', { windGusts: 32.1 }, 25);\n  assertEquals(high.alert, true, 'Gusts above threshold should trigger an alert');\n  assertEquals(high.gusts, 32.1, 'Should echo the gust value');\n  assertEquals(high.threshold, 25, 'Should echo the threshold');\n  assert(typeof high.message === 'string' && high.message.length > 0, 'Alert message should be non-empty');\n  assert(high.message.indexOf('exceed') >= 0, 'Alert message should describe exceeding the threshold');\n\n  // Branch 2: gusts BELOW the threshold -> alert false\n  const low = functions.call('computeWindAlert', { windGusts: 12.4 }, 25);\n  assertEquals(low.alert, false, 'Gusts below threshold should not trigger an alert');\n  assertEquals(low.gusts, 12.4, 'Should echo the gust value');\n  assertEquals(low.threshold, 25, 'Should echo the threshold');\n  assert(typeof low.message === 'string' && low.message.length > 0, 'No-alert message should be non-empty');\n  assert(low.message.indexOf('within') >= 0, 'No-alert message should describe being within the threshold');\n\n  // Edge case: exactly equal to the threshold is NOT an alert (strict >)\n  const equal = functions.call('computeWindAlert', { windGusts: 25 }, 25);\n  assertEquals(equal.alert, false, 'Gusts exactly at threshold should not alert (strictly greater)');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved — build it, then run the tests and checks to verify.",
+    "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+    "toolCallId": "sevt_01AcYoJoBFJ4gSL7u5nqnabW"
+  },
+  "createdAt": "2026-06-26T13:44:41.013Z",
+  "undoable": true,
+  "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+  "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "rationale": "Unit-test the pure threshold-comparison logic without network, covering both alert branches.",
+  "implementation": "Calls computeWindAlert with a crafted current object for gusts above and below the threshold; asserts the alert flag, echoed gusts/threshold, and a non-empty message each time.",
+  "workMessageId": 1782481481110155
+}

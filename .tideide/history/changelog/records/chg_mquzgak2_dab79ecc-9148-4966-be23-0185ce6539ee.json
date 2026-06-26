@@ -1,0 +1,30 @@
+{
+  "uid": "chg_mquzgak2_dab79ecc-9148-4966-be23-0185ce6539ee",
+  "id": 1782481482866374,
+  "category": "test",
+  "key": "testWindAlertMissingParams",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "testWindAlertMissingParams",
+    "source": "\n// Verify /api/wind-alert returns 400 when lat/lon are missing — caught by route schema validation.\nasync function testWindAlertMissingParams() {\n  const res = await fetch('http://localhost:3001/api/wind-alert');\n  assertEquals(res.status, 400, 'Missing params should return 400');\n  const body = await res.json();\n  // Route schema validation returns this shape\n  assertEquals(body.error, 'Validation failed', 'Should report a schema validation failure');\n  assert(body.details.length > 0, 'Should include validation detail messages');\n}\n",
+    "module": "weather",
+    "runtimeId": "typescript",
+    "language": "typescript"
+  },
+  "context": {
+    "userMessage": "Approved — build it, then run the tests and checks to verify.",
+    "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+    "turnIndex": 1,
+    "sessionId": "session_mqlin5kw_29c2bdd2-6c8c-48f4-ae0c-6448b2869667",
+    "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+    "toolCallId": "sevt_016SrDD2hHjYeVf17T4BLidr"
+  },
+  "createdAt": "2026-06-26T13:44:42.866Z",
+  "undoable": true,
+  "turnId": "turn_mquzdwkv_3723c4f4-0390-4269-b368-da9576066011",
+  "changesetId": "cs_mquzcsed_84d06978-b139-401c-9080-632e3ef91de7",
+  "rationale": "Verify schema validation rejects requests with no coordinates before the handler runs.",
+  "implementation": "Calls the endpoint with no query params and asserts the 400 schema-validation shape used across weather endpoints.",
+  "workMessageId": 1782481482904306
+}

@@ -1,0 +1,28 @@
+{
+  "uid": "chg_mqv61eph_4e9956cf-7084-466a-8977-53f267b814b5",
+  "id": 1782492545750575,
+  "category": "config",
+  "key": "ROUTE_HEADWIND_ANGLE_DEG",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "name": "ROUTE_HEADWIND_ANGLE_DEG",
+    "value": 60,
+    "description": "Half-angle (degrees) within which the wind's FROM direction must align with the leg bearing to count as a headwind."
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+    "turnIndex": 0,
+    "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+    "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+    "toolCallId": "sevt_01Ab4JnpurixWqChr314FCRH"
+  },
+  "createdAt": "2026-06-26T16:49:05.716Z",
+  "undoable": true,
+  "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+  "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "rationale": "Headwind detection needs a tunable tolerance for how head-on the wind must be.",
+  "implementation": "60° matches the typical no-go zone where sailing directly upwind is impractical.",
+  "workMessageId": 1782492545788924
+}

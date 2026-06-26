@@ -1,9 +1,14 @@
 {
   "name": "testDirectionsBatchConfig",
   "source": "\n// Verify the DIRECTION_BATCH_SIZE config is set and used by analyzeDirections.\n// This is a unit-level check — it validates the config exists with a sensible value,\n// ensuring the staggered batching mechanism is properly configured.\nasync function testDirectionsBatchConfig() {\n  // Config should exist and be a positive number\n  const batchSize = config.get('DIRECTION_BATCH_SIZE');\n  assert(batchSize !== null && batchSize !== undefined, 'DIRECTION_BATCH_SIZE config should be defined');\n  assert(typeof batchSize === 'number', 'DIRECTION_BATCH_SIZE should be a number, got: ' + typeof batchSize);\n  assert(batchSize > 0, 'DIRECTION_BATCH_SIZE should be positive, got: ' + batchSize);\n  assert(batchSize <= 8, 'DIRECTION_BATCH_SIZE should be <= 8 (total directions), got: ' + batchSize);\n\n  // Default should be 2 — optimal for avoiding rate limits while keeping latency low\n  assertEquals(batchSize, 2, 'Default DIRECTION_BATCH_SIZE should be 2');\n}\n",
-  "registeredAt": "2026-06-22T17:49:16.766Z",
+  "registeredAt": "2026-06-22T18:56:16.313Z",
   "module": "weather",
   "changesetId": "cs_mql9kttv_c06da2fe-e5dc-4b1f-84b8-73a919928346",
+  "lastResult": {
+    "passed": true,
+    "durationMs": 0,
+    "ranAt": "2026-06-26T17:05:29.726Z"
+  },
   "runtimeId": "typescript",
   "language": "typescript"
 }

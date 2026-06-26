@@ -1,0 +1,59 @@
+{
+  "id": "cs_mqv2zrsn_a7089074-ffdc-4658-b6c2-dd2337e5038a",
+  "sessionId": "session_mqv2u01a_4b2d76f8-c40f-4340-943b-eeccd6f493c6",
+  "title": "Make all floating map controls draggable via grip handles",
+  "description": null,
+  "status": "completed",
+  "plan": {
+    "summary": "The sailing app has six floating controls pinned to fixed CSS positions (Current Conditions, Direction Analysis, Layers, Forecast Timeline, the LAT/LON info bar, and the My Location/Refresh button stack). On smaller viewports they overlap and crowd the map, and there is no way to reposition them. This change adds a visible drag 'grip' handle to each floating control and a small client-side drag module so the user can move any control out of the way. Positions are persisted in localStorage so the layout survives refreshes, are clamped to stay within the viewport, and a double-click on a handle resets that control to its default spot. The approach reuses the app's existing structure exactly: a new dedicated CSS asset (like the other sailing-*.css assets), handle markup added to the existing template panels, and vanilla JS added to the JS bundle stored in the _temp_build table and served via /api/sailing-js — no new dependencies, no backend/API changes.\n\nRequirements:\n1. Add a visible drag handle to every floating control: #conditions-panel, #compass-panel, #layer-panel, #timeline-panel, #info-bar, #action-buttons.\n2. Dragging a control by its handle repositions it (mouse + touch via Pointer Events).\n3. Controls cannot be dragged off-screen (clamped to the viewport, including on window resize).\n4. Positions persist across page reloads (localStorage); double-clicking a handle resets that control to its default position.\n5. Keep concerns separated (CSS asset, template markup, JS logic) and don't break existing controls (checkboxes, slider, play/refresh/location buttons, Leaflet map panning).\n\nAssumptions: handles are rendered as a compact 6-dot 'grip' affordance with a grab cursor; the dragged control is elevated (raised z-index + shadow) while moving but stays below toasts; persistence is keyed per control id in a single localStorage entry; this is a UI-only enhancement with no schema/route changes.",
+    "steps": [
+      {
+        "id": "step_0",
+        "description": "Step 1 (reqs 1,5): Create new text asset 'sailing-drag.css' (module 'sailing') defining .drag-handle (grab cursor, centered .grip-dots rendered via a radial-gradient dot pattern, touch-action:none, hover state), compact handle variants for #info-bar (vertical grip) and #action-buttons, a .dragging state (raised z-index below toasts, accent outline/shadow, disabled transition), and a #action-buttons.dragging background so the transparent button stack has a visible body while dragging.",
+        "status": "done"
+      },
+      {
+        "id": "step_1",
+        "description": "Step 2 (reqs 1,5): Update the 'sailing-app' template (module 'sailing') to (a) add a <link> for /_assets/sailing-drag.css in <head>, and (b) insert a <div class=\"drag-handle\" title=\"Drag to move\" aria-label=\"Drag to move\"><span class=\"grip-dots\"></span></div> as the first child of #conditions-panel, #compass-panel, #layer-panel, #timeline-panel, #info-bar, and #action-buttons. Markup only — no logic.",
+        "status": "done"
+      },
+      {
+        "id": "step_2",
+        "description": "Step 3 (reqs 2,3,4,5): Update the JS bundle in _temp_build (id=1, served via /api/sailing-js) to add a drag module: DRAGGABLE_IDS list, loadSavedPositions/savePosition/clearSavedPosition (localStorage, try/catch), pinElement (switch a control from right/bottom/transform anchoring to explicit left/top px), clampToViewport, makeDraggable(el, handle) using pointerdown/move/up with e.stopPropagation so Leaflet panning isn't triggered, and dblclick-to-reset; setupDraggablePanels() to wire handles + restore saved (clamped) positions + re-clamp on window resize. Call setupDraggablePanels() in the DOMContentLoaded boot after setupEvents(). Update via execute_sql.",
+        "status": "done"
+      },
+      {
+        "id": "step_3",
+        "description": "Step 4 (req 5): Extend testServeApp to assert the sailing-drag.css link and the drag-handle/grip-dots markup are present; extend testSailingJsEndpoint to assert setupDraggablePanels/makeDraggable/pinElement and the DRAGGABLE_IDS are present in the served JS. Run all tests and fix failures.",
+        "status": "done"
+      },
+      {
+        "id": "step_4",
+        "description": "Step 5 (all reqs): Run check_export_types and fix any error diagnostics in source entities. Then screenshot the app and run a test_app drag interaction (pointer drag a panel by its handle) to visually verify a control moves and stays on-screen. Run test_coverage and complete the changeset.",
+        "status": "done"
+      }
+    ]
+  },
+  "planMessageIds": [
+    1782487430959491
+  ],
+  "approvalMessageId": 1782487850902608,
+  "workMessageIds": [
+    1782487933357495,
+    1782487971669173,
+    1782488128383533,
+    1782488129057386,
+    1782488230924003
+  ],
+  "toolCalls": null,
+  "reasoning": null,
+  "tokenUsage": {
+    "inputTokens": 38,
+    "outputTokens": 28891,
+    "costUsd": 2.34109125,
+    "durationMs": 380046
+  },
+  "createdAt": "2026-06-26T15:23:50.519Z",
+  "updatedAt": "2026-06-26T15:37:10.953Z",
+  "completedAt": "2026-06-26T15:36:57.981Z"
+}

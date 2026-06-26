@@ -1,0 +1,115 @@
+{
+  "uid": "chg_mqv68rqu_bcd00ad9-9f14-4f51-a66c-0a5775299f9d",
+  "id": 1782492889249326,
+  "category": "route",
+  "key": "POST /api/route-plan",
+  "action": "create",
+  "beforeSnapshot": null,
+  "afterSnapshot": {
+    "method": "POST",
+    "path": "/api/route-plan",
+    "handlerName": "getRoutePlan",
+    "schema": {
+      "body": {
+        "properties": {
+          "points": {
+            "description": "Ordered points; index 0 is the origin (boat), the rest are waypoints",
+            "items": {
+              "properties": {
+                "lat": {
+                  "description": "Latitude (-90..90)",
+                  "type": "number"
+                },
+                "lon": {
+                  "description": "Longitude (-180..180)",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "speed": {
+            "description": "Boat speed in knots (defaults to ROUTE_DEFAULT_SPEED_KNOTS)",
+            "type": "number"
+          },
+          "startTime": {
+            "description": "Departure time in UTC milliseconds (defaults to now)",
+            "type": "number"
+          }
+        },
+        "required": [
+          "points"
+        ],
+        "type": "object"
+      },
+      "description": "Given an ordered list of points (origin first, then waypoints), returns per-leg distance, bearing, duration and ETA at the given boat speed, plus per-leg weather risk warnings.",
+      "responses": {
+        "200": {
+          "description": "Weather-aware route plan with legs and totals",
+          "schema": {
+            "properties": {
+              "legs": {
+                "type": "array"
+              },
+              "speed": {
+                "type": "number"
+              },
+              "startTime": {
+                "type": "number"
+              },
+              "totals": {
+                "properties": {
+                  "departTimeMs": {
+                    "type": "number"
+                  },
+                  "distanceNm": {
+                    "type": "number"
+                  },
+                  "durationHours": {
+                    "type": "number"
+                  },
+                  "etaMs": {
+                    "type": "number"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "400": {
+          "description": "Validation error (bad points or speed)"
+        },
+        "502": {
+          "description": "Weather data could not be fetched for the route"
+        }
+      },
+      "summary": "Compute a weather-aware route plan",
+      "tags": [
+        "route"
+      ]
+    },
+    "module": "route"
+  },
+  "context": {
+    "userMessage": "Approved. Go ahead with the plan.",
+    "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+    "turnIndex": 0,
+    "sessionId": "session_mqv5p49l_59278ee5-f388-4f59-8925-9bda59408d67",
+    "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+    "toolCallId": "sevt_01VLazfJUVwr4d38Hh72GjtZ"
+  },
+  "createdAt": "2026-06-26T16:54:49.206Z",
+  "undoable": true,
+  "turnId": "turn_mqv5zqxd_0dcf9253-f682-47c3-9a6d-94b05db411a5",
+  "changesetId": "cs_mqv5xbk2_5cddc64e-ebe9-4f0e-b32f-4ad95eef34a7",
+  "rationale": "Expose the weather-aware route planner to the client as a POST endpoint.",
+  "implementation": "POST carries the structured ordered waypoint list; the handler's attached body/response schema auto-applies for validation and docs.",
+  "workMessageId": 1782492889256878
+}
